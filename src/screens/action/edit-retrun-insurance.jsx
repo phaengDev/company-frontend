@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import { SelectPicker, Input, InputGroup, DatePicker, InputPicker, Button, Loader } from 'rsuite'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Config, imageUrl } from '../../config/connenct';
@@ -6,14 +6,16 @@ import { useAgent, useCompany, useType, useCurrency } from '../../config/select-
 import axios from 'axios';
 import numeral from 'numeral';
 import Alert from '../../utils/config';
-export default function RetrunInsurance() {
+export default function EditRetrun() {
   const api = Config.urlApi;
   const url = imageUrl.url;
   const itemAg = useAgent();
   const itemcn = useCompany();
   const itemType = useType();
   const itemCry = useCurrency();
-  // const location = useLocation();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const retrunId = atob(searchParams.get('id'));
 
   const [itemOption, setItemOption] = useState([]);
   const handleOption = async (name, value) => {
@@ -47,27 +49,42 @@ export default function RetrunInsurance() {
       setLoading(false)
     }
   }
-
   const dataBuy = itemBuy.map(item => ({ label: item.customer_name, value: item.custom_uuid }));
 
-  const [inputs, setInputs] = useState({
-    insurance_retrunId: '',
-    company_id_fk: null,
-    agent_id_fk: '',
-    custom_buyer_id_fk: '',
-    insurance_type_fk: '',
-    option_id_fk: '',
-    contract_number: '',
-    retrun_balance: 0,
-    currency_id_fk: 22001,
-    status_company: 1,
-    company_date: new Date(),
-    status_agent: 1,
-    agent_date: new Date(),
-    status_oac: 1,
-    oac_date: new Date(),
-    remark_text: ''
-  })
+
+  const showDataRetrun = async () => {
+    try {
+      const response = await fetch(api+`retrun/edit/${retrunId}`);
+      const data = await response.json();
+      handelCompany('company_id_fk',data.company_id_fk);
+      handleOption('',data.insurance_type_fk)
+      setInputs({
+        insurance_retrunId: data.insurance_retrun_id,
+        company_id_fk: data.company_id_fk,
+        agent_id_fk: data.agent_id_fk,
+        custom_buyer_id_fk: data.custom_buyer_id_fk,
+        insurance_type_fk: data.insurance_type_fk,
+        option_id_fk: data.option_id_fk,
+        contract_number: data.contract_number,
+        retrun_balance: data.retrun_balance,
+        currency_id_fk: data.currency_id_fk,
+        status_company: data.status_company,
+        company_date: new Date(data.company_date),
+        status_agent: data.status_agent,
+        agent_date: new Date(data.agent_date),
+        status_oac: data.status_oac,
+        oac_date: new Date(data.oac_date),
+        remark_text: data.remark_text
+      });
+      // handelCompany('',data.company_id_fk)
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+}
+
+const navigate = useNavigate();
+
+  const [inputs, setInputs] = useState({})
   const handelChange = (name, value) => {
     setInputs({
       ...inputs, [name]: value
@@ -77,30 +94,12 @@ export default function RetrunInsurance() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true)
-    console.log(inputs)
     try {
       axios.post(api + 'retrun/create', inputs)
         .then(function (respones) {
           if (respones.status === 200) {
+            navigate(`/retrun-all`);
             Alert.successData(respones.data.message)
-            setInputs({
-              insurance_retrunId: '',
-              company_id_fk: null,
-              agent_id_fk: '',
-              custom_buyer_id_fk: '',
-              insurance_type_fk: '',
-              option_id_fk: '',
-              contract_number: '',
-              retrun_balance: 0,
-              currency_id_fk: 22001,
-              status_company: 1,
-              company_date: new Date(),
-              status_agent: 1,
-              agent_date: new Date(),
-              status_oac: 1,
-              oac_date: new Date(),
-              remark_text: ''
-            })
           } else {
             Alert.errorData(respones.data.message)
           }
@@ -112,6 +111,10 @@ export default function RetrunInsurance() {
     }
   }
 
+
+useEffect(()=>{
+  showDataRetrun();
+},[])
   return (
     <>
       <div id="content" className="app-content">
@@ -122,7 +125,7 @@ export default function RetrunInsurance() {
         </ol>
         <h3 className="page-header fs-20px">
           <Link to={'/'} className='me-3 text-danger' ><i class="fa-solid fa-circle-arrow-left"></i> </Link>
-          ລົງທະບຽນຮັບເງິນຄືນ
+          ແກ້ໄຂຂໍ້ມູນຮັບເງິນຄືນ {retrunId}
         </h3>
 
         <div className="panel  border-4 border-top border-red rounded-top-4">

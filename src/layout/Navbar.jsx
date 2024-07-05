@@ -92,6 +92,37 @@ export default function Navbar() {
           <div className="menu-item has-sub">
             <a href="javascript:;" className="menu-link">
               <div className="menu-icon">
+              <i class="fa-solid fa-copy bg-orange"></i>
+              </div>
+              <div className="menu-text">ລາຍງານຄືອນເງິນ</div>
+              <div className="menu-caret"></div>
+            </a>
+            <div className="menu-submenu">
+              <div className="menu-item">
+                <Link to={'retrun-all'} className="menu-link">
+                  <div className="menu-text">ລາຍງານການສັນຍາທັງໝົດ</div>
+                </Link>
+              </div>
+              <div className="menu-item">
+                <Link to={'retrun-company'} className="menu-link">
+                  <div className="menu-text">ລາຍງານຮັບເງິນຈາກບໍລິສັດ</div>
+                </Link>
+              </div>
+              <div className="menu-item">
+                <Link to={'retrun-agent'} className="menu-link">
+                  <div className="menu-text">ລາຍງານຮັບເງິນຈາກຕົວແທນ</div>
+                </Link>
+              </div>
+              <div className="menu-item">
+                <Link to={'retrun-oac'} className="menu-link">
+                  <div className="menu-text">ລາຍງານຮັບເງິນຈາກໂອເອຊີ</div>
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="menu-item has-sub">
+            <a href="javascript:;" className="menu-link">
+              <div className="menu-icon">
               <i class="fa-solid fa-wallet bg-red-500" />
               </div>
               <div className="menu-text">ລາຍງານໜີ້</div>

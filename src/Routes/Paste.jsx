@@ -40,6 +40,8 @@ import ReportAlmostExpire from '../screens/reports/report-almost-expire';
 import DocCommitoin from '../screens/document/doc-commitoin';
 import CurrencyPage from '../screens/setting/currency-page';
 import RetrunInsurance from '../screens/action/rigits-retrun-insurance';
+import ReportRetrunAll from '../screens/lefun/Report-retrun-all';
+import EditRetrun from '../screens/action/edit-retrun-insurance';
 import { Routes, Route, Navigate } from 'react-router-dom';
 export default function AppContent() {
   return (
@@ -86,6 +88,8 @@ export default function AppContent() {
             <Route path='/doct-com' element={<DocCommitoin />}/>
             <Route path='/currency' element={<CurrencyPage />}/>
             <Route path='/rigits-retrun' element={<RetrunInsurance />}/>
+            <Route path='/retrun-all' element={<ReportRetrunAll />}/>
+            <Route path='/editReturn' element={<EditRetrun />}/>
             
         </Routes>
   )
