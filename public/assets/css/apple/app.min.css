@@ -44951,7 +44951,12 @@ a.editable-click:hover {
   max-width: auto;
   left: 0px;    
 }
-
+.first-col-end {
+  width: auto;
+  min-width: auto;
+  max-width: auto;
+  right: 0px;    
+}
 .second-col {
   width: 150px;
   min-width: 150px;
@@ -44975,4 +44980,18 @@ a.editable-click:hover {
   right: 0;
   left: 0;
   z-index: 1000;
+}
+
+.file-item {
+  position: relative;
+}
+
+.trash-icon {
+  display: none;
+  transition: opacity 0.2s ease;
+}
+
+.file-item:hover .trash-icon {
+  display: inline;
+  opacity: 1;
 }

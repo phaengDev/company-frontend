@@ -43,6 +43,27 @@ import Swal from "sweetalert2";
 },
 
 
+Successreload(){
+  Swal.fire({
+    title: "ຢືນຢັນ",
+    text: "ການດຳເນີນງານສຳເລັດແລ້ວ",
+    icon: "success",
+    width:400,
+    buttons: {
+      confirm: {
+        text: "ຕົກລົງ",
+        value: true,
+        visible: true,
+        className: "btn btn-success",
+        closeModal: true,
+      },
+    },
+  }).then((confirm) => {
+    if (confirm) {
+      window.location.reload();
+    }
+  });
+},
 
 Successlocation(Url){
   Swal.fire({

@@ -42,6 +42,9 @@ import CurrencyPage from '../screens/setting/currency-page';
 import RetrunInsurance from '../screens/action/rigits-retrun-insurance';
 import ReportRetrunAll from '../screens/lefun/Report-retrun-all';
 import EditRetrun from '../screens/action/edit-retrun-insurance';
+import RetrunCompany from '../screens/lefun/Retrun-company';
+import RetrunAgent from '../screens/lefun/Retrun-agent';
+import RetrunOacborker from '../screens/lefun/Retrun-oacborker';
 import { Routes, Route, Navigate } from 'react-router-dom';
 export default function AppContent() {
   return (
@@ -90,6 +93,9 @@ export default function AppContent() {
             <Route path='/rigits-retrun' element={<RetrunInsurance />}/>
             <Route path='/retrun-all' element={<ReportRetrunAll />}/>
             <Route path='/editReturn' element={<EditRetrun />}/>
+            <Route path='/retrun-company' element={<RetrunCompany />}/>
+            <Route path='/retrun-agent' element={<RetrunAgent />}/>
+            <Route path='/retrun-oac' element={<RetrunOacborker />}/>
             
         </Routes>
   )

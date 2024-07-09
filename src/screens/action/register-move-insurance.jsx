@@ -96,6 +96,8 @@ export default function MoveInsurance() {
       setCheckedItems(newCheckedItems);
       setIsAllChecked(Object.keys(newCheckedItems).length === itemData.length && Object.values(newCheckedItems).every(Boolean));
     };
+
+    
     const handleSubmit = () => {
         const selectedIds = itemData.filter((item, index) => checkedItems[index])
         .map(item => ({ incuranec_code: item.incuranec_code })); 
@@ -187,8 +189,7 @@ export default function MoveInsurance() {
                             <tr>
                                 <th width='1%' className="text-center sticky-col first-col">ລ/ດ</th>
                                 <th width='10%' className="text-center sticky-col first-col">
-                                    <input class="form-check-input" type="checkbox"  checked={isAllChecked}
-              onChange={handleCheckAll} />
+                                    <input class="form-check-input" type="checkbox"  checked={isAllChecked} onChange={handleCheckAll} />
                                 </th>
                                 <th className="">ຊື່ລູກຄ້າ</th>
                                 <th className="">ເລກທີສັນຍາ</th>
@@ -219,7 +220,7 @@ export default function MoveInsurance() {
                                                 <td className='text-center bg-white sticky-col first-col'>{index + 1}</td>
                                                 <td className='text-center bg-white sticky-col first-col'>
                                                     <input class="form-check-input" type="checkbox"  checked={checkedItems[index] || false}
-                onChange={() => handleCheckboxChange(index)}  />
+                                                 onChange={() => handleCheckboxChange(index)}  />
                                                 </td>
                                                 <td className=''>{item.customer_name}</td>
                                                 <td className='text-center'>{item.contract_number}</td>

@@ -6,6 +6,7 @@ import { Config } from '../../config/connenct';
 import moment from 'moment';
 import numeral from 'numeral';
 import Alert from '../../utils/config';
+import FormPayDebtcom from './Form-PayDebtcom';
 import { useCompany, useAgent } from '../../config/select-option';
 export default function DebtCompany() {
     const api = Config.urlApi;
@@ -40,9 +41,12 @@ export default function DebtCompany() {
         }
 
     };
-    const Filter = (event) => {
-        setItemData(filter.filter(n => n.contract_number.toLowerCase().includes(event)))
-    }
+    const Filter = (value) => {
+        setItemData(filter.filter(n => 
+            n.contract_number.toLowerCase().includes(value) ||
+            n.currency_name.toLowerCase().includes(value)
+        ));
+    };
     const [sum, steSum] = useState({});
     const [loading, setLoading] = useState(true)
     const showTotalDebt = async () => {
@@ -151,6 +155,41 @@ const sumData = itemData.reduce((acc, item) => {
 const formatNumber = (num) => numeral(num).format('0,00');
 
 
+
+
+ //==========================
+ const [checkedItems, setCheckedItems] = useState([]);
+
+ const handleCheckUse = (item) => {
+     setCheckedItems(prevState => {
+         if (prevState.includes(item)) {
+             return prevState.filter(i => i !== item);
+         } else {
+             return [...prevState, item];
+         }
+     });
+ };
+ const dataDebt = checkedItems.map(item => ({
+     incuranec_code: item.incuranec_code,
+     contract_number: item.contract_number,
+     contract_start_date:item.contract_start_date,
+     contract_end_date:item.contract_end_date,
+     currency_name:item.currency_name,
+     genus:item.genus,
+     initial_fee:item.initial_fee,
+     percent_taxes:item.percent_taxes,
+     money_taxes:item.money_taxes,
+     registration_fee:item.registration_fee,
+     insuranc_included:item.insuranc_included
+   }));
+
+ const [showPay, setShowPay] = useState(false);
+ const handlePayDebtMouti = () => {
+     setShowPay(true);
+ };
+ const handleClose = () => setShowPay(false);
+
+
     useEffect(() => {
         fetchReport();
         showTotalDebt();
@@ -221,8 +260,14 @@ const formatNumber = (num) => numeral(num).format('0,00');
                 <div class="panel-heading bg-white">
                     <h4 class="panel-title text-dark fs-18px">ລາຍການໜີ້ຄ້າງຈ່າຍບໍລິສັດ</h4>
                     <div class="panel-heading-btn">
-                        <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
-                        <a href="javascript:;" class="btn btn-xs btn-icon btn-danger" data-toggle="panel-remove"><i class="fa fa-times"></i></a>
+                    {checkedItems.length > 0 ? (
+                            <button onClick={handlePayDebtMouti} className="btn btn-md btn-danger">ຢືນຢັນສຳລະໜີ້</button>
+                        ) : (
+                            <>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-danger" data-toggle="panel-remove"><i class="fa fa-times"></i></a>
+                            </>
+                        )}
                     </div>
                 </div>
                 <div className="panel-body">
@@ -307,9 +352,8 @@ const formatNumber = (num) => numeral(num).format('0,00');
                                                     <td className='text-end'>{numeral(item.insuranc_included).format('0,00')} {item.genus}</td>
                                                     <td className='text-center'>{moment(item.company_date).format('DD/MM/YYYY')}</td>
                                                     <td className='text-center'>{item.day_company} ວັນ</td>
-                                                    <td>
-                                                        <button type='button' className='btn btn-xs btn-red'> PDF </button>
-                                                        <button className='btn btn-xs btn-green ms-2'> Excel </button>
+                                                    <td className='text-center bg-white sticky-col first-col-end'>
+                                                        <input class="form-check-input" type="checkbox" onChange={() => handleCheckUse(item)} />
                                                     </td>
                                                 </tr>
                                             ))}
@@ -387,6 +431,15 @@ const formatNumber = (num) => numeral(num).format('0,00');
                 </Modal.Footer>
                 </form>
             </Modal>
+
+            <FormPayDebtcom 
+             show={showPay}
+             handleClose={handleClose}
+             data={dataDebt}
+             fetchReport={fetchReport}
+             showTotalDebt={showTotalDebt}
+             setCheckedItems={setCheckedItems}
+            />
         </div>
     )
 }

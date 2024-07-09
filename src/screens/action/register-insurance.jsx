@@ -144,7 +144,8 @@ export default function RegisterInsurance() {
       axios.post(api + 'insurance/create', imputData)
         .then(function (respones) {
           if (respones.status === 200) {
-            Alert.successData(respones.data.message)
+           
+            Alert.Successreload(respones.data.message)
           } else {
             Alert.errorData(respones.data.error)
           }
@@ -175,7 +176,7 @@ export default function RegisterInsurance() {
 
 
   const [initialFee, setInitialFee] = useState(0);//---- ຄ່າທຳນຽມເບື້ອງຕົ້ນ
-  const [percentTaxes, setPercentTaxes] = useState(7);
+  const [percentTaxes, setPercentTaxes] = useState(10);
   const moneyTaxes = (initialFee * percentTaxes) / 100;
 
   const [registrationFee, setRegistrationFee] = useState(0)

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DatePicker, SelectPicker, Input, InputGroup, Placeholder, Loader, Modal, Button, Steps } from 'rsuite'
+import { DatePicker, SelectPicker, Input, InputGroup, Placeholder, Loader} from 'rsuite'
 import { useCompany, useType, useAgent } from '../../config/select-option';
 import { Config } from '../../config/connenct';
 import {useNavigate } from 'react-router-dom'
@@ -44,8 +44,12 @@ export default function ReportRetrunAll() {
         }
     };
     const Filter = (event) => {
-        setItemData(dataFilter.filter(n => n.contract_number.toLowerCase().includes(event)))
-    }
+        const query = event.toLowerCase();
+        setItemData(dataFilter.filter(n => 
+            n.contract_number.toLowerCase().includes(query) ||
+            n.currency_name.toLowerCase().includes(query)
+        ));
+    };
     const [itemsPerPage, setitemsPerPage] = useState(100);
     const handleShowLimit = (value) => {
         setitemsPerPage(value);

@@ -3,6 +3,10 @@ import { Input, InputGroup, Placeholder, Loader } from 'rsuite'
 import { Config,imageUrl } from '../../config/connenct';
 import axios from 'axios';
 import moment from 'moment';
+import FormAddDoct from './form-add-doct';
+import {useToaster,Message} from 'rsuite';
+import Swal from 'sweetalert2';
+import Alert from '../../utils/config';
 export default function DocInsurance() {
   const api = Config.urlApi;
   const url = imageUrl.url;
@@ -12,7 +16,6 @@ export default function DocInsurance() {
     try {
       const response = await axios.post(api + 'custom/all');
       const jsonData = response.data;
-      console.log(jsonData);
       setItemCustom(jsonData);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -36,7 +39,9 @@ export default function DocInsurance() {
 
   const [itemData, setItemData] = useState([]);
   const [loadingView, setLoadingView] = useState(false)
+  const [idBuy,setIdBuy]=useState('')
   const preventDefault = async (id) => {
+    setIdBuy(id)
     setLoadingView(true)
     try {
       const response = await axios.get(api + 'insurance/viewBuy/' + id);
@@ -73,9 +78,96 @@ const handleDownload = async (fileName) => {
   }
 };
 
+const [open, setOpen] = React.useState(false);
+const handleClose = () => setOpen(false);
+const[id,setId]=useState('')
+const handleAddDoct=(id)=>{
+  setId(id);
+  setOpen(true)
+}
+const toaster = useToaster();
+const handleDeleteFile= async (id)=>{
+  try {
+    const response = await axios.delete(api + 'upload/' + id)
+    .then(function (response) {
+      if (response.status === 200) {
+      preventDefault(idBuy);
+      toaster.push(
+        <Message type="success" showIcon> {response.data.message} </Message>,
+        { placement: 'topEnd' }
+      );
+      }
+  });
+  } catch (error) {
+    toaster.push(
+      <Message type="error" showIcon> ການດຳເນີນງານບໍ່ສຳເລັດ </Message>,
+      { placement: 'topEnd' }
+    );
+  }
+}
+//=============
+const [selectAll, setSelectAll] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
+  
+  const handleCheckAll = () => {
+    setSelectAll(!selectAll);
+    if (!selectAll) {
+      setSelectedItems([...itemData]); // Select all items
+    } else {
+      setSelectedItems([]); // Deselect all items
+    }
+  };
+
+  const handleChecked = (item) => {
+    if (selectedItems.includes(item)) {
+      setSelectedItems(selectedItems.filter((selectedItem) => selectedItem !== item));
+    } else {
+      setSelectedItems([...selectedItems, item]);
+    }
+    // setSelectedItems(selectedItems);
+  };
+
+  const handleDeletemt = () => {
+    const fileList = selectedItems.flatMap((item) => item.file_doc);
+    
+    Swal.fire({
+      title: "ຢືນຢັນ?",
+      text: "ທ່ານຕ້ອງການລົບຂໍ້ມູນນີ້ແທ້ບໍ່!",
+      icon: "warning",
+      width: 400,
+      showDenyButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ຕົກລົງ",
+      denyButtonText: `ຍົກເລີກ`
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.post(api + `upload/delmt`, { fileData: fileList })
+          .then((response) => {
+            if (response.status === 200) {
+              preventDefault(idBuy);
+              Alert.successData(response.data.message);
+            } else {
+              Alert.errorData(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error('Error deleting files:', error);
+            Alert.errorData('Failed to delete files');
+          });
+      }
+    });
+  };
+
   useEffect(() => {
+    if (selectedItems.length === itemData.length) {
+      setSelectAll(true);
+    } else {
+      setSelectAll(false);
+    }
+   
     showCustomBuyer();
-  }, [])
+  }, [selectedItems,itemData])
   return (
     <div id="content" className="app-content d-flex flex-column p-0">
       <div className="panel panel-inverse flex-1 m-0 d-flex flex-column overflow-hidden">
@@ -100,7 +192,7 @@ const handleDownload = async (fileName) => {
               <button type="button" className="btn shadow-none text-body text-opacity-50 border-0" disabled=""  >
                 <i className="fa fa-lg me-1 fa-download" /> Download
               </button>
-              <button type="button" className="btn shadow-none text-body text-opacity-50 border-0" disabled=""  >
+              <button type="button" onClick={handleDeletemt} className="btn shadow-none text-body  border-1 border-red"  >
                 <i className="fa fa-lg me-1 fa-xmark" /> Delete
               </button>
               <button type="button" className="btn shadow-none text-body text-opacity-50 border-0" disabled=""  >
@@ -171,7 +263,6 @@ const handleDownload = async (fileName) => {
                           </>
                         )
                       }
-
                     </div>
                   </div>
                 </div>
@@ -201,7 +292,7 @@ const handleDownload = async (fileName) => {
                             <Placeholder.Paragraph graph="image" active className='mb-3' />
                             <Placeholder.Paragraph graph="image" active className='mb-3' />
                             <Placeholder.Paragraph graph="circle" active />
-                            <Loader size='lg' center content="ກຳລັງໂຫລດ...." vertical />
+                            <Loader size='lg' center content="ກຳລັງໂຫລດ...."  />
                             </div>
                           </>
                         ) : (
@@ -211,6 +302,7 @@ const handleDownload = async (fileName) => {
                                 <table className="table table-striped table-borderless table-sm m-0 text-nowrap">
                                   <thead>
                                     <tr className="border-bottom">
+                                      <th><input class="form-check-input" type="checkbox" checked={selectAll} onChange={handleCheckAll} /></th>
                                       <th className="w-10px ps-10px" />
                                       <th className="px-10px">ເລກທີສັນຍາ</th>
                                       <th className="px-10px">ວັນທີເລີມ</th>
@@ -222,19 +314,22 @@ const handleDownload = async (fileName) => {
                                   </thead>
                                   <tbody>
                                     {itemData.map((row, index) =>
-                                      <tr>
+                                      <tr key={index}>
+                                        <td><input class="form-check-input" onChange={()=>handleChecked(row)} type="checkbox" checked={selectedItems.includes(row)} /></td>
                                         <td className="ps-10px border-0 text-center">
                                         <a href="#" class="btn btn-xs btn-danger dropdown-toggle" data-bs-toggle="dropdown">
                                         <i class="fa fa-caret-down"></i>
                                       </a>
-                                      <div class="dropdown-menu dropdown-menu-start">
-                                      <a href="javascript:;" class="px-3 text-green fs-14px"><i class="fa-solid fa-file-circle-plus "></i> ເພີ່ມເອກະສານ</a>
+                                      <div class="dropdown-menu dropdown-menu-start ">
+                                      <a href="javascript:;" onClick={()=>handleAddDoct(row.incuranec_code)} class="px-3 text-green fs-14px"><i class="fa-solid fa-file-circle-plus "></i> ເພີ່ມເອກະສານ</a>
                                       <div class="dropdown-divider"></div>
                                       {row.file_doc.map((file,index)=>
-                                      <div class="dropdown-item"><a href="javascript:;" onClick={() => handleDownload(`${url}docfile/${file.file_insurance}`)}><i class="fa-solid fa-cloud-arrow-down fs-4"></i></a> : {file.file_insurance}</div>
+                                      <div class="dropdown-item file-item"><a href="javascript:;" onClick={() => handleDownload(`${url}docfile/${file.file_insurance}`)}><i class="fa-solid fa-cloud-arrow-down fs-4"></i></a> : {file.file_insurance} 
+                                       <span role="button" onClick={()=>handleDeleteFile(file.file_doc_id)} className="text-red ms-4 float-end trash-icon">
+                                      <i className="fa-solid fa-trash"></i>
+                                    </span></div>
                                       )}
                                       </div>
-                                         
                                         </td>
                                         <td className="px-10px border-0">{row.contract_number}</td>
                                         <td className="px-10px">{moment(row.contract_start_date).format('DD/MM/YYYY')}</td>
@@ -263,6 +358,13 @@ const handleDownload = async (fileName) => {
           </div>
         </div>
       </div>
+
+      <FormAddDoct 
+       open={open}
+       handleClose={handleClose}
+       id={id}
+       idbuy={idBuy}
+       preventDefault={preventDefault}/>
     </div>
 
   )

@@ -131,8 +131,6 @@ export default function ReportCommisPay() {
 
 
     // =======================\\
-
-
     const downloadPDF = () => {
         const data = getReportData();
         const doc = new jsPDF();
@@ -142,12 +140,12 @@ export default function ReportCommisPay() {
     };
 
     const downloadExcel = () => {
-        const data = getReportData();
-        const worksheet = XLSX.utils.json_to_sheet(data);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
-        const workbookBlob = XLSX.write(workbook, { bookType: 'xlsx', type: 'blob' });
-        saveAs(workbookBlob, 'report.xlsx');
+        // const data = getReportData();
+        // const worksheet = XLSX.utils.json_to_sheet(data);
+        // const workbook = XLSX.utils.book_new();
+        // XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
+        // const workbookBlob = XLSX.write(workbook, { bookType: 'xlsx', type: 'blob' });
+        // saveAs(workbookBlob, 'report.xlsx');
     };
 
 
@@ -173,11 +171,14 @@ export default function ReportCommisPay() {
         acc[currency].pays_advance_fee += parseFloat(item.pays_advance_fee);
         acc[currency].money_percent_fee += parseFloat(item.money_percent_fee);
         acc[currency].expences_pays_taxes += parseFloat(item.expences_pays_taxes);
-
         return acc;
     }, {});
     const formatNumber = (num) => numeral(num).format('0,00');
     
+
+
+
+
     useEffect(() => {
         fetchReport();
     }, [data])
@@ -192,7 +193,7 @@ export default function ReportCommisPay() {
                         <button class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
                             <i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
                         </button>
-                        <button class="btn btn-success btn-sm d-flex me-2 pe-3 rounded-3">
+                        <button onClick={downloadExcel} class="btn btn-success btn-sm d-flex me-2 pe-3 rounded-3">
                             <i class="fa-solid fa-cloud-arrow-down fs-18px me-2 ms-n1"></i>
                             Export Excel
                         </button>

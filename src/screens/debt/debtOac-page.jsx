@@ -7,6 +7,7 @@ import moment from 'moment';
 import numeral from 'numeral';
 import Alert from '../../utils/config';
 import { useCompany, useAgent } from '../../config/select-option';
+import FormPayDebtoac from './Form-PayDebtoac';
 export default function DebtOac() {
     const api = Config.urlApi;
     const itemCompay = useCompany();
@@ -40,9 +41,12 @@ export default function DebtOac() {
         }
 
     };
-    const Filter = (event) => {
-        setItemData(filter.filter(n => n.contract_number.toLowerCase().includes(event)))
-    }
+    const Filter = (value) => {
+        setItemData(filter.filter(n => 
+            n.contract_number.toLowerCase().includes(value) ||
+            n.currency_name.toLowerCase().includes(value)
+        ));
+    };
     const [sum, steSum] = useState({})
     const [loading, setLoading] = useState(true)
     const showTotalDebt = async () => {
@@ -151,6 +155,38 @@ export default function DebtOac() {
     
     const formatNumber = (num) => numeral(num).format('0,00');
 
+ //==========================
+ const [checkedItems, setCheckedItems] = useState([]);
+
+ const handleCheckUse = (item) => {
+     setCheckedItems(prevState => {
+         if (prevState.includes(item)) {
+             return prevState.filter(i => i !== item);
+         } else {
+             return [...prevState, item];
+         }
+     });
+ };
+ const dataDebt = checkedItems.map(item => ({
+     incuranec_code: item.incuranec_code,
+     contract_number: item.contract_number,
+     contract_start_date:item.contract_start_date,
+     contract_end_date:item.contract_end_date,
+     currency_name:item.currency_name,
+     genus:item.genus,
+     initial_fee:item.initial_fee,
+     pre_tax_profit:item.pre_tax_profit,
+     incom_money:item.incom_money,
+     incom_finally:item.incom_finally,
+     precent_incom:item.precent_incom,
+     percent_akorn:item.percent_akorn
+   }));
+
+ const [showPay, setShowPay] = useState(false);
+ const handlePayDebtMouti = () => {
+     setShowPay(true);
+ };
+ const handleClose = () => setShowPay(false);
 
 
     useEffect(() => {
@@ -224,8 +260,14 @@ export default function DebtOac() {
                 <div class="panel-heading bg-white">
                     <h4 class="panel-title text-dark fs-18px">ລາຍການໜີ້ຄ້າງຮັບຄ່າຄອມ OAC</h4>
                     <div class="panel-heading-btn">
-                        <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
-                        <a href="javascript:;" class="btn btn-xs btn-icon btn-danger" data-toggle="panel-remove"><i class="fa fa-times"></i></a>
+                    {checkedItems.length > 0 ? (
+                            <button onClick={handlePayDebtMouti} className="btn btn-md btn-danger">ຢືນຢັນສຳລະໜີ້</button>
+                        ) : (
+                            <>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                                <a href="javascript:;" class="btn btn-xs btn-icon btn-danger" data-toggle="panel-remove"><i class="fa fa-times"></i></a>
+                            </>
+                        )}
                     </div>
                 </div>
                 <div className="panel-body">
@@ -314,9 +356,10 @@ export default function DebtOac() {
                                                     <td className='text-end'>{numeral(item.incom_finally).format('0,00')} {item.genus}</td>
                                                     <td className='text-center'>{moment(item.oac_date).format('DD/MM/YYYY')}</td>
                                                     <td className='text-center'>{item.day_oac} ວັນ</td>
-                                                    <td>
-                                                        <button type='button' className='btn btn-xs btn-red'> PDF </button>
-                                                        <button className='btn btn-xs btn-green ms-2'> Excel </button>
+                                                    <td className='text-center bg-white sticky-col first-col-end'>
+                                                    {item.status_company === 1 ? (<i class="fa-solid fa-triangle-exclamation text-orange"></i>) : (
+                                                        <input class="form-check-input" type="checkbox" onChange={() => handleCheckUse(item)} />
+                                                    )}
                                                     </td>
                                                 </tr>
                                             ))}
@@ -394,6 +437,14 @@ export default function DebtOac() {
                 </form>
             </Modal>
 
+            <FormPayDebtoac 
+             show={showPay}
+             handleClose={handleClose}
+             data={dataDebt}
+             fetchReport={fetchReport}
+             showTotalDebt={showTotalDebt}
+             setCheckedItems={setCheckedItems}
+            />
         </div>
     )
 }

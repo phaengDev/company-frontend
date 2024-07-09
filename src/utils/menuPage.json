@@ -1,0 +1,249 @@
+{
+  "main": [
+    {
+      "id": 1,
+      "mainName": "ໜ້າຫຼັກ",
+      "link": "home",
+      "typeUser":"1",
+      "icon": "fa-solid fa-house-chimney bg-info",
+      "subMenu": []
+    },
+    {
+      "id": 2,
+      "mainName": "ລົງທະບຽນຊື້ປະກັນ",
+      "link": "#",
+      "typeUser":"1",
+      "icon":"fa-solid fa-indent bg-gradient-blue",
+      "subMenu": [
+        {
+          "subId": 1,
+          "mainFk": 2,
+          "subName": "ລົງທະບຽນຊື້ປະກັນໃໝ່",
+          "sublink": "regits"
+        },
+        {
+          "subId": 2,
+          "mainFk": 2,
+          "subName": "ລົງທະບຽນຊື້ປະກັນເພີ່ມ",
+          "sublink": "regis-more"
+        },
+        {
+          "subId": 3,
+          "mainFk": 2,
+          "subName": "ລົງທະບຽນຕໍ່ສັນຍາ",
+          "sublink": "regis-renew"
+        },
+        {
+          "subId": 4,
+          "mainFk": 2,
+          "subName": "ລົງທະບຽນຍ້າຍສັນຍາ",
+          "sublink": "move-contract"
+        },
+        {
+          "subId": 5,
+          "mainFk": 2,
+          "subName": "ລົງທະບຽນສົ່ງເງິນຄືນ",
+          "sublink": "rigits-retrun"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "mainName": "ລາຍງານ",
+      "link": "#",
+      "typeUser":"1",
+      "icon":"fa-solid fa-list bg-green-500",
+      "subMenu": [
+        {
+          "subId": 6,
+          "mainFk": 3,
+          "subName": "ລາຍງານການຂາຍ",
+          "sublink": "report"
+        },
+        {
+          "subId": 7,
+          "mainFk": 3,
+          "subName": "ລາຍງານຄອມຮັບ",
+          "sublink": "comsIn"
+        },
+        {
+          "subId": 8,
+          "mainFk": 3,
+          "subName": "ລາຍງານຄອມຈ່າຍ",
+          "sublink": "comsPay"
+        },
+        {
+          "subId": 9,
+          "mainFk": 3,
+          "subName": "ສັນຍາໝົດຄວາມຄຸ້ມຄອງ",
+          "sublink": "report-ends"
+        },
+        {
+          "subId": 10,
+          "mainFk": 3,
+          "subName": "ປະຫວັນການຕໍ່ສັນຍາ",
+          "sublink": "history"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "mainName": "ລາຍງານຄືນເງິນ",
+      "link": "",
+      "typeUser":"1",
+      "icon":"fa-solid fa-copy bg-gradient-yellow-green",
+      "subMenu": [
+        {
+          "subId": 11,
+          "mainFk": 4,
+          "subName": "ລາຍງານການສັນຍາທັງໝົດ",
+          "sublink": "retrun-all"
+        },
+        {
+          "subId": 12,
+          "mainFk": 4,
+          "subName": "ຈັດການຮັບເງິນຈາກບໍລິສັດ",
+          "sublink": "retrun-company"
+        },
+        {
+          "subId": 13,
+          "mainFk": 4,
+          "subName": "ຈັດການຮັບເງິນຈາກຕົວແທນ",
+          "sublink": "retrun-agent"
+        },
+        {
+          "subId": 14,
+          "mainFk": 4,
+          "subName": "ຈັດການຮັບເງິນຈາກໂອເອຊີ",
+          "sublink": "retrun-oac"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "mainName": "ລາຍງານໜີ້",
+      "link": "",
+      "typeUser":"1",
+      "icon":"fa-solid fa-wallet bg-gradient-yellow-red",
+      "subMenu": [
+        {
+          "subId": 15,
+          "mainFk": 5,
+          "subName": "ຂໍ້ມູນໜີ້ທັງໝົດ",
+          "sublink": "debt"
+        },
+        {
+          "subId": 16,
+          "mainFk": 5,
+          "subName": "ລາຍງານໜີ້ຈ່າຍບໍລິສັດ",
+          "sublink": "r-debcom"
+        },
+        {
+          "subId": 17,
+          "mainFk": 5,
+          "subName": "ລາຍງານໜີ້ຈ່າຍຕົວແທນ",
+          "sublink": "r-debagent"
+        },
+        {
+          "subId": 18,
+          "mainFk": 5,
+          "subName": "ລາຍງານໜີ້ຮັບບໍລິສັດ",
+          "sublink": "r-deboac"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "mainName": "ເອກສານ",
+      "link": "",
+      "typeUser":"1",
+      "icon":"fa-solid fa-folder-open",
+      "subMenu": [
+        {
+          "subId": 19,
+          "mainFk": 6,
+          "subName": "ເອກສານປະກັນໄພ",
+          "sublink": "doc"
+        },
+        {
+          "subId": 20,
+          "mainFk": 6,
+          "subName": "ເອກສານຈ່າຍຄ່າຄອມ",
+          "sublink": "doct-com"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "mainName": "ຂໍ້ມູນຜູ້ຊື້ປະກັນ",
+      "link": "#",
+      "typeUser":"1",
+      "icon":"fa-solid fa-users bg-gradient-orange",
+      "subMenu": [
+        {
+          "subId": 21,
+          "mainFk": 7,
+          "subName": "ບໍລິສັດປະກັນໄພ",
+          "sublink": "company"
+        },
+        {
+          "subId": 22,
+          "mainFk": 7,
+          "subName": "ຕົວແທນຂາຍປະກັນ",
+          "sublink": "agent"
+        },
+        {
+          "subId": 23,
+          "mainFk": 7,
+          "subName": "ຂໍ້ມູນລູກຄ້າຊື້ປະກັນ",
+          "sublink": "custom"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "mainName": "ການຕັ້ງຄ່າ",
+      "link": "",
+      "typeUser":"1",
+      "icon":"fa-solid fa-sliders",
+      "subMenu": [
+        {
+          "subId": 24,
+          "mainFk": 8,
+          "subName": "ປະເພດປະກັນໄພ",
+          "sublink": "type-in"
+        },
+        {
+          "subId": 25,
+          "mainFk": 8,
+          "subName": "ຕັ້ງຄ່າປະເພດລົດ",
+          "sublink": "type-car"
+        },
+        {
+          "subId": 26,
+          "mainFk": 8,
+          "subName": "ຕັ້ງຄ່າຍີ່ຫໍ້ລົດ",
+          "sublink": "brand"
+        },
+        {
+          "subId": 27,
+          "mainFk": 8,
+          "subName": "ຕັ້ງຄ່າລຸ້ນລົດ",
+          "sublink": "version"
+        },
+        {
+          "subId": 28,
+          "mainFk": 8,
+          "subName": "ລົງທະບຽນຜູ້ເຂົ້າໃຊ້",
+          "sublink": "user"
+        },
+        {
+          "subId": 29,
+          "mainFk": 8,
+          "subName": "ຕັ້ງຄ່າສະກຸນເງິນ",
+          "sublink": "currency"
+        }
+      ]
+    }
+  ]
+}
