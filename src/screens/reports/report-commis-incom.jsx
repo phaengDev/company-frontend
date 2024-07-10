@@ -5,10 +5,6 @@ import { Config } from '../../config/connenct';
 import axios from 'axios';
 import moment from 'moment';
 import numeral from 'numeral';
-import { saveAs } from 'file-saver';
-import * as XLSX from 'xlsx';
-import jsPDF from 'jspdf';
-import { getReportData } from '../invioce/report-pays';
 export default function ReportCommisIncom() {
     const api = Config.urlApi;
     const itemcm = useCompany();
@@ -132,48 +128,6 @@ export default function ReportCommisIncom() {
 
     // =======================\\
 
-    const handleDownloadExcel = () => {
-        const data = getReportData();
-        const dataArray = Object.keys(data).map(key => data[key]);
-        const worksheet = XLSX.utils.json_to_sheet(dataArray);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
-        const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'blob' });
-        saveAs(wbout, 'report.xlsx');
-    };
-
-    //   const handleDownloadPDF = (contact,id) => {
-    //     // const data = getReportData(id);
-    //     // const doc = new jsPDF();
-    //     // const reportText = JSON.stringify(data, null, 4);
-    //     // doc.text(reportText, 10, 10);
-    //     // doc.save(contact+'.pdf');
-
-
-    //     const data = getReportData(id);
-    //     const doc = new jsPDF();
-    //     doc.text(data, 10, 10);
-    //     const pdfBlob = doc.output('blob');
-    //     saveAs(pdfBlob, `${contact}.pdf`);
-    //   };
-
-    const handleDownloadPDF = (contractNumber, insuranceCode) => {
-        const data = getReportData(insuranceCode);
-
-        if (typeof data === 'string') {
-            // Create a new jsPDF instance
-            const doc = new jsPDF();
-            doc.text(data, 10, 10);
-            const pdfBlob = doc.output('blob');
-            saveAs(pdfBlob, `${contractNumber}.pdf`);
-        } else {
-            // Handle case where data is JSX (optional)
-            console.log('Data is JSX:', data);
-            alert(data)
-
-            // You can render JSX directly in your component or handle it as needed
-        }
-    };
 
     const groupedData = currentItems.reduce((acc, item) => {
         const currency = item.currency_name;

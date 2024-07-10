@@ -508,8 +508,8 @@ export default function FormEditInsurance() {
                 <Input value={inputs.net_income = numeral(netIncome).format('0,00')} placeholder='00.000' size="lg" className='bg-green-100 text-center' block readOnly />
               </div>
               <div className="col-sm-3 col-6 mt-4">
-                <label htmlFor="" className='form-label'>ສະກຸນ </label>
-                <InputPicker defaultValue={inputs.currency_id_fk} data={itemCry} onChange={(e) => handelChange('currency_id_fk', e)} block/>
+                <label htmlFor="" className='form-label'>ສະກຸນເງິນ</label>
+                <InputPicker value={inputs.currency_id_fk} data={itemCry} onChange={(e) => handelChange('currency_id_fk', e)} block/>
               </div>
               <div className="col-sm-5 mt-4 ">
                 <label htmlFor="" className='form-label'>ເອກະສານຕິດຄັດ </label>

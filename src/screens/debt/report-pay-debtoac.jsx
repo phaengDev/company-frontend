@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DatePicker, Input, InputGroup, SelectPicker, Placeholder, Loader } from 'rsuite'
+import { DatePicker,SelectPicker, Placeholder, Loader } from 'rsuite'
 import { useCompany, useType, useAgent } from '../../config/select-option';
 import { Config } from '../../config/connenct';
 import axios from 'axios';
@@ -45,22 +45,22 @@ export default function ReportPayDebtoac() {
 
     const [isLoading, setIsLoading] = useState(true)
     const [itemData, setItemData] = useState([]);
-    const [dataFilter, setDataFilter] = useState([]);
+    // const [dataFilter, setDataFilter] = useState([]);
     const fetchReport = async () => {
         setIsLoading(true);
         try {
             const response = await axios.post(api + 'pays/report', data);
             setItemData(response.data);
-            setDataFilter(response.data)
+            // setDataFilter(response.data)
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
             setIsLoading(false);
         }
     };
-    const Filter = (event) => {
-        setItemData(dataFilter.filter(n => n.contract_number.toLowerCase().includes(event)))
-    }
+    // const Filter = (event) => {
+    //     setItemData(dataFilter.filter(n => n.contract_number.toLowerCase().includes(event)))
+    // }
 
     const sumData = itemData.reduce((acc, item) => {
         const currency = item.currency_name;

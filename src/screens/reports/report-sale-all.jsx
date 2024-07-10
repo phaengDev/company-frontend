@@ -7,7 +7,8 @@ import axios from 'axios';
 import moment from 'moment';
 import numeral from 'numeral';
 import { ViewInsturance } from '../invioce/view-data-insturance';
-import { getReportData } from '../invioce/report-pays';
+import Alert from '../../utils/config';
+import Swal from 'sweetalert2';
 export default function ReportSaleAll() {
     const api = Config.urlApi;
     const itemcm = useCompany();
@@ -59,8 +60,13 @@ export default function ReportSaleAll() {
         }
     };
     const Filter = (event) => {
-        setItemData(dataFilter.filter(n => n.contract_number.toLowerCase().includes(event)))
+        setItemData(dataFilter.filter(n => 
+            n.contract_number.toLowerCase().includes(event)||
+            n.currency_name.toLowerCase().includes(event)
+    ))
     }
+
+    
     // =================== custom pages============
     const [currentPage, setcurrentPage] = useState(1);
     const [itemsPerPage, setitemsPerPage] = useState(100);
@@ -126,15 +132,12 @@ export default function ReportSaleAll() {
 
 
     const handleEportEcel = () => {
-        getReportData(currentItems)
+       
     }
-    // const handleDownload = (contract, id) => {
-    //     const data = getReportData(id);
-    //     const doc = new jsPDF();
-    //     doc.text(data, 10, 10);
-    //     const pdfBlob = doc.output('blob');
-    //     saveAs(pdfBlob, contract + '.pdf');
-    // };
+    const handleEportPdf=()=>{
+        
+    }
+   
     const handleEdit = (id) => {
         navigate(`/editIn?id=${btoa(id)}`);
     }
@@ -145,7 +148,28 @@ export default function ReportSaleAll() {
         setView(value)
     }
     const handleDelete = (id) => {
-
+        Swal.fire({
+            title: "ຢືນຢັນ?",
+            text: "ທ່ານຕ້ອງການລົບຂໍ້ມູນນີ້ແທ້ບໍ່!",
+            icon: "warning",
+            width: 400,
+            showDenyButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "ຕົກລົງ",
+            denyButtonText: `ຍົກເລີກ`
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(api + `insurance/${id}`).then(function (response) {
+                    if (response.status === 200) {
+                        fetchReport();
+                        Alert.successData(response.data.message)
+                    } else {
+                        Alert.errorData(response.data.message)
+                    }
+                });
+            }
+        });
     }
 
     const groupedData = currentItems.reduce((acc, item) => {
@@ -194,7 +218,7 @@ export default function ReportSaleAll() {
                 <div class="d-lg-flex mb-lg-3 mb-2">
                     <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍການສັນຍາປະກັນໄພທັງໝົດ</h3>
                     <span class="d-none d-lg-flex align-items-center">
-                        <button class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
+                        <button onClick={handleEportPdf} class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
                             <i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
                         </button>
                         <button onClick={handleEportEcel} class="btn btn-success btn-sm d-flex me-2 pe-3 rounded-3">
@@ -307,22 +331,22 @@ export default function ReportSaleAll() {
                                                 <td>{item.type_in_name}</td>
                                                 <td>{item.options_name}</td>
                                                 <td>{item.agent_name}</td>
-                                                <td className='text-end'>{numeral(item.initial_fee).format('0,00')}</td>
+                                                <td className='text-end'>{numeral(item.initial_fee).format('0,00')} {item.genus}</td>
                                                 <td className='text-center'>{item.percent_taxes}%</td>
-                                                <td className='text-end'>{numeral(item.money_taxes).format('0,00')}</td>
-                                                <td className='text-end'>{numeral(item.registration_fee).format('0,00')}</td>
-                                                <td className='text-end'>{numeral(item.insuranc_included).format('0,00')}</td>
+                                                <td className='text-end'>{numeral(item.money_taxes).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.registration_fee).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.insuranc_included).format('0,00')} {item.genus}</td>
                                                 <td className='text-center'>{item.precent_incom}%</td>
-                                                <td className='text-end'>{numeral(item.pre_tax_profit).format('0,00')}</td>
+                                                <td className='text-end'>{numeral(item.pre_tax_profit).format('0,00')} {item.genus}</td>
                                                 <td className='text-center'>{item.percent_akorn}%</td>
-                                                <td className='text-end'>{numeral(item.incom_money).format('0,00')}</td>
-                                                <td className='text-end'>{numeral(item.incom_finally).format('0,00')}</td>
+                                                <td className='text-end'>{numeral(item.incom_money).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.incom_finally).format('0,00')} {item.genus}</td>
                                                 <td className='text-center'>{item.percent_eps}%</td>
-                                                <td className='text-end'>{numeral(item.pays_advance_fee).format('0,00')}</td>
+                                                <td className='text-end'>{numeral(item.pays_advance_fee).format('0,00')} {item.genus}</td>
                                                 <td className='text-center'>{item.percent_fee_eps}%</td>
-                                                <td className='text-end'>{numeral(item.money_percent_fee).format('0,00')}</td>
-                                                <td className='text-end'>{numeral(item.expences_pays_taxes).format('0,00')}</td>
-                                                <td className='text-end'>{numeral(item.net_income).format('0,00')}</td>
+                                                <td className='text-end'>{numeral(item.money_percent_fee).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.expences_pays_taxes).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.net_income).format('0,00')} {item.genus}</td>
                                                 <td>
                                                     <button type='button' onClick={() => handleView(true, item)} className='btn btn-xs btn-orange'> <i class="fa-solid fa-eye"></i> </button>
                                                     <button onClick={() => handleEdit(item.incuranec_code)} className='btn btn-xs btn-green ms-2'> <i class="fa-solid fa-file-pen"></i> </button>
@@ -364,7 +388,7 @@ export default function ReportSaleAll() {
                         ສະແດງ 1 ຫາ {itemsPerPage} ຂອງ {qtyItem} ລາຍການ
                     </div>
                     <ul className="pagination  mb-0 ms-auto justify-content-center">
-                        <li className="page-item "><span role="button" onClick={handlePrevbtn} className={`page-link  ${currentPage == pages[0] ? 'disabled' : 'border-blue'}`} >ກອນໜ້າ</span></li>
+                        <li className="page-item "><span role="button" onClick={handlePrevbtn} className={`page-link  ${currentPage === pages[0] ? 'disabled' : 'border-blue'}`} >ກອນໜ້າ</span></li>
                         {minPageNumberLimit >= 1 ? (
                             <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
                         ) : ''}
@@ -372,7 +396,7 @@ export default function ReportSaleAll() {
                         {pages.length > maxPageNumberLimit ? (
                             <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
                         ) : ''}
-                        <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage == pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}>ໜ້າຕໍ່ໄປ</span></li>
+                        <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage === pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}>ໜ້າຕໍ່ໄປ</span></li>
                     </ul>
                 </div>
                 {view && (

@@ -57,7 +57,7 @@
         {
           "subId": 6,
           "mainFk": 3,
-          "subName": "ລາຍງານການຂາຍ",
+          "subName": "ລາຍງານສັນຍາທັງໝົດ",
           "sublink": "report"
         },
         {
@@ -96,7 +96,7 @@
         {
           "subId": 11,
           "mainFk": 4,
-          "subName": "ລາຍງານການສັນຍາທັງໝົດ",
+          "subName": "ລາຍງານສັນຍາທັງໝົດ",
           "sublink": "retrun-all"
         },
         {

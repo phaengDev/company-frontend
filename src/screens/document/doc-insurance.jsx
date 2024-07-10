@@ -36,7 +36,7 @@ export default function DocInsurance() {
       setFilterDate([]); // Clear filter if input is empty
     }
   };
-
+  const [filter, setFilter] = useState([]);
   const [itemData, setItemData] = useState([]);
   const [loadingView, setLoadingView] = useState(false)
   const [idBuy,setIdBuy]=useState('')
@@ -47,13 +47,16 @@ export default function DocInsurance() {
       const response = await axios.get(api + 'insurance/viewBuy/' + id);
       const jsonData = response.data;
       setItemData(jsonData);
+      setFilter(jsonData)
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
       setLoadingView(false);
     }
   }
-
+  const Filter = (event) => {
+    setItemData(filter.filter(n => n.contract_number.toLowerCase().includes(event)))
+}
 //======================
 
 
@@ -106,6 +109,7 @@ const handleDeleteFile= async (id)=>{
   }
 }
 //=============
+const [disable,setDisable]=useState(true)
 const [selectAll, setSelectAll] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   
@@ -124,7 +128,6 @@ const [selectAll, setSelectAll] = useState(false);
     } else {
       setSelectedItems([...selectedItems, item]);
     }
-    // setSelectedItems(selectedItems);
   };
 
   const handleDeletemt = () => {
@@ -165,6 +168,11 @@ const [selectAll, setSelectAll] = useState(false);
     } else {
       setSelectAll(false);
     }
+    if(selectedItems.length>0){
+      setDisable(false)
+    }else{
+      setDisable(true)
+    }
    
     showCustomBuyer();
   }, [selectedItems,itemData])
@@ -174,49 +182,49 @@ const [selectAll, setSelectAll] = useState(false);
         <div className="panel-body p-0 flex-1 overflow-hidden">
           <div className="file-manager h-100" id="fileManager">
             <div className="file-manager-toolbar">
-              <button type="button" className="btn shadow-none text-body border-0">
+              <button type="button" className="btn shadow-none text-body border-0" disabled>
                 <i className="fa fa-lg me-1 fa-plus" /> File
               </button>
-              <button type="button" className="btn shadow-none text-body border-0">
+              <button type="button" className="btn shadow-none text-body border-0" disabled>
                 <i className="fa fa-lg me-1 fa-plus" /> Folder
               </button>
-              <button type="button" className="btn shadow-none text-body text-opacity-50 border-0" disabled="" >
+              <button type="button" className="btn shadow-none text-body  border-0" disabled >
                 <i className="fa fa-lg me-1 fa-copy" /> Copy
               </button>
-              <button type="button" className="btn shadow-none text-body text-opacity-50 border-0" disabled="" >
+              <button type="button" className="btn shadow-none text-body  border-0" disabled >
                 <i className="fa fa-lg me-1 fa-move" /> Move
               </button>
-              <button type="button" className="btn shadow-none text-body border-0">
+              <button type="button" className="btn shadow-none text-body border-0" disabled>
                 <i className="fa fa-lg me-1 fa-upload" /> Upload
               </button>
-              <button type="button" className="btn shadow-none text-body text-opacity-50 border-0" disabled=""  >
+              <button type="button" className="btn shadow-none text-body  border-0" disabled  >
                 <i className="fa fa-lg me-1 fa-download" /> Download
               </button>
-              <button type="button" onClick={handleDeletemt} className="btn shadow-none text-body  border-1 border-red"  >
+              <button type="button" onClick={handleDeletemt} disabled={disable} className="btn shadow-none text-body  border-1 border-red"  >
                 <i className="fa fa-lg me-1 fa-xmark" /> Delete
               </button>
-              <button type="button" className="btn shadow-none text-body text-opacity-50 border-0" disabled=""  >
+              <button type="button" className="btn shadow-none text-body  border-0" disabled  >
                 <i className="fa fa-lg me-1 fa-rotate-left" /> Restore
               </button>
-              <button type="button" className="btn shadow-none text-body text-opacity-50 border-0" disabled="" >
+              <button type="button" className="btn shadow-none text-body  border-0" disabled >
                 <i className="fa fa-lg me-1 fa-file" /> Rename
               </button>
-              <button type="button" className="btn shadow-none text-body text-opacity-50 border-0" disabled="" >
+              <button type="button" className="btn shadow-none text-body  border-0" disabled >
                 <i className="fa fa-lg me-1 fa-pen" /> Edit
               </button>
-              <button type="button" className="btn shadow-none text-body text-opacity-50 border-0" disabled="" >
+              <button type="button" className="btn shadow-none text-body  border-0" disabled >
                 <i className="fa fa-lg me-1 fa-pen-to-square" /> HTML Editor
               </button>
-              <button type="button" className="btn shadow-none text-body text-opacity-50 border-0" disabled="" >
+              <button type="button" className="btn shadow-none text-body  border-0" disabled >
                 <i className="fa fa-lg me-1 fa-key" /> Permissions
               </button>
-              <button type="button" className="btn shadow-none text-body text-opacity-50 border-0" disabled="" >
+              <button type="button" className="btn shadow-none text-body  border-0" disabled >
                 <i className="fa fa-lg me-1 fa-file" /> View
               </button>
-              <button type="button" className="btn shadow-none text-body text-opacity-50 border-0" disabled="">
+              <button type="button" className="btn shadow-none text-body  border-0" disabled>
                 <i className="fa fa-lg me-1 fa-lock-open" /> Extract
               </button>
-              <button type="button" className="btn shadow-none text-body text-opacity-50 border-0" disabled="" >
+              <button type="button" className="btn shadow-none text-body  border-0" disabled >
                 <i className="fa fa-lg me-1 fa-file-zipper" /> Compress
               </button>
             </div>
@@ -243,8 +251,8 @@ const [selectAll, setSelectAll] = useState(false);
                               filterDate.length > 0 ? (
                                 filterDate.map((item, key) => (
                                   <>
-                                    <div className="file-node" key={key}>
-                                      <a href="javascript:;" className="file-link active" onClick={() => preventDefault(item.custom_uuid)}>
+                                    <div className={`file-node ${item.custom_uuid===idBuy?'text-blue':''}`} key={key}>
+                                      <a href="javascript:;" className="file-link " onClick={() => preventDefault(item.custom_uuid)}>
                                         <span className="file-info">
                                           <span className="file-icon">
                                             <img src="assets/img/logo/user1.png" className="w-100" alt="User" />
@@ -273,7 +281,7 @@ const [selectAll, setSelectAll] = useState(false);
                   <div className="row">
                     <div className="col-sm-3">
                       <InputGroup inside>
-                        <Input />
+                        <Input onChange={(e)=>Filter(e)} placeholder='ເລກທີສັນຍາ....' />
                         <InputGroup.Button>
                           <i className='fas fa-search' />
                         </InputGroup.Button>

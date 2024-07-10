@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { DatePicker, Input, InputGroup, SelectPicker, Placeholder, Loader } from 'rsuite'
+import { DatePicker,SelectPicker, Placeholder, Loader } from 'rsuite'
 import { useCompany, useType, useAgent } from '../../config/select-option';
 import { Config } from '../../config/connenct';
 import axios from 'axios';

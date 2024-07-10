@@ -8,7 +8,7 @@ import numeral from 'numeral';
 import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
-import { getReportData } from '../invioce/report-pays';
+import  GetReportData  from '../invioce/report-pays';
 export default function ReportCommisPay() {
     const api = Config.urlApi;
     const itemcm = useCompany();
@@ -63,9 +63,13 @@ export default function ReportCommisPay() {
         }
 
     };
-    const Filter = (event) => {
-        setItemData(dataFilter.filter(n => n.contract_number.toLowerCase().includes(event)))
-    }
+    const Filter = (value) => {
+        // const searchTerm = event.target.value.toLowerCase();
+        setItemData(dataFilter.filter(n => 
+            n.contract_number.toLowerCase().includes(value) ||
+            n.currency_name.toLowerCase().includes(value)
+        ));
+    };
 
     // =================== custom pages============
     const [currentPage, setcurrentPage] = useState(1);
@@ -132,21 +136,11 @@ export default function ReportCommisPay() {
 
     // =======================\\
     const downloadPDF = () => {
-        const data = getReportData();
-        const doc = new jsPDF();
-        doc.text(data, 10, 10);
-        const pdfBlob = doc.output('blob');
-        saveAs(pdfBlob, 'report.pdf');
     };
 
+
     const downloadExcel = () => {
-        // const data = getReportData();
-        // const worksheet = XLSX.utils.json_to_sheet(data);
-        // const workbook = XLSX.utils.book_new();
-        // XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
-        // const workbookBlob = XLSX.write(workbook, { bookType: 'xlsx', type: 'blob' });
-        // saveAs(workbookBlob, 'report.xlsx');
-    };
+    }
 
 
     // ================================
@@ -188,9 +182,9 @@ export default function ReportCommisPay() {
 
             <div class="app-content-padding px-4 py-3">
                 <div class="d-lg-flex mb-lg-3 mb-2">
-                    <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍງານຄອມຈ່າຍຕົວແທນ</h3>
+                    <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍງານຄອມຈ່າຍຕົວແທນ d</h3>
                     <span class="d-none d-lg-flex align-items-center">
-                        <button class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
+                        <button onClick={downloadPDF} class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
                             <i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
                         </button>
                         <button onClick={downloadExcel} class="btn btn-success btn-sm d-flex me-2 pe-3 rounded-3">

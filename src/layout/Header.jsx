@@ -8,7 +8,7 @@ export default function Header() {
   const url=imageUrl.url;
   const navigate = useNavigate();
   const userName = localStorage.getItem('username')
-  const handleLogut = () => {
+  const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     localStorage.removeItem('userId');
@@ -117,28 +117,19 @@ export default function Header() {
             </span>
           </a>
           <div className="dropdown-menu dropdown-menu-end me-1">
-            <a href="extra_profile.html" className="dropdown-item">
+            <button type="button" className="dropdown-item">
               Edit Profile
-            </a>
-            <a
-              href="email_inbox.html"
-              className="dropdown-item d-flex align-items-center"
-            >
-              Inbox
-              <span className="badge bg-danger rounded-pill ms-auto pb-4px">
-                2
-              </span>
-            </a>
-            <a href="calendar.html" className="dropdown-item">
+            </button>
+            <button type="button" className="dropdown-item">
               Calendar
-            </a>
-            <a href="extra_settings_page.html" className="dropdown-item">
+            </button>
+            <button type="button" className="dropdown-item">
               Settings
-            </a>
+            </button>
             <div className="dropdown-divider" />
-            <a href="javascrip:;" onClick={handleLogut} className="dropdown-item">
-              Log Out
-            </a>
+            <button type="button" onClick={handleLogout} className="dropdown-item ">
+            <i class="fa-solid fa-right-from-bracket"></i> Log Out
+          </button>
           </div>
         </div>
       </div>

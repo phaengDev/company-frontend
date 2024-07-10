@@ -5,7 +5,6 @@ import { Config } from '../../config/connenct';
 import axios from 'axios';
 import moment from 'moment';
 import numeral from 'numeral';
-import ExportPaydebtAgent from '../invioce/export-paydebt-agent';
 export default function ReportPayDebtagen() {
   const api = Config.urlApi;
   const itemcm = useCompany();
@@ -85,7 +84,11 @@ export default function ReportPayDebtagen() {
   const formatNumber = (num) => numeral(num).format('0,00');
 
   const downloadExcel = () => {
-    ExportPaydebtAgent(itemData);
+   
+  };
+
+  const downloadPDF = () => {
+    
   };
 
   useEffect(() => {
@@ -99,7 +102,7 @@ export default function ReportPayDebtagen() {
         <div class="d-lg-flex mb-lg-3 mb-2">
           <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍງານຈ່າຍໜີ້ຕົວແທນຂາຍ</h3>
           <span class="d-none d-lg-flex align-items-center">
-            <button class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
+            <button onClick={downloadPDF} class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
               <i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
             </button>
             <button onClick={downloadExcel} class="btn btn-success btn-sm d-flex me-2 pe-3 rounded-3">
