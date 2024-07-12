@@ -12,7 +12,6 @@ export default function ReportEndsCoverage() {
   const itemType = useType();
   const itemagent = useAgent();
 
-
   const [itemOption, setItemOption] = useState([]);
   const handleOption = async (name, value) => {
     try {
@@ -70,11 +69,8 @@ const handleRenew=(id)=>{
 }
 const navigate = useNavigate();
 
-
-
 // =================== custom pages============
 const [currentPage, setcurrentPage] = useState(1);
-
 const [itemsPerPage, setitemsPerPage] = useState(100);
 const handleShowLimit = (value) => {
   setitemsPerPage(value);

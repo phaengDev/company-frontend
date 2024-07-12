@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Input, InputNumber, SelectPicker, InputGroup, DatePicker, Button, InputPicker } from 'rsuite';
-import { useAgent, useCompany, useType, useTypeCar, useBrandCar, useVersion,useProvince,useCurrency } from '../../config/select-option';
+import { useAgent, useCompany, useType, useTypeCar, useBrandCar, useProvince, useCurrency } from '../../config/select-option';
 import Select from 'react-select'
 import { Config, imageUrl } from '../../config/connenct';
 import axios from 'axios';
@@ -9,17 +9,16 @@ import numeral from 'numeral';
 import Alert from '../../utils/config';
 
 export default function FormEditInsurance() {
-    const api = Config.urlApi;
+  const api = Config.urlApi;
   const url = imageUrl.url;
   const itemAg = useAgent();
   const itemcn = useCompany();
   const itemType = useType();
   const itemTypeCar = useTypeCar();
   const itemBrand = useBrandCar();
-  const itemVersion = useVersion();
   const location = useLocation();
-  const itemPv=useProvince();
-  const itemCry=useCurrency();
+  const itemPv = useProvince();
+  const itemCry = useCurrency();
   const searchParams = new URLSearchParams(location.search);
   const Id = atob(searchParams.get('id'));
 
@@ -38,7 +37,7 @@ export default function FormEditInsurance() {
   const [itemDistrict, setItemDistrict] = useState([]);
   const handelShowDist = async (value) => {
     try {
-      const response = await fetch(api+`district/pv/${value}`);
+      const response = await fetch(api + `district/pv/${value}`);
       const jsonData = await response.json();
       setItemDistrict(jsonData);
     } catch (error) {
@@ -46,7 +45,6 @@ export default function FormEditInsurance() {
     }
   }
   const dataDist = itemDistrict.map(item => ({ label: item.district_name, value: item.district_id }));
-
 
   const [typeInsurance, setTypeInsurance] = useState(2);
   const [inputs, setInputs] = useState({
@@ -56,7 +54,7 @@ export default function FormEditInsurance() {
     agent_id_fk: '',
     insurance_type_fk: '',
     option_id_fk: '',
-    currency_id_fk:22001,
+    currency_id_fk: 22001,
     contract_number: '',
     contract_start_date: '',
     contract_end_date: '',
@@ -73,13 +71,13 @@ export default function FormEditInsurance() {
     statusIns: '',
     car_type_id_fk: '',
     car_brand_id_fk: '',
-    car_version_id_fk: '',
+    version_name: '',
     car_registration: '',
     vehicle_number: '',
     tank_number: '',
     // ---------- ຂໍ້ມູນຄ່າປະກັນໄພ
     initial_fee: '',
-    percent_taxes: '7',
+    percent_taxes: '10',
     money_taxes: '',
     registration_fee: '0',
     insuranc_included: '',
@@ -106,12 +104,12 @@ export default function FormEditInsurance() {
       ...inputs, [name]: value
     })
   }
-  
+
   const showDataInsurance = async () => {
     try {
       const response = await fetch(api + `insurance/${Id}`);
       const data = await response.json();
-      if(data.user_province_id){
+      if (data.user_province_id) {
         handelShowDist(data.user_province_id)
       }
       setTypeInsurance(data.status_ins);
@@ -122,7 +120,7 @@ export default function FormEditInsurance() {
         agent_id_fk: data.agent_id_fk,
         insurance_type_fk: data.insurance_type_fk,
         option_id_fk: data.option_id_fk,
-        currency_id_fk:data.currency_id_fk,
+        currency_id_fk: data.currency_id_fk,
         contract_number: data.contract_number,
         contract_start_date: new Date(data.contract_start_date),
         contract_end_date: new Date(data.contract_end_date),
@@ -131,16 +129,16 @@ export default function FormEditInsurance() {
         user_gender: data.user_gender,
         user_dob: new Date(data.user_dob),
         user_tel: data.user_tel,
-        user_province_id:data.user_province_id,
+        user_province_id: data.user_province_id,
         user_district_fk: data.user_district_fk,
         user_village: data.user_village,
         file_doct: '',
-    
+
         // ----------- ຂໍມູນລົດ
         statusIns: data.statusIns,
         car_type_id_fk: data.car_type_id_fk,
         car_brand_id_fk: data.car_brand_id_fk,
-        car_version_id_fk: data.car_version_id_fk,
+        version_name: data.version_name,
         car_registration: data.car_registration,
         vehicle_number: data.vehicle_number,
         tank_number: data.tank_number,
@@ -183,9 +181,9 @@ export default function FormEditInsurance() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const imputData=new FormData();
-    for(const key in inputs){
-        imputData.append(key,inputs[key])
+    const imputData = new FormData();
+    for (const key in inputs) {
+      imputData.append(key, inputs[key])
     }
     try {
       axios.post(api + 'insurance/create', imputData)
@@ -212,7 +210,7 @@ export default function FormEditInsurance() {
       await showType(value); // Ensure showType is awaited here
     } catch (error) {
       console.error('Error fetching data:', error);
-    }   
+    }
   };
 
   const showType = async (value) => {
@@ -281,7 +279,7 @@ export default function FormEditInsurance() {
     const file = event.target.files[0];
     if (file) {
       setInputs({
-        ...inputs,file_doct:file
+        ...inputs, file_doct: file
       })
       setFileName(file.name);
       const reader = new FileReader();
@@ -313,7 +311,7 @@ export default function FormEditInsurance() {
               </div>
               <div className="col-sm-6  mb-2">
                 <label htmlFor="" className='form-label'>ຕົວແທນຂາຍປະກັນ</label>
-                <SelectPicker data={itemAg} value={inputs.agent_id_fk}  onChange={(e) => handelChange('agent_id_fk', e)} placeholder={'ຕົວແທນຂາຍ'} block required />
+                <SelectPicker data={itemAg} value={inputs.agent_id_fk} onChange={(e) => handelChange('agent_id_fk', e)} placeholder={'ຕົວແທນຂາຍ'} block required />
               </div>
               <div className="col-sm-6  mb-2">
                 <label htmlFor="" className='form-label'>ປະເພດປະກັນໄພ </label>
@@ -348,11 +346,15 @@ export default function FormEditInsurance() {
                 <h5>ຂໍ້ມູນຜູ້ທີ່ໄດ້ຮັບຄວາມຄຸ້ມຄອງ</h5>
               </span>
             </div>
-            <div id="collapseOne" class={`accordion-collapse collapse ${inputs.type_buyer_fk==='2201'?'show':''}`} data-bs-parent="#accordion">
+            <div id="collapseOne" class={`accordion-collapse collapse ${inputs.type_buyer_fk === 2201 ? 'show' : ''}`} data-bs-parent="#accordion">
               <div className="accordion-body row fs-15px">
                 <div className="col-sm-1 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ເພດ</label>
-                  <InputPicker data={gender}  defaultValue={'F'} onChange={(e) => handelChange('user_gender', e)} placeholder="ເລືອກ" />
+                  <select className='form-select' value={inputs.user_gender} onChange={(e) => handelChange('user_gender', e.target.value)} >
+                    <option value="F">ເພດຍິງ</option>
+                    <option value="M">ເພດຊາຍ</option>
+                  </select>
+                  {/* <InputPicker data={gender} defaultValue={'F'} onChange={(e) => handelChange('user_gender', e)} placeholder="ເລືອກ" /> */}
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ຊື່ແທ້</label>
@@ -364,7 +366,7 @@ export default function FormEditInsurance() {
                 </div>
                 <div className="col-sm-3 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ວັນເດືອນປີເກິດ</label>
-                  <DatePicker format='dd/MM/yyyy' value={inputs.user_dob}  oneTap block onChange={(e) => handelChange('user_dob', e)} placeholder="ເລືອກ" />
+                  <DatePicker format='dd/MM/yyyy' value={inputs.user_dob} oneTap block onChange={(e) => handelChange('user_dob', e)} placeholder="ເລືອກ" />
                 </div>
                 <div className="col-sm-3 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ແຂວງ {inputs.user_province_id}</label>
@@ -405,7 +407,8 @@ export default function FormEditInsurance() {
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ລຸ່ນລົດ</label>
-                  <Select options={itemVersion} value={itemVersion.find(obj => obj.value === inputs.car_version_id_fk)} onChange={(e) => handelChange('car_version_id_fk', e.value)} placeholder="ເລືອກ" />
+                  <Input value={inputs.version_name} onChange={(e) => handelChange('version_name', e)} placeholder='ລຸ່ນລົດ' />
+                  {/* <Select options={itemVersion} value={itemVersion.find(obj => obj.value === inputs.car_version_id_fk)} onChange={(e) => handelChange('car_version_id_fk', e.value)} placeholder="ເລືອກ" /> */}
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ທະບຽນລົດ</label>
@@ -509,7 +512,7 @@ export default function FormEditInsurance() {
               </div>
               <div className="col-sm-3 col-6 mt-4">
                 <label htmlFor="" className='form-label'>ສະກຸນເງິນ</label>
-                <InputPicker value={inputs.currency_id_fk} data={itemCry} onChange={(e) => handelChange('currency_id_fk', e)} block/>
+                <InputPicker value={inputs.currency_id_fk} data={itemCry} onChange={(e) => handelChange('currency_id_fk', e)} block />
               </div>
               <div className="col-sm-5 mt-4 ">
                 <label htmlFor="" className='form-label'>ເອກະສານຕິດຄັດ </label>
@@ -519,10 +522,10 @@ export default function FormEditInsurance() {
                   <input type="file" onChange={handleFileChange} className='hide' />
                 </label>
                 {fileName && (
-                <div class="alert alert-green alert-dismissible fade show mt-3">
-                <i class="fa-solid fa-paperclip"></i>  :{fileName}
-                <button type="button" class="btn-close" ></button>
-                </div>
+                  <div class="alert alert-green alert-dismissible fade show mt-3">
+                    <i class="fa-solid fa-paperclip"></i>  :{fileName}
+                    <button type="button" class="btn-close" ></button>
+                  </div>
                 )}
               </div>
             </div>

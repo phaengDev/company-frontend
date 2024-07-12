@@ -170,9 +170,6 @@ export default function ReportCommisPay() {
     const formatNumber = (num) => numeral(num).format('0,00');
     
 
-
-
-
     useEffect(() => {
         fetchReport();
     }, [data])

@@ -62,8 +62,10 @@ export default function RetrunInsurance() {
     currency_id_fk: 22001,
     status_company: 1,
     company_date: new Date(),
+    percent_agent:0,
     status_agent: 1,
     agent_date: new Date(),
+    percent_oac:0,
     status_oac: 1,
     oac_date: new Date(),
     remark_text: ''
@@ -95,8 +97,10 @@ export default function RetrunInsurance() {
               currency_id_fk: 22001,
               status_company: 1,
               company_date: new Date(),
+              percent_agent:0,
               status_agent: 1,
               agent_date: new Date(),
+              percent_oac:0,
               status_oac: 1,
               oac_date: new Date(),
               remark_text: ''
@@ -171,33 +175,8 @@ export default function RetrunInsurance() {
 
               </div>
               <div className="row">
-                <div className="col-sm-4 mb-2">
-                  <div className="form-group mb-2">
-                    <label htmlFor="" className='form-label'>ສະຖານະຕົວແທນ</label>
-                    <select className='form-select' value={inputs.status_company} onChange={(e) => handelChange('status_company', e.target.value)}>
-                      <option value="1">ຕົວແທນຄ້າງຄືນ</option>
-                      <option value="2">ຕົວແທນຄືນແລ້ວ</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="" className='form-label'>ວັນທິຕົວແທນຄືນ</label>
-                    <DatePicker oneTap format='dd/MM/yyyy' value={inputs.company_date} onChange={(e) => handelChange('company_date', e)} block />
-                  </div>
-                </div>
-                <div className="col-sm-4 mb-2">
-                  <div className="form-group mb-2">
-                    <label htmlFor="" className='form-label'>ສະຖານະໂອເອຊີ</label>
-                    <select className='form-select' value={inputs.status_agent} onChange={(e) => handelChange('status_agent', e.target.value)}>
-                      <option value="1">ໂອເອຊີຄ້າງຄືນ</option>
-                      <option value="2">ໂອເອຊີຄືນແລ້ວ</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="" className='form-label'>ວັນທິໂອເອຊີຄືນ</label>
-                    <DatePicker oneTap format='dd/MM/yyyy' value={inputs.agent_date} onChange={(e) => handelChange('agent_date', e)} block />
-                  </div>
-                </div>
-                <div className="col-sm-4 mb-2">
+
+              <div className="col-sm-4 mb-2">
                   <div className="form-group mb-2">
                     <label htmlFor="" className='form-label'>ສະຖານະຄືນບໍລິສັດ</label>
                     <select className='form-select' value={inputs.status_oac} onChange={(e) => handelChange('status_oac', e.target.value)}>
@@ -208,6 +187,46 @@ export default function RetrunInsurance() {
                   <div className="form-group">
                     <label htmlFor="" className='form-label'>ວັນທິຄືນບໍລິສັດ</label>
                     <DatePicker oneTap format='dd/MM/yyyy' value={inputs.oac_date} onChange={(e) => handelChange('oac_date', e)} block />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 mb-2">
+                  <div className="form-group mb-2 row">
+                    <div className="col-sm-6">
+                    <label htmlFor="" className='form-label'>ເປິເຊັນຕົວແທນ {inputs.percent_agent}%</label>
+                    <Input type='number' value={inputs.percent_agent} onChange={(e)=>handelChange('percent_agent',e)} />
+                    </div>
+                    <div className="col-sm-6">
+                    <label htmlFor="" className='form-label'>ສະຖານະຕົວແທນ</label>
+                    <select className='form-select' value={inputs.status_company} onChange={(e) => handelChange('status_company', e.target.value)}>
+                      <option value="1">ຕົວແທນຄ້າງຄືນ</option>
+                      <option value="2">ຕົວແທນຄືນແລ້ວ</option>
+                    </select>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="" className='form-label'>ວັນທິຕົວແທນຄືນ</label>
+                    <DatePicker oneTap format='dd/MM/yyyy' value={inputs.company_date} onChange={(e) => handelChange('company_date', e)} block />
+                  </div>
+                </div>
+                
+                <div className="col-sm-4 mb-2">
+                  <div className="form-group mb-2 row">
+                  <div className="col-sm-6">
+                    <label htmlFor="" className='form-label'>ເປິເຊັນໂອເອຊີ {inputs.percent_oac}%</label>
+                    <Input type='number' value={inputs.percent_oac} onChange={(e)=>handelChange('percent_oac',e)} />
+                    </div>
+                    <div className="col-sm-6">
+                    <label htmlFor="" className='form-label'>ສະຖານະໂອເອຊີ</label>
+                    <select className='form-select' value={inputs.status_agent} onChange={(e) => handelChange('status_agent', e.target.value)}>
+                      <option value="1">ໂອເອຊີຄ້າງຄືນ</option>
+                      <option value="2">ໂອເອຊີຄືນແລ້ວ</option>
+                    </select>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="" className='form-label'>ວັນທິໂອເອຊີຄືນ</label>
+                    <DatePicker oneTap format='dd/MM/yyyy' value={inputs.agent_date} onChange={(e) => handelChange('agent_date', e)} block />
                   </div>
                 </div>
 

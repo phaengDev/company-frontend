@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SelectPicker, Input, InputGroup, DatePicker, InputPicker, Button, Loader } from 'rsuite'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Config, imageUrl } from '../../config/connenct';
@@ -8,7 +8,6 @@ import numeral from 'numeral';
 import Alert from '../../utils/config';
 export default function EditRetrun() {
   const api = Config.urlApi;
-  const url = imageUrl.url;
   const itemAg = useAgent();
   const itemcn = useCompany();
   const itemType = useType();
@@ -54,10 +53,10 @@ export default function EditRetrun() {
 
   const showDataRetrun = async () => {
     try {
-      const response = await fetch(api+`retrun/edit/${retrunId}`);
+      const response = await fetch(api + `retrun/edit/${retrunId}`);
       const data = await response.json();
-      handelCompany('company_id_fk',data.company_id_fk);
-      handleOption('',data.insurance_type_fk)
+      handelCompany('company_id_fk', data.company_id_fk);
+      handleOption('', data.insurance_type_fk)
       setInputs({
         insurance_retrunId: data.insurance_retrun_id,
         company_id_fk: data.company_id_fk,
@@ -70,8 +69,10 @@ export default function EditRetrun() {
         currency_id_fk: data.currency_id_fk,
         status_company: data.status_company,
         company_date: new Date(data.company_date),
+        percent_agent:data.percent_agent,
         status_agent: data.status_agent,
         agent_date: new Date(data.agent_date),
+        percent_oac:data.percent_oac,
         status_oac: data.status_oac,
         oac_date: new Date(data.oac_date),
         remark_text: data.remark_text
@@ -80,9 +81,9 @@ export default function EditRetrun() {
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-}
+  }
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [inputs, setInputs] = useState({})
   const handelChange = (name, value) => {
@@ -112,9 +113,9 @@ const navigate = useNavigate();
   }
 
 
-useEffect(()=>{
-  showDataRetrun();
-},[])
+  useEffect(() => {
+    showDataRetrun();
+  }, [])
   return (
     <>
       <div id="content" className="app-content">
@@ -174,42 +175,56 @@ useEffect(()=>{
 
               </div>
               <div className="row">
-                <div className="col-sm-4 mb-2">
-                  <div className="form-group mb-2">
-                    <label htmlFor="" className='form-label'>ສະຖານະຕົວແທນ</label>
-                    <select className='form-select' value={inputs.status_company} onChange={(e) => handelChange('status_company', e.target.value)}>
-                      <option value="1">ຕົວແທນຄ້າງຄືນ</option>
-                      <option value="2">ຕົວແທນຄືນແລ້ວ</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="" className='form-label'>ວັນທິຕົວແທນຄືນ</label>
-                    <DatePicker oneTap format='dd/MM/yyyy' value={inputs.company_date} onChange={(e) => handelChange('company_date', e)} block />
-                  </div>
-                </div>
-                <div className="col-sm-4 mb-2">
-                  <div className="form-group mb-2">
-                    <label htmlFor="" className='form-label'>ສະຖານະໂອເອຊີ</label>
-                    <select className='form-select' value={inputs.status_agent} onChange={(e) => handelChange('status_agent', e.target.value)}>
-                      <option value="1">ໂອເອຊີຄ້າງຄືນ</option>
-                      <option value="2">ໂອເອຊີຄືນແລ້ວ</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="" className='form-label'>ວັນທິໂອເອຊີຄືນ</label>
-                    <DatePicker oneTap format='dd/MM/yyyy' value={inputs.agent_date} onChange={(e) => handelChange('agent_date', e)} block />
-                  </div>
-                </div>
+
                 <div className="col-sm-4 mb-2">
                   <div className="form-group mb-2">
                     <label htmlFor="" className='form-label'>ສະຖານະຄືນບໍລິສັດ</label>
-                    <select className='form-select' value={inputs.status_oac} onChange={(e) => handelChange('status_oac', e.target.value)}>
+                    <select className='form-select' value={inputs.status_company} onChange={(e) => handelChange('status_company', e.target.value)}>
                       <option value="1">ຄ້າງຄືນບໍລິສັດ</option>
                       <option value="2">ຄືນບໍລິສັດແລ້ວ</option>
                     </select>
                   </div>
                   <div className="form-group">
                     <label htmlFor="" className='form-label'>ວັນທິຄືນບໍລິສັດ</label>
+                    <DatePicker oneTap format='dd/MM/yyyy' value={inputs.company_date} onChange={(e) => handelChange('company_date', e)} block />
+                  </div>
+                </div>
+
+                <div className="col-sm-4 mb-2">
+                  <div className="form-group mb-2 row">
+                    <div className="col-sm-6">
+                      <label htmlFor="" className='form-label'>ເປິເຊັນຕົວແທນ {inputs.percent_agent}%</label>
+                      <Input type='number' value={inputs.percent_agent} onChange={(e) => handelChange('percent_agent', e)} />
+                    </div>
+                    <div className="col-sm-6">
+                      <label htmlFor="" className='form-label'>ສະຖານະຕົວແທນ</label>
+                      <select className='form-select' value={inputs.status_agent} onChange={(e) => handelChange('status_agent', e.target.value)}>
+                        <option value="1">ຕົວແທນຄ້າງຄືນ</option>
+                        <option value="2">ຕົວແທນຄືນແລ້ວ</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="" className='form-label'>ວັນທິຕົວແທນຄືນ</label>
+                    <DatePicker oneTap format='dd/MM/yyyy' value={inputs.agent_date} onChange={(e) => handelChange('agent_date', e)} block />
+                  </div>
+                </div>
+                <div className="col-sm-4 mb-2">
+                  <div className="form-group mb-2 row">
+                    <div className="col-sm-6">
+                      <label htmlFor="" className='form-label'>ເປິເຊັນໂອເອຊີ {inputs.percent_oac}%</label>
+                      <Input type='number' value={inputs.percent_oac} onChange={(e) => handelChange('percent_oac', e)} />
+                    </div>
+                    <div className="col-sm-6">
+                      <label htmlFor="" className='form-label'>ສະຖານະໂອເອຊີ</label>
+                      <select className='form-select' value={inputs.status_oac} onChange={(e) => handelChange('status_oac', e.target.value)}>
+                        <option value="1">ໂອເອຊີຄ້າງຄືນ</option>
+                        <option value="2">ໂອເອຊີຄືນແລ້ວ</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="" className='form-label'>ວັນທິໂອເອຊີຄືນ</label>
                     <DatePicker oneTap format='dd/MM/yyyy' value={inputs.oac_date} onChange={(e) => handelChange('oac_date', e)} block />
                   </div>
                 </div>

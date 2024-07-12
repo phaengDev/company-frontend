@@ -74,9 +74,11 @@ export default function RetrunAgent() {
     if (!acc[currency]) {
       acc[currency] = {
         retrun_balance: 0,
+        balance_agent:0
       };
     }
     acc[currency].retrun_balance += parseFloat(item.retrun_balance);
+    acc[currency].balance_agent += parseFloat(item.balance_agent);
     return acc;
   }, {});
   const formatNumber = (num) => numeral(num).format('0,00');
@@ -90,7 +92,9 @@ export default function RetrunAgent() {
     status_retrun:2,
     retrun_date: new Date(),
     retrun_balance: 0,
-    genus: ''
+    genus: '',
+    percent_agent:0,
+    balance_agent:0,
   })
   const handleRetrun = (item) => {
     setValues({
@@ -100,6 +104,8 @@ export default function RetrunAgent() {
       retrun_balance: item.retrun_balance,
       genus: item.genus,
       status_retrun:2,
+      balance_agent:item.balance_agent,
+      percent_agent:item.percent_agent,
     })
     setOpen(true);
   }
@@ -207,6 +213,8 @@ export default function RetrunAgent() {
                 <th className="">ປະເພດປະກັນ</th>
                 <th className="">ທາງເລືອກ</th>
                 <th className="">ຕົວແທນຂາຍ	</th>
+                <th className="text-end">ລວມຍອດເງິນ</th>
+                <th className="text-center">ເປີເຊັນ</th>
                 <th className="text-end">ຍອດເງິນ</th>
                 <th className="text-center">ສະຖານະ</th>
                 <th className="text-center">ວັນທີ</th>
@@ -237,6 +245,8 @@ export default function RetrunAgent() {
                         <td>{item.options_name}</td>
                         <td>{item.agent_name}</td>
                         <td className='text-end'>{numeral(item.retrun_balance).format('0,00')} {item.genus}</td>
+                        <td className="text-center">{item.percent_agent}%</td>
+                        <td className='text-end'>{numeral(item.balance_agent).format('0,00')} {item.genus}</td>
                         <td className="text-center">{item.status_agent === 1 ? 'ຄ້າງຄືນ' : 'ຄືນແລ້ວ'}</td>
                         <td className="text-center">{moment(item.agent_date).format('DD/MM/YYYY')}</td>
                         <td className="">{item.remark_text}</td>
@@ -251,12 +261,14 @@ export default function RetrunAgent() {
                       <tr key={`${key}`}>
                         <td colSpan={9} className='text-end'>ລວມຍອດທັງໝົດ ({currency})</td>
                         <td className='text-end'>{formatNumber(groupedData[currency].retrun_balance)}</td>
+                        <td></td>
+                        <td className='text-end'>{formatNumber(groupedData[currency].balance_agent)}</td>
                         <td colSpan={4}></td>
 
                       </tr>
                     ))}
                   </>
-                ) : (<tr><td colSpan={18} className='text-center text-red'>ບໍ່ພົບຂໍ້ມູນທີ່ມີການຄົ້ນຫາ.......</td></tr>)
+                ) : (<tr><td colSpan={20} className='text-center text-red'>ບໍ່ພົບຂໍ້ມູນທີ່ມີການຄົ້ນຫາ.......</td></tr>)
               )}
             </tbody>
           </table>
@@ -269,6 +281,10 @@ export default function RetrunAgent() {
         <form onSubmit={handledSubmit}>
           <Modal.Body>
             <h2 className='text-center text-red'>{numeral(values.retrun_balance).format('0,00')} {values.genus}</h2>
+            <h3 className='text-center text-red'>
+              ({values.percent_agent} % ) /
+              {numeral(values.balance_agent).format('0,00')} {values.genus}
+              </h3>
             <div className="form-group mb-2">
               <label htmlFor="" className='form-label'>ໝາຍເຫດ</label>
               <Input as='textarea' value={values.remark_text} onChange={(e) => handledUseRetrun('remark_text', e)} placeholder='ໝາຍເຫດ....' />

@@ -4,9 +4,6 @@ import { useCompany, useType, useAgent } from '../../config/select-option';
 import { Config } from '../../config/connenct';
 import axios from 'axios';
 import moment from 'moment';
-import { saveAs } from 'file-saver';
-import * as XLSX from 'xlsx';
-import jsPDF from 'jspdf';
 export default function ReportInsuranceHistory() {
     const api = Config.urlApi;
     const itemcm = useCompany();

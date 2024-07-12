@@ -108,7 +108,7 @@ useEffect(() => {
       <div className="panel  border-4 border-top border-red rounded-top-4">
         <div className="panel-body ">
           <div className='mb-3'>
-            <h5> ຟອມລົງທະບຽນຜູ້ຊື່ປະກັນໄພ</h5>
+            <h5> ຟອມລົງທະບຽນຜູ້ຊື້ປະກັນໄພ</h5>
           </div>
             <form onSubmit={handleSubmit}>
               <div className="row">

@@ -197,6 +197,12 @@
           "mainFk": 7,
           "subName": "ຂໍ້ມູນລູກຄ້າຊື້ປະກັນ",
           "sublink": "custom"
+        },
+        {
+          "subId": 24,
+          "mainFk": 7,
+          "subName": "ຕັ້ງຄ່າຄອມມິດຊັນ",
+          "sublink": "comission"
         }
       ]
     },

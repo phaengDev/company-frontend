@@ -69,14 +69,16 @@ export default function RetrunOacborker() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = itemData.slice(indexOfFirstItem, indexOfLastItem);
 
-  const groupedData = currentItems.reduce((acc, item) => {
+  const sumData = currentItems.reduce((acc, item) => {
     const currency = item.currency_name;
     if (!acc[currency]) {
       acc[currency] = {
         retrun_balance: 0,
+        balance_oac:0,
       };
     }
     acc[currency].retrun_balance += parseFloat(item.retrun_balance);
+    acc[currency].balance_oac += parseFloat(item.balance_oac);
     return acc;
   }, {});
   const formatNumber = (num) => numeral(num).format('0,00');
@@ -90,7 +92,9 @@ export default function RetrunOacborker() {
     status_retrun: 3,
     retrun_date: new Date(),
     retrun_balance: 0,
-    genus: ''
+    genus: '',
+    percent_oac:0,
+    balance_oac:0,
   })
   const handleRetrun = (item) => {
     setValues({
@@ -100,6 +104,8 @@ export default function RetrunOacborker() {
       retrun_balance: item.retrun_balance,
       genus: item.genus,
       status_retrun: 3,
+      percent_oac:item.percent_oac,
+      balance_oac:item.balance_oac,
     })
     setOpen(true);
   }
@@ -207,6 +213,8 @@ export default function RetrunOacborker() {
                 <th className="">ປະເພດປະກັນ</th>
                 <th className="">ທາງເລືອກ</th>
                 <th className="">ຕົວແທນຂາຍ	</th>
+                <th className="text-end">ລວມຍອດເງິນ</th>
+                <th className="text-center">ເປີເຊັນ</th>
                 <th className="text-end">ຍອດເງິນ</th>
                 <th className="text-center">ສະຖານະ</th>
                 <th className="text-center">ວັນທີ</th>
@@ -237,6 +245,8 @@ export default function RetrunOacborker() {
                         <td>{item.options_name}</td>
                         <td>{item.agent_name}</td>
                         <td className='text-end'>{numeral(item.retrun_balance).format('0,00')} {item.genus}</td>
+                        <td className="text-center">{item.percent_oac}%</td>
+                        <td className='text-end'>{numeral(item.balance_oac).format('0,00')} {item.genus}</td>
                         <td className="text-center">{item.status_oac === 1 ? 'ຄ້າງຄືນ' : 'ຄືນແລ້ວ'}</td>
                         <td className="text-center">{moment(item.oac_date).format('DD/MM/YYYY')}</td>
                         <td className="">{item.remark_text}</td>
@@ -247,16 +257,18 @@ export default function RetrunOacborker() {
                         </td>
                       </tr>
                     ))}
-                    {Object.keys(groupedData).map((currency, key) => (
+                    {Object.keys(sumData).map((currency, key) => (
                       <tr key={`${key}`}>
                         <td colSpan={9} className='text-end'>ລວມຍອດທັງໝົດ ({currency})</td>
-                        <td className='text-end'>{formatNumber(groupedData[currency].retrun_balance)}</td>
+                        <td className='text-end'>{formatNumber(sumData[currency].retrun_balance)}</td>
+                        <td></td>
+                        <td className='text-end'>{formatNumber(sumData[currency].balance_oac)}</td>
                         <td colSpan={4}></td>
 
                       </tr>
                     ))}
                   </>
-                ) : (<tr><td colSpan={18} className='text-center text-red'>ບໍ່ພົບຂໍ້ມູນທີ່ມີການຄົ້ນຫາ.......</td></tr>)
+                ) : (<tr><td colSpan={20} className='text-center text-red'>ບໍ່ພົບຂໍ້ມູນທີ່ມີການຄົ້ນຫາ.......</td></tr>)
               )}
             </tbody>
           </table>

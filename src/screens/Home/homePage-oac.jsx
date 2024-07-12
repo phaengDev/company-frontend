@@ -181,7 +181,6 @@ export default function HomePageOac() {
             <div class="panel panel-inverse">
                 <div class="panel-body">
                     <ReactApexChart options={chartData.options} series={chartData.series} type="bar" height={350} />
-
                 </div>
             </div>
         </div>

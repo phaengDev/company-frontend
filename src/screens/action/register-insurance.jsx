@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Input, InputNumber, SelectPicker, InputGroup, DatePicker, Button, InputPicker } from 'rsuite';
-import { useAgent, useCompany, useType, useTypeCar, useBrandCar, useVersion,useProvince,useCurrency } from '../../config/select-option';
+import { useAgent, useCompany, useType, useTypeCar, useBrandCar, useVersion, useProvince, useCurrency } from '../../config/select-option';
 import Select from 'react-select'
 import { Config, imageUrl } from '../../config/connenct';
 import axios from 'axios';
@@ -17,7 +17,7 @@ export default function RegisterInsurance() {
   const itemBrand = useBrandCar();
   const itemVersion = useVersion();
   const itemPv = useProvince()
-  const itemCry=useCurrency();
+  const itemCry = useCurrency();
   const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
@@ -64,7 +64,7 @@ export default function RegisterInsurance() {
   const [itemDistrict, setItemDistrict] = useState([]);
   const handelShowDist = async (value) => {
     try {
-      const response = await fetch(api+`district/pv/${value}`);
+      const response = await fetch(api + `district/pv/${value}`);
       const jsonData = await response.json();
       setItemDistrict(jsonData);
     } catch (error) {
@@ -83,7 +83,7 @@ export default function RegisterInsurance() {
     agent_id_fk: '',
     insurance_type_fk: '',
     option_id_fk: '',
-    currency_id_fk:22001,
+    currency_id_fk: 22001,
     contract_number: '',
     contract_start_date: '',
     contract_end_date: '',
@@ -100,22 +100,22 @@ export default function RegisterInsurance() {
     statusIns: '',
     car_type_id_fk: '',
     car_brand_id_fk: '',
-    car_version_id_fk: '',
+    version_name: '',
     car_registration: '',
     vehicle_number: '',
     tank_number: '',
     // ---------- ຂໍ້ມູນຄ່າປະກັນໄພ
     initial_fee: '',
-    percent_taxes: '7',
+    percent_taxes: '10',
     money_taxes: '',
     registration_fee: '0',
     insuranc_included: '',
-    precent_incom: '',
+    precent_incom: 0,
     pre_tax_profit: '',
     percent_akorn: '5',
     incom_money: '',
     incom_finally: '',
-    percent_eps: '',
+    percent_eps: 0,
     pays_advance_fee: '',
     percent_fee_eps: '5',
     money_percent_fee: '',
@@ -132,19 +132,31 @@ export default function RegisterInsurance() {
     setInputs({
       ...inputs, [name]: value
     })
+    if(name==='company_id_fk'){
+      // setCompanyId(value)
+      setValueComis({
+        ...valueComis,companyId:value
+      })
+    }
+    if(name==='agent_id_fk'){
+      // setAgentId(value)
+      setValueComis({
+        ...valueComis,agentId:value
+      })
+    }
   }
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const imputData=new FormData();
-  for(const key in inputs){
-      imputData.append(key,inputs[key])
-  }
+    const imputData = new FormData();
+    for (const key in inputs) {
+      imputData.append(key, inputs[key])
+    }
     try {
       axios.post(api + 'insurance/create', imputData)
         .then(function (respones) {
           if (respones.status === 200) {
-           
+
             Alert.Successreload(respones.data.message)
           } else {
             Alert.errorData(respones.data.error)
@@ -155,22 +167,45 @@ export default function RegisterInsurance() {
     }
   }
 
+  const [valueComis,setValueComis]=useState({
+    companyId:'',
+    agentId:'',
+    typeinsId:''
+  })
 
   const handleOption = (name, value) => {
+    setValueComis({
+      ...valueComis,typeins:value
+    })
     setOpId(value);
     setInputs({
       ...inputs, [name]: value
     })
     const response = fetch(api + 'type-ins/' + value)
-      .then(function (response) {
-        return response.json();
-      })
       .then(function (data) {
         setTypeInsurance(data.status_ins)
         setInputs({
           ...inputs, ['statusIns']: data.status_ins
         })
       });
+  }
+
+  const [comis,setComis]=useState({
+    comisget:0,
+    comispay:0,
+  })
+  const fetchComission = async ()=>{
+    try {
+      const response = await axios.post(api + 'comisget/single', valueComis);
+      const jsonData = response.data;
+      setComis({
+      comisget:jsonData.percentGet,
+      comispay:jsonData.percentPay,
+      }
+      )
+  } catch (error) {
+      console.error('Error fetching data:', error);
+  }
   }
 
 
@@ -183,14 +218,14 @@ export default function RegisterInsurance() {
   const insurancIncluded = numeral(parseInt(initialFee) + parseInt(moneyTaxes) + parseInt(registrationFee)).format('0,00');
 
   // -------------------- ຄ່າຄອມຮັບ
-  const [taxProfit, setTaxProfit] = useState(0);//----ເປີເຊັນຮັບ 
+  const [taxProfit, setTaxProfit] = useState(comis.comisget);//----ເປີເຊັນຮັບ 
   const [percentAkorn, stePercentAkorn] = useState(5)
   const precentIncom = (initialFee * taxProfit) / 100; //----- ຄອມກ່ອນອາກອນ
 
   const incomMoney = (precentIncom * percentAkorn) / 100; //-- ອ.ກ ລາຍໄດ້  (ຄອມຮັບ)
   const incomFinally = (precentIncom - incomMoney) //-- ຄອມຫຼັງຫັກອາກອນ
   //-------------------- ຄ່າຄອມຈ່າຍ
-  const [percentEps, setPercentEps] = useState(0); //-------ເປີເຊັນຈ່າຍ
+  const [percentEps, setPercentEps] = useState(comis.comispay); //-------ເປີເຊັນຈ່າຍ
   const advanceFee = (initialFee * percentEps) / 100; //-------ຄອມຈ່າຍກ່ອນອາກອນ
   const [pcfeeEps, setPcfeeEps] = useState(5); //---ອ/ກ.ຈ່າຍ
   const moneyPsFee = (advanceFee * pcfeeEps) / 100; //---ອ.ກ ລາຍໄດ້ (ຄອມຈ່າຍ)
@@ -210,10 +245,12 @@ export default function RegisterInsurance() {
     }
     else if (name === 'precent_incom') {
       setTaxProfit(values)
-    } else if (name === 'percent_akorn') {
-      stePercentAkorn(values)
     } else if (name === 'percent_eps') {
       setPercentEps(values);
+    }
+    
+    else if (name === 'percent_akorn') {
+      stePercentAkorn(values)
     } else if (name === 'percent_fee_eps') {
       setPcfeeEps(values)
     }
@@ -224,7 +261,7 @@ export default function RegisterInsurance() {
     const file = event.target.files[0];
     if (file) {
       setInputs({
-        ...inputs,file_doct:file
+        ...inputs, file_doct: file
       })
       setFileName(file.name);
       const reader = new FileReader();
@@ -235,7 +272,8 @@ export default function RegisterInsurance() {
   useEffect(() => {
     showOption();
     showCustom();
-  }, [opId, customId]);
+    fetchComission();
+  }, [opId, customId,valueComis]);
   return (
     <div id="content" className="app-content">
       <ol className="breadcrumb float-end">
@@ -260,7 +298,7 @@ export default function RegisterInsurance() {
 
             <hr className='border-blue' />
             <div className='mb-3'>
-              <h5 className='text-blue'><i class="fa-solid fa-user-pen"></i> ຟອມລົງທະບຽນຊື້ປະກັນໄພ</h5>
+              <h5 className='text-blue'><i class="fa-solid fa-user-pen"></i> ຟອມລົງທະບຽນຊື້ປະກັນໄພ {comis.comisget}</h5>
             </div>
             <div className="row fs-15px mb-4">
               <div className="col-sm-6 mb-2">
@@ -301,14 +339,18 @@ export default function RegisterInsurance() {
           <div className="panel-body accordion" id="accordion">
             <div class="bg-white" id="headingOne">
               <span class="accordion-button bg-white py-5px " type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
-                <h5>ຂໍ້ມູນຜູ້ທີ່ໄດ້ຮັບຄວາມຄຸ້ມຄອງ</h5>
+                <h5>ຂໍ້ມູນຜູ້ທີ່ໄດ້ຮັບຄວາມຄຸ້ມຄອງ </h5>
               </span>
             </div>
-            <div id="collapseOne" class={`accordion-collapse collapse ${custom.type_buyer_fk==='2201'?'show':''}`} data-bs-parent="#accordion">
+            <div id="collapseOne" class={`accordion-collapse collapse ${custom.type_buyer_fk === 2201 ? 'show' : ''}`} data-bs-parent="#accordion">
               <div className="accordion-body row fs-15px">
                 <div className="col-sm-1 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ເພດ</label>
-                  <InputPicker data={gender} defaultValue={'F'} onChange={(e) => handelChange('user_gender', e)} placeholder="ເລືອກ" />
+                  <select className='form-select' onChange={(e) => handelChange('user_gender', e.target.value)} >
+                    <option value="F">ເພດຍິງ</option>
+                    <option value="M">ເພດຊາຍ</option>
+                  </select>
+                  {/* <InputPicker data={gender} defaultValue={'F'} onChange={(e) => handelChange('user_gender', e)} placeholder="ເລືອກ" /> */}
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ຊື່ແທ້</label>
@@ -361,7 +403,8 @@ export default function RegisterInsurance() {
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ລຸ່ນລົດ</label>
-                  <Select options={itemVersion} onChange={(e) => handelChange('car_version_id_fk', e.value)} placeholder="ເລືອກ" />
+                  <Input value={inputs.version_name} onChange={(e) => handelChange('version_name', e)} placeholder='ລຸ່ນລົດ' />
+                  {/* <Select options={itemVersion} onChange={(e) => handelChange('version_name', e.value)} placeholder="ເລືອກ" /> */}
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ທະບຽນລົດ</label>
@@ -413,8 +456,8 @@ export default function RegisterInsurance() {
             </div>
             <div className="row fs-15px">
               <div className="col-sm-2 col-6 mb-2">
-                <label htmlFor="" className='form-label'>ເປີເຊັນ ຮັບ</label>
-                <InputNumber value={inputs.precent_incom} onChange={(e) => onkeyup_premiums('precent_incom', e)} placeholder='0.%' block required />
+                <label htmlFor="" className='form-label'>ເປີເຊັນ ຮັບ </label>
+                <InputNumber value={inputs.precent_incom=comis.comisget} onChange={(e) => onkeyup_premiums('precent_incom', e)} placeholder='0.%' block required readOnly />
               </div>
               <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄອມກ່ອນອາກອນ</label>
@@ -440,7 +483,7 @@ export default function RegisterInsurance() {
             <div className="row fs-15px">
               <div className="col-sm-2 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ເປີເຊັນ ຈ່າຍ</label>
-                <InputNumber value={inputs.percent_eps} onChange={(e) => onkeyup_premiums('percent_eps', e)} placeholder='0.%' block required />
+                <InputNumber value={inputs.percent_eps=comis.comispay} onChange={(e) => onkeyup_premiums('percent_eps', e)} placeholder='0.%' block required readOnly />
               </div>
               <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄອມຈ່າຍກ່ອນອາກອນ</label>
@@ -465,7 +508,7 @@ export default function RegisterInsurance() {
               </div>
               <div className="col-sm-3 col-6 mt-4">
                 <label htmlFor="" className='form-label'>ສະກຸນ </label>
-                <InputPicker defaultValue={inputs.currency_id_fk} data={itemCry} onChange={(e) => handelChange('currency_id_fk', e)} block/>
+                <InputPicker defaultValue={inputs.currency_id_fk} data={itemCry} onChange={(e) => handelChange('currency_id_fk', e)} block />
               </div>
               <div className="col-sm-5 mt-4 ">
                 <label htmlFor="" className='form-label'>ເອກະສານຕິດຄັດ </label>
@@ -475,10 +518,10 @@ export default function RegisterInsurance() {
                   <input type="file" onChange={handleFileChange} className='hide' />
                 </label>
                 {fileName && (
-                <div class="alert alert-green alert-dismissible fade show mt-3">
-                <i class="fa-solid fa-paperclip"></i>  :{fileName}
-                <button type="button" class="btn-close" ></button>
-                </div>
+                  <div class="alert alert-green alert-dismissible fade show mt-3">
+                    <i class="fa-solid fa-paperclip"></i>  :{fileName}
+                    <button type="button" class="btn-close" ></button>
+                  </div>
                 )}
               </div>
             </div>

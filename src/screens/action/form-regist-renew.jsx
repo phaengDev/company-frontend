@@ -61,13 +61,13 @@ export default function FormRegistRenew() {
       statusIns: '',
       car_type_id_fk: '',
       car_brand_id_fk: '',
-      car_version_id_fk: '',
+      version_name: '',
       car_registration: '',
       vehicle_number: '',
       tank_number: '',
       // ---------- ຂໍ້ມູນຄ່າປະກັນໄພ
       initial_fee: '',
-      percent_taxes: '7',
+      percent_taxes: '10',
       money_taxes: '',
       registration_fee: '0',
       insuranc_included: '',
@@ -128,7 +128,7 @@ export default function FormRegistRenew() {
           statusIns: data.statusIns,
           car_type_id_fk: data.car_type_id_fk,
           car_brand_id_fk: data.car_brand_id_fk,
-          car_version_id_fk: data.car_version_id_fk,
+          version_name: data.version_name,
           car_registration: data.car_registration,
           vehicle_number: data.vehicle_number,
           tank_number: data.tank_number,
@@ -348,11 +348,15 @@ export default function FormRegistRenew() {
                 <h5>ຂໍ້ມູນຜູ້ທີ່ໄດ້ຮັບຄວາມຄຸ້ມຄອງ</h5>
               </span>
             </div>
-            <div id="collapseOne" class={`accordion-collapse collapse ${inputs.type_buyer_fk==='2201'?'show':''}`} data-bs-parent="#accordion">
+            <div id="collapseOne" class={`accordion-collapse collapse ${inputs.type_buyer_fk===2201 ? 'show':''}`} data-bs-parent="#accordion">
               <div className="accordion-body row fs-15px">
                 <div className="col-sm-1 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ເພດ</label>
-                  <InputPicker data={gender}  defaultValue={'F'} onChange={(e) => handelChange('user_gender', e)} placeholder="ເລືອກ" />
+                  <select className='form-select' onChange={(e) => handelChange('user_gender', e.target.value)} >
+                    <option value="F">ເພດຍິງ</option>
+                    <option value="M">ເພດຊາຍ</option>
+                  </select>
+                  {/* <InputPicker data={gender}  defaultValue={'F'} onChange={(e) => handelChange('user_gender', e)} placeholder="ເລືອກ" /> */}
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ຊື່ແທ້</label>
@@ -405,7 +409,8 @@ export default function FormRegistRenew() {
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ລຸ່ນລົດ</label>
-                  <Select options={itemVersion} value={itemVersion.find(obj => obj.value === inputs.car_version_id_fk)} onChange={(e) => handelChange('car_version_id_fk', e.value)} placeholder="ເລືອກ" />
+                  <Input value={inputs.version_name} onChange={(e) => handelChange('version_name', e)} placeholder='ລຸ່ນລົດ' />
+                  {/* <Select options={itemVersion} value={itemVersion.find(obj => obj.value === inputs.car_version_id_fk)} onChange={(e) => handelChange('car_version_id_fk', e.value)} placeholder="ເລືອກ" /> */}
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ທະບຽນລົດ</label>

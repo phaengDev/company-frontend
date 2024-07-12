@@ -128,7 +128,6 @@ export default function ReportCommisIncom() {
 
     // =======================\\
 
-
     const groupedData = currentItems.reduce((acc, item) => {
         const currency = item.currency_name;
         if (!acc[currency]) {

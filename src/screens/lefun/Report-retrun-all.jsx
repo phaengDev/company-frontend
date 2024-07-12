@@ -89,14 +89,18 @@ export default function ReportRetrunAll() {
         })
     }
 
-    const groupedData = currentItems.reduce((acc, item) => {
+    const sumData = currentItems.reduce((acc, item) => {
         const currency = item.currency_name;
         if (!acc[currency]) {
             acc[currency] = {
                 retrun_balance: 0,
+                balance_agent:0,
+                balance_oac:0,
             };
         }
         acc[currency].retrun_balance += parseFloat(item.retrun_balance);
+        acc[currency].balance_agent += parseFloat(item.balance_agent);
+        acc[currency].balance_oac += parseFloat(item.balance_oac);
         return acc;
     }, {});
     const formatNumber = (num) => numeral(num).format('0,00');
@@ -180,8 +184,10 @@ export default function ReportRetrunAll() {
                                 <th className="text-end">ຍອດເງິນ</th>
                                 <th className="text-center">ສະຖານະບໍລິສັດ</th>
                                 <th className="text-center">ວັນທີ</th>
+                                <th className="text-end">ຍອດເງິນຕົວແທນ</th>
                                 <th className="text-center">ສະຖານະຕົວແທນ</th>
                                 <th className="text-center">ວັນທີ</th>
+                                <th className="text-end">ຍອດເງິນໂອເອຊີ</th>
                                 <th className='text-center'>ສະຖານະໂອເອຊີ</th>
                                 <th className="text-center">ວັນທີ</th>
                                 <th className="">ໝາຍເຫດ</th>
@@ -213,8 +219,10 @@ export default function ReportRetrunAll() {
                                                 <td className='text-end'>{numeral(item.retrun_balance).format('0,00')} {item.genus}</td>
                                                 <td className="text-center">{item.status_company === 1 ? 'ຄ້າງຄືນ' : 'ຄືນແລ້ວ'}</td>
                                                 <td className="text-center">{moment(item.company_date).format('DD/MM/YYYY')}</td>
+                                                <td className='text-end'>{item.percent_agent}% / {numeral(item.balance_agent).format('0,00')} {item.genus}</td>
                                                 <td className="text-center">{item.status_agent === 1 ? 'ຄ້າງຄືນ' : 'ຄືນແລ້ວ'}</td>
                                                 <td className="text-center">{moment(item.agent_date).format('DD/MM/YYYY')}</td>
+                                                <td className='text-end'>{item.percent_oac}% / {numeral(item.balance_oac).format('0,00')} {item.genus}</td>
                                                 <td className="text-center">{item.status_oac === 1 ? 'ຄ້າງຄືນ' : 'ຄືນແລ້ວ'}</td>
                                                 <td className="text-center">{moment(item.oac_date).format('DD/MM/YYYY')}</td>
                                                 <td className="">{item.remark_text}</td>
@@ -224,16 +232,20 @@ export default function ReportRetrunAll() {
                                                 </td>
                                             </tr>
                                         ))}
-                                        {Object.keys(groupedData).map((currency, key) => (
+                                        {Object.keys(sumData).map((currency, key) => (
                                             <tr key={`${key}`}>
                                                 <td colSpan={9} className='text-end'>ລວມຍອດທັງໝົດ ({currency})</td>
-                                                <td className='text-end'>{formatNumber(groupedData[currency].retrun_balance)}</td>
-                                                <td colSpan={8}></td>
+                                                <td className='text-end'>{formatNumber(sumData[currency].retrun_balance)}</td>
+                                                <td colSpan={2}></td>
+                                                <td className='text-end'>{formatNumber(sumData[currency].balance_agent)}</td>
+                                                <td colSpan={2}></td>
+                                                <td className='text-end'>{formatNumber(sumData[currency].balance_oac)}</td>
+                                                <td colSpan={4}></td>
 
                                             </tr>
                                         ))}
                                     </>
-                                ) : (<tr><td colSpan={18} className='text-center text-red'>ບໍ່ພົບຂໍ້ມູນທີ່ມີການຄົ້ນຫາ.......</td></tr>)
+                                ) : (<tr><td colSpan={20} className='text-center text-red'>ບໍ່ພົບຂໍ້ມູນທີ່ມີການຄົ້ນຫາ.......</td></tr>)
                             )}
                         </tbody>
                     </table>
