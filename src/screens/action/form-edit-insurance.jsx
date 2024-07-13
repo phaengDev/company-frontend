@@ -3,14 +3,13 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Input, InputNumber, SelectPicker, InputGroup, DatePicker, Button, InputPicker } from 'rsuite';
 import { useAgent, useCompany, useType, useTypeCar, useBrandCar, useProvince, useCurrency } from '../../config/select-option';
 import Select from 'react-select'
-import { Config, imageUrl } from '../../config/connenct';
+import { Config } from '../../config/connenct';
 import axios from 'axios';
 import numeral from 'numeral';
 import Alert from '../../utils/config';
 
 export default function FormEditInsurance() {
   const api = Config.urlApi;
-  const url = imageUrl.url;
   const itemAg = useAgent();
   const itemcn = useCompany();
   const itemType = useType();
@@ -24,15 +23,12 @@ export default function FormEditInsurance() {
 
 
   //===========================
+  const [valueComis,setValueComis]=useState({
+    companyId:'',
+    agentId:'',
+    typeinsId:''
+  })
 
-  const gender = [{
-    label: 'ເພດຍິງ',
-    value: 'F'
-  },
-  {
-    label: 'ເພດຊາຍ',
-    value: 'M'
-  }]
 
   const [itemDistrict, setItemDistrict] = useState([]);
   const handelShowDist = async (value) => {
@@ -99,11 +95,9 @@ export default function FormEditInsurance() {
     status_oac: '1',
     oac_date: new Date()
   });
-  const handelChange = (name, value) => {
-    setInputs({
-      ...inputs, [name]: value
-    })
-  }
+
+
+
 
   const showDataInsurance = async () => {
     try {
@@ -166,6 +160,12 @@ export default function FormEditInsurance() {
         status_oac: data.status_oac,
         oac_date: new Date(data.oac_date)
       })
+      setValueComis({
+        companyId:data.custom_id_fk,
+        agentId:data.agent_id_fk,
+        typeinsId:data.insurance_type_fk
+      })
+
       setInitialFee(parseInt(data.initial_fee));
       setPercentTaxes(data.percent_taxes);
       setRegistrationFee(parseInt(data.registration_fee));
@@ -173,65 +173,94 @@ export default function FormEditInsurance() {
       stePercentAkorn(data.percent_akorn)
       setPercentEps(parseInt(data.percent_eps));
       setPcfeeEps(data.percent_fee_eps);
-      handleOption(data.insurance_type_fk)
+      await handleOption(data.insurance_type_fk);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const imputData = new FormData();
-    for (const key in inputs) {
-      imputData.append(key, inputs[key])
-    }
-    try {
-      axios.post(api + 'insurance/create', imputData)
-        .then(function (respones) {
-          if (respones.status === 200) {
-            // Alert.successData(respones.data.message)
-            Alert.Successlocation('/report');
-          } else {
-            Alert.errorData(respones.data.error)
-          }
-        });
-    } catch (error) {
-      console.error('Error inserting data:', error);
-    }
-  }
+
 
   const [itemOption, setItemOption] = useState([]);
-  const handleOption = async (value) => {
-    try {
-      const response = await fetch(api + `options/t/${value}`);
-      const jsonData = await response.json();
-      setItemOption(jsonData);
+const handleOption = async (value) => {
+  setInputs((prevInputs) => ({
+    ...prevInputs,
+    insurance_type_fk: value,
+  }));
 
-      await showType(value); // Ensure showType is awaited here
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
+  try {
+    // Fetch option items
+    const response = await fetch(api + `options/t/${value}`);
+    const jsonData = await response.json();
+    setItemOption(jsonData);
 
-  const showType = async (value) => {
-    try {
-      const res = await fetch(api + 'type-ins/' + value);
-      const jsonType = await res.json();
-      setTypeInsurance(jsonType.status_ins);
-      setInputs((prevInputs) => ({
-        ...prevInputs,
-        statusIns: jsonType.status_ins,
-      }));
-    } catch (error) {
-      console.error('Error fetching type:', error);
-    }
-  };
+    // Fetch type insurance status
+    const res = await fetch(api + 'type-ins/' + value);
+    const jsonType = await res.json();
+    setTypeInsurance(jsonType.status_ins);
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      statusIns: jsonType.status_ins,
+    }));
 
+    // Update valueComis with typeinsId
+    setValueComis((prevValueComis) => ({
+      ...prevValueComis,
+      typeinsId: value,
+    }));
+    await fetchComission();
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
   const dataOption = itemOption.map(item => ({ label: item.options_name, value: item.options_Id }));
 
 
+
+  const handelChange = (name, value) => {
+    setInputs({
+      ...inputs, [name]: value
+    })
+    if(name==='company_id_fk'){
+      setValueComis({
+        ...valueComis,companyId:value
+      })
+    }
+    if(name==='agent_id_fk'){
+      setValueComis({
+        ...valueComis,agentId:value
+      })
+    }
+  }
+ 
+
+
+  // ================== commission=============
+ 
+
+  const fetchComission = async () => {
+    try {
+      console.log('Fetching commission data with:', valueComis);
+      const response = await axios.post(api + 'comisget/single', valueComis);
+      const jsonData = response.data;
+      console.log('Commission data received:', jsonData);
+
+      setTaxProfit(jsonData.percentGet);
+      setPercentEps(jsonData.percentPay);
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        precent_incom: jsonData.percentGet,
+        percent_eps: jsonData.percentPay,
+      }));
+    } catch (error) {
+      console.error('Error fetching commission data:', error);
+    }
+  };
+
+//==================================
+
   const [initialFee, setInitialFee] = useState(0);//---- ຄ່າທຳນຽມເບື້ອງຕົ້ນ
-  const [percentTaxes, setPercentTaxes] = useState(7);
+  const [percentTaxes, setPercentTaxes] = useState(10);
   const moneyTaxes = (initialFee * percentTaxes) / 100;
 
   const [registrationFee, setRegistrationFee] = useState(0)
@@ -274,6 +303,7 @@ export default function FormEditInsurance() {
     }
   }
 
+  //============ select file doct ===============
   const [fileName, setFileName] = useState('');
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -287,8 +317,32 @@ export default function FormEditInsurance() {
     }
   };
 
+
+//================= insert to data database
+const handleSubmit = (event) => {
+  event.preventDefault();
+  const imputData = new FormData();
+  for (const key in inputs) {
+    imputData.append(key, inputs[key])
+  }
+  try {
+    axios.post(api + 'insurance/create', imputData)
+      .then(function (respones) {
+        if (respones.status === 200) {
+          Alert.Successlocation('/report');
+        } else {
+          Alert.errorData(respones.data.error)
+        }
+      });
+  } catch (error) {
+    console.error('Error inserting data:', error);
+  }
+}
+
+
   useEffect(() => {
     showDataInsurance();
+    fetchComission();
   }, []);
   return (
     <div id="content" className="app-content">
@@ -464,7 +518,7 @@ export default function FormEditInsurance() {
                 <InputNumber value={inputs.precent_incom} onChange={(e) => onkeyup_premiums('precent_incom', e)} placeholder='0.%' block required />
               </div>
               <div className="col-sm-3 col-6 mb-2">
-                <label htmlFor="" className='form-label'>ຄອມກ່ອນອາກອນ {inputs.pre_tax_profit}</label>
+                <label htmlFor="" className='form-label'>ຄອມກ່ອນອາກອນ </label>
                 <Input value={inputs.pre_tax_profit = numeral(precentIncom).format('0,00')} placeholder='00.000' className='bg-lime-100' block readOnly />
               </div>
               <div className="col-sm-2 col-6 mb-2">

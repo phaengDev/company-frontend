@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Input, InputNumber, SelectPicker, InputGroup, DatePicker, Button, InputPicker } from 'rsuite';
-import { useAgent, useCompany, useType, useTypeCar, useBrandCar, useVersion, useProvince, useCurrency } from '../../config/select-option';
+import { useAgent, useCompany, useType, useTypeCar, useBrandCar, useProvince, useCurrency } from '../../config/select-option';
 import Select from 'react-select'
 import { Config, imageUrl } from '../../config/connenct';
 import axios from 'axios';
@@ -15,7 +15,7 @@ export default function RegisterInsurance() {
   const itemType = useType();
   const itemTypeCar = useTypeCar();
   const itemBrand = useBrandCar();
-  const itemVersion = useVersion();
+  // const itemVersion = useVersion();
   const itemPv = useProvince()
   const itemCry = useCurrency();
   const location = useLocation();
@@ -53,14 +53,7 @@ export default function RegisterInsurance() {
     }
   };
 
-  const gender = [{
-    label: 'ເພດຍິງ',
-    value: 'F'
-  },
-  {
-    label: 'ເພດຊາຍ',
-    value: 'M'
-  }]
+
   const [itemDistrict, setItemDistrict] = useState([]);
   const handelShowDist = async (value) => {
     try {
@@ -76,6 +69,97 @@ export default function RegisterInsurance() {
 
 
   const [typeInsurance, setTypeInsurance] = useState(2);
+  
+  const [valueComis,setValueComis]=useState({
+    companyId:'',
+    agentId:'',
+    typeinsId:''
+  })
+
+  const handleOption = async (name, value) => {
+    setValueComis({
+      ...valueComis,typeinsId:value
+    })
+    setOpId(value);
+    setInputs({
+      ...inputs, [name]: value
+    })
+    const response = await fetch(api + 'type-ins/' + value)
+    const data = await response.json();
+        setTypeInsurance(data.status_ins)
+        setInputs({
+          ...inputs, statusIns: data.status_ins
+        })
+  }
+
+  // const [comis, setComis] = useState({ comisget: 0, comispay: 0 });
+
+  const fetchComission = async ()=>{
+    try {
+      const response = await axios.post(api + 'comisget/single', valueComis);
+      const jsonData = response.data;
+     
+      setTaxProfit(jsonData.percentGet);
+      setPercentEps(jsonData.percentPay);
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        precent_incom: jsonData.percentGet,
+        percent_eps: jsonData.percentPay,
+      }));
+  } catch (error) {
+      console.error('Error fetching data:', error);
+  }
+  }
+
+
+
+  const [initialFee, setInitialFee] = useState(0);//---- ຄ່າທຳນຽມເບື້ອງຕົ້ນ
+  const [percentTaxes, setPercentTaxes] = useState(10);
+  const moneyTaxes = (initialFee * percentTaxes) / 100;
+
+  const [registrationFee, setRegistrationFee] = useState(0)
+  const insurancIncluded = numeral(parseInt(initialFee) + parseInt(moneyTaxes) + parseInt(registrationFee)).format('0,00');
+
+  // -------------------- ຄ່າຄອມຮັບ
+   const [taxProfit, setTaxProfit] = useState(0);//----ເປີເຊັນຮັບ 
+  const [percentAkorn, stePercentAkorn] = useState(5)
+  const precentIncom = (initialFee * taxProfit) / 100; //----- ຄອມກ່ອນອາກອນ
+
+  const incomMoney = (precentIncom * percentAkorn) / 100; //-- ອ.ກ ລາຍໄດ້  (ຄອມຮັບ)
+  const incomFinally = (precentIncom - incomMoney) //-- ຄອມຫຼັງຫັກອາກອນ
+  //-------------------- ຄ່າຄອມຈ່າຍ
+  const [percentEps, setPercentEps] = useState(0); //-------ເປີເຊັນຈ່າຍ
+  const advanceFee = (initialFee * percentEps) / 100; //-------ຄອມຈ່າຍກ່ອນອາກອນ
+  const [pcfeeEps, setPcfeeEps] = useState(5); //---ອ/ກ.ຈ່າຍ
+  const moneyPsFee = (advanceFee * pcfeeEps) / 100; //---ອ.ກ ລາຍໄດ້ (ຄອມຈ່າຍ)
+  const expencesTaxes = (advanceFee - moneyPsFee);  //----ຄອມຈ່າຍຫຼັງຫັກອາກອນ
+  const netIncome = (incomFinally - expencesTaxes);//--ລາຍຮັບສຸທິ
+  const onkeyup_premiums = (name, value) => {
+    const values = parseFloat(value.replace(/,/g, ''));
+    setInputs({
+      ...inputs, [name]: value
+    })
+    if (name === 'initial_fee') {
+      setInitialFee(isNaN(values) ? 0 : parseInt(values));
+    } else if (name === 'percent_taxes') {
+      setPercentTaxes(values)
+    } else if (name === 'registration_fee') {
+      setRegistrationFee(isNaN(values) ? 0 : parseInt(values))
+    }
+    else if (name === 'precent_incom') {
+      setTaxProfit(values)
+    } else if (name === 'percent_eps') {
+      setPercentEps(values);
+    }
+    
+    else if (name === 'percent_akorn') {
+      stePercentAkorn(values)
+    } else if (name === 'percent_fee_eps') {
+      setPcfeeEps(values)
+    }
+  }
+
+
   const [inputs, setInputs] = useState({
     incuranecCode: '',
     custom_id_fk: customId,
@@ -133,19 +217,33 @@ export default function RegisterInsurance() {
       ...inputs, [name]: value
     })
     if(name==='company_id_fk'){
-      // setCompanyId(value)
       setValueComis({
         ...valueComis,companyId:value
       })
     }
     if(name==='agent_id_fk'){
-      // setAgentId(value)
       setValueComis({
         ...valueComis,agentId:value
       })
     }
   }
 
+
+
+  const [fileName, setFileName] = useState('');
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setInputs({
+        ...inputs, file_doct: file
+      })
+      setFileName(file.name);
+      const reader = new FileReader();
+      reader.readAsText(file);
+    }
+  };
+
+//=================================== insert data to datablse============
   const handleSubmit = (event) => {
     event.preventDefault();
     const imputData = new FormData();
@@ -167,107 +265,6 @@ export default function RegisterInsurance() {
     }
   }
 
-  const [valueComis,setValueComis]=useState({
-    companyId:'',
-    agentId:'',
-    typeinsId:''
-  })
-
-  const handleOption = (name, value) => {
-    setValueComis({
-      ...valueComis,typeins:value
-    })
-    setOpId(value);
-    setInputs({
-      ...inputs, [name]: value
-    })
-    const response = fetch(api + 'type-ins/' + value)
-      .then(function (data) {
-        setTypeInsurance(data.status_ins)
-        setInputs({
-          ...inputs, ['statusIns']: data.status_ins
-        })
-      });
-  }
-
-  const [comis,setComis]=useState({
-    comisget:0,
-    comispay:0,
-  })
-  const fetchComission = async ()=>{
-    try {
-      const response = await axios.post(api + 'comisget/single', valueComis);
-      const jsonData = response.data;
-      setComis({
-      comisget:jsonData.percentGet,
-      comispay:jsonData.percentPay,
-      }
-      )
-  } catch (error) {
-      console.error('Error fetching data:', error);
-  }
-  }
-
-
-
-  const [initialFee, setInitialFee] = useState(0);//---- ຄ່າທຳນຽມເບື້ອງຕົ້ນ
-  const [percentTaxes, setPercentTaxes] = useState(10);
-  const moneyTaxes = (initialFee * percentTaxes) / 100;
-
-  const [registrationFee, setRegistrationFee] = useState(0)
-  const insurancIncluded = numeral(parseInt(initialFee) + parseInt(moneyTaxes) + parseInt(registrationFee)).format('0,00');
-
-  // -------------------- ຄ່າຄອມຮັບ
-  const [taxProfit, setTaxProfit] = useState(comis.comisget);//----ເປີເຊັນຮັບ 
-  const [percentAkorn, stePercentAkorn] = useState(5)
-  const precentIncom = (initialFee * taxProfit) / 100; //----- ຄອມກ່ອນອາກອນ
-
-  const incomMoney = (precentIncom * percentAkorn) / 100; //-- ອ.ກ ລາຍໄດ້  (ຄອມຮັບ)
-  const incomFinally = (precentIncom - incomMoney) //-- ຄອມຫຼັງຫັກອາກອນ
-  //-------------------- ຄ່າຄອມຈ່າຍ
-  const [percentEps, setPercentEps] = useState(comis.comispay); //-------ເປີເຊັນຈ່າຍ
-  const advanceFee = (initialFee * percentEps) / 100; //-------ຄອມຈ່າຍກ່ອນອາກອນ
-  const [pcfeeEps, setPcfeeEps] = useState(5); //---ອ/ກ.ຈ່າຍ
-  const moneyPsFee = (advanceFee * pcfeeEps) / 100; //---ອ.ກ ລາຍໄດ້ (ຄອມຈ່າຍ)
-  const expencesTaxes = (advanceFee - moneyPsFee);  //----ຄອມຈ່າຍຫຼັງຫັກອາກອນ
-  const netIncome = (incomFinally - expencesTaxes);//--ລາຍຮັບສຸທິ
-  const onkeyup_premiums = (name, value) => {
-    const values = parseFloat(value.replace(/,/g, ''));
-    setInputs({
-      ...inputs, [name]: value
-    })
-    if (name === 'initial_fee') {
-      setInitialFee(isNaN(values) ? 0 : parseInt(values));
-    } else if (name === 'percent_taxes') {
-      setPercentTaxes(values)
-    } else if (name === 'registration_fee') {
-      setRegistrationFee(isNaN(values) ? 0 : parseInt(values))
-    }
-    else if (name === 'precent_incom') {
-      setTaxProfit(values)
-    } else if (name === 'percent_eps') {
-      setPercentEps(values);
-    }
-    
-    else if (name === 'percent_akorn') {
-      stePercentAkorn(values)
-    } else if (name === 'percent_fee_eps') {
-      setPcfeeEps(values)
-    }
-  }
-
-  const [fileName, setFileName] = useState('');
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setInputs({
-        ...inputs, file_doct: file
-      })
-      setFileName(file.name);
-      const reader = new FileReader();
-      reader.readAsText(file);
-    }
-  };
 
   useEffect(() => {
     showOption();
@@ -298,7 +295,7 @@ export default function RegisterInsurance() {
 
             <hr className='border-blue' />
             <div className='mb-3'>
-              <h5 className='text-blue'><i class="fa-solid fa-user-pen"></i> ຟອມລົງທະບຽນຊື້ປະກັນໄພ {comis.comisget}</h5>
+              <h5 className='text-blue'><i class="fa-solid fa-user-pen"></i> ຟອມລົງທະບຽນຊື້ປະກັນໄພ </h5>
             </div>
             <div className="row fs-15px mb-4">
               <div className="col-sm-6 mb-2">
@@ -426,7 +423,7 @@ export default function RegisterInsurance() {
         <div className="panel border-4 border-top border-red rounded-top-4 mb-3 text-dark">
           <div className="panel-body">
             <div className="mb-3">
-              <h5>I. ຄ່າທຳນຽມທັງໝົດ</h5>
+              <h5>I. ຄ່າທຳນຽມທັງໝົດ {typeInsurance}</h5>
             </div>
 
             <div className="row fs-15px">
@@ -457,7 +454,7 @@ export default function RegisterInsurance() {
             <div className="row fs-15px">
               <div className="col-sm-2 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ເປີເຊັນ ຮັບ </label>
-                <InputNumber value={inputs.precent_incom=comis.comisget} onChange={(e) => onkeyup_premiums('precent_incom', e)} placeholder='0.%' block required readOnly />
+                <InputNumber value={inputs.precent_incom} onChange={(e) => onkeyup_premiums('precent_incom', e)} placeholder='0.%' block required readOnly />
               </div>
               <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄອມກ່ອນອາກອນ</label>
@@ -483,7 +480,7 @@ export default function RegisterInsurance() {
             <div className="row fs-15px">
               <div className="col-sm-2 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ເປີເຊັນ ຈ່າຍ</label>
-                <InputNumber value={inputs.percent_eps=comis.comispay} onChange={(e) => onkeyup_premiums('percent_eps', e)} placeholder='0.%' block required readOnly />
+                <InputNumber value={inputs.percent_eps} onChange={(e) => onkeyup_premiums('percent_eps', e)} placeholder='0.%' block required readOnly />
               </div>
               <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄອມຈ່າຍກ່ອນອາກອນ</label>
