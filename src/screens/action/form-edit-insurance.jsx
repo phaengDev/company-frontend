@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Input, InputNumber, SelectPicker, InputGroup, DatePicker, Button, InputPicker } from 'rsuite';
 import { useAgent, useCompany, useType, useTypeCar, useBrandCar, useProvince, useCurrency } from '../../config/select-option';
 import Select from 'react-select'
@@ -22,12 +22,28 @@ export default function FormEditInsurance() {
   const Id = atob(searchParams.get('id'));
 
 
-  //===========================
-  const [valueComis,setValueComis]=useState({
-    companyId:'',
-    agentId:'',
-    typeinsId:''
-  })
+  //============fetchComission===============
+  const fetchComission = async (companyId,agentId,typeinsId) => {
+    try {
+      const response = await axios.post(`${api}comisget/single`, {
+        companyId: companyId,
+        agentId: agentId,
+        typeinsId: typeinsId
+      });
+      const jsonData = response.data;
+      console.log('Commission data received:', jsonData);
+
+      setTaxProfit(jsonData.percentGet);
+      setPercentEps(jsonData.percentPay);
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        precent_incom: jsonData.percentGet,
+        percent_eps: jsonData.percentPay,
+      }));
+    } catch (error) {
+      console.error('Error fetching commission data:', error);
+    }
+  };
 
 
   const [itemDistrict, setItemDistrict] = useState([]);
@@ -43,61 +59,7 @@ export default function FormEditInsurance() {
   const dataDist = itemDistrict.map(item => ({ label: item.district_name, value: item.district_id }));
 
   const [typeInsurance, setTypeInsurance] = useState(2);
-  const [inputs, setInputs] = useState({
-    incuranecCode: '',
-    custom_id_fk: '',
-    company_id_fk: '',
-    agent_id_fk: '',
-    insurance_type_fk: '',
-    option_id_fk: '',
-    currency_id_fk: 22001,
-    contract_number: '',
-    contract_start_date: '',
-    contract_end_date: '',
-    user_fname: '',
-    user_lname: '',
-    user_gender: 'F',
-    user_dob: '',
-    user_tel: '',
-    user_district_fk: '',
-    user_village: '',
-    file_doct: '',
-
-    // ----------- ຂໍມູນລົດ
-    statusIns: '',
-    car_type_id_fk: '',
-    car_brand_id_fk: '',
-    version_name: '',
-    car_registration: '',
-    vehicle_number: '',
-    tank_number: '',
-    // ---------- ຂໍ້ມູນຄ່າປະກັນໄພ
-    initial_fee: '',
-    percent_taxes: '10',
-    money_taxes: '',
-    registration_fee: '0',
-    insuranc_included: '',
-    precent_incom: '',
-    pre_tax_profit: '',
-    percent_akorn: '5',
-    incom_money: '',
-    incom_finally: '',
-    percent_eps: '',
-    pays_advance_fee: '',
-    percent_fee_eps: '5',
-    money_percent_fee: '',
-    expences_pays_taxes: '',
-    net_income: '',
-    status_company: '1',
-    company_date: new Date(),
-    status_agent: '1',
-    agent_date: new Date(),
-    status_oac: '1',
-    oac_date: new Date()
-  });
-
-
-
+  const [inputs, setInputs] = useState({});
 
   const showDataInsurance = async () => {
     try {
@@ -160,11 +122,11 @@ export default function FormEditInsurance() {
         status_oac: data.status_oac,
         oac_date: new Date(data.oac_date)
       })
-      setValueComis({
-        companyId:data.custom_id_fk,
-        agentId:data.agent_id_fk,
-        typeinsId:data.insurance_type_fk
-      })
+      // setValueComis({
+      //   companyId:data.custom_id_fk,
+      //   agentId:data.agent_id_fk,
+      //   typeinsId:data.insurance_type_fk
+      // })
 
       setInitialFee(parseInt(data.initial_fee));
       setPercentTaxes(data.percent_taxes);
@@ -187,7 +149,7 @@ const handleOption = async (value) => {
     ...prevInputs,
     insurance_type_fk: value,
   }));
-
+  fetchComission(inputs.company_id_fk, inputs.agent_id_fk, value);
   try {
     // Fetch option items
     const response = await fetch(api + `options/t/${value}`);
@@ -202,13 +164,8 @@ const handleOption = async (value) => {
       ...prevInputs,
       statusIns: jsonType.status_ins,
     }));
-
-    // Update valueComis with typeinsId
-    setValueComis((prevValueComis) => ({
-      ...prevValueComis,
-      typeinsId: value,
-    }));
-    await fetchComission();
+    await fetchComission(inputs.company_id_fk, inputs.agent_id_fk, value);
+   
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -216,46 +173,19 @@ const handleOption = async (value) => {
   const dataOption = itemOption.map(item => ({ label: item.options_name, value: item.options_Id }));
 
 
-
   const handelChange = (name, value) => {
     setInputs({
       ...inputs, [name]: value
     })
-    if(name==='company_id_fk'){
-      setValueComis({
-        ...valueComis,companyId:value
-      })
-    }
-    if(name==='agent_id_fk'){
-      setValueComis({
-        ...valueComis,agentId:value
-      })
+    if (name === 'company_id_fk') {
+      fetchComission(value, inputs.agent_id_fk, inputs.insurance_type_fk);
+    } else if (name === 'agent_id_fk') {
+      fetchComission(inputs.company_id_fk, value, inputs.insurance_type_fk);
+    } else if (name === 'insurance_type_fk') {
+      fetchComission(inputs.company_id_fk, inputs.agent_id_fk, value);
     }
   }
  
-
-
-  // ================== commission=============
- 
-
-  const fetchComission = async () => {
-    try {
-      console.log('Fetching commission data with:', valueComis);
-      const response = await axios.post(api + 'comisget/single', valueComis);
-      const jsonData = response.data;
-      console.log('Commission data received:', jsonData);
-
-      setTaxProfit(jsonData.percentGet);
-      setPercentEps(jsonData.percentPay);
-      setInputs((prevInputs) => ({
-        ...prevInputs,
-        precent_incom: jsonData.percentGet,
-        percent_eps: jsonData.percentPay,
-      }));
-    } catch (error) {
-      console.error('Error fetching commission data:', error);
-    }
-  };
 
 //==================================
 
@@ -303,6 +233,31 @@ const handleOption = async (value) => {
     }
   }
 
+
+  // ================== commission=============
+ 
+
+  // const fetchComission = async (typeinsId) => {
+  //   try {
+  //     const response = await axios.post(api + 'comisget/single', { 
+  //       companyId:inputs.company_id_fk,
+  //       agentId:inputs.agent_id_fk,
+  //       typeinsId:typeinsId});
+  //     const jsonData = response.data;
+  //     console.log('Commission data received:', jsonData);
+
+  //     setTaxProfit(jsonData.percentGet);
+  //     setPercentEps(jsonData.percentPay);
+  //     setInputs((prevInputs) => ({
+  //       ...prevInputs,
+  //       precent_incom: jsonData.percentGet,
+  //       percent_eps: jsonData.percentPay,
+  //     }));
+  //   } catch (error) {
+  //     console.error('Error fetching commission data:', error);
+  //   }
+  // };
+
   //============ select file doct ===============
   const [fileName, setFileName] = useState('');
   const handleFileChange = (event) => {
@@ -342,7 +297,6 @@ const handleSubmit = (event) => {
 
   useEffect(() => {
     showDataInsurance();
-    fetchComission();
   }, []);
   return (
     <div id="content" className="app-content">

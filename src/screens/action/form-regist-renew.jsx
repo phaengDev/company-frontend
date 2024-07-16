@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Input, InputNumber, SelectPicker, InputGroup, DatePicker, Button, InputPicker } from 'rsuite';
-import { useAgent, useCompany, useType, useTypeCar, useBrandCar, useVersion,useProvince,useCurrency } from '../../config/select-option';
+import { useAgent, useCompany, useType, useTypeCar, useBrandCar, useProvince,useCurrency } from '../../config/select-option';
 import Select from 'react-select'
-import { Config, imageUrl } from '../../config/connenct';
+import { Config} from '../../config/connenct';
 import axios from 'axios';
 import numeral from 'numeral';
 import Alert from '../../utils/config';
@@ -15,26 +15,37 @@ export default function FormRegistRenew() {
     const itemType = useType();
     const itemTypeCar = useTypeCar();
     const itemBrand = useBrandCar();
-    const itemVersion = useVersion();
     const location = useLocation();
     const itemPv=useProvince();
     const itemCry=useCurrency();
     const searchParams = new URLSearchParams(location.search);
     const Id = atob(searchParams.get('id'));
   
+  //============fetchComission===============
+  const fetchComission = async (companyId,agentId,typeinsId) => {
+    try {
+      const response = await axios.post(`${api}comisget/single`, {
+        companyId: companyId,
+        agentId: agentId,
+        typeinsId: typeinsId
+      });
+      const jsonData = response.data;
+      console.log('Commission data received:', jsonData);
+
+      setTaxProfit(jsonData.percentGet);
+      setPercentEps(jsonData.percentPay);
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        precent_incom: jsonData.percentGet,
+        percent_eps: jsonData.percentPay,
+      }));
+    } catch (error) {
+      console.error('Error fetching commission data:', error);
+    }
+  };
+
   
     //===========================
-  
-    const gender = [{
-      label: 'ເພດຍິງ',
-      value: 'F'
-    },
-    {
-      label: 'ເພດຊາຍ',
-      value: 'M'
-    }]
-  
-
   
     const [typeInsurance, setTypeInsurance] = useState(2);
     const [inputs, setInputs] = useState({
@@ -89,11 +100,7 @@ export default function FormRegistRenew() {
       status_oac: '1',
       oac_date: new Date()
     });
-    const handelChange = (name, value) => {
-      setInputs({
-        ...inputs, [name]: value
-      })
-    }
+   
     
     const showDataInsurance = async () => {
       try {
@@ -190,33 +197,33 @@ export default function FormRegistRenew() {
       }
     }
   
-    const [itemOption, setItemOption] = useState([]);
-    const handleOption = async (value) => {
-      try {
-        const response = await fetch(api + `options/t/${value}`);
-        const jsonData = await response.json();
-        setItemOption(jsonData);
+  const [itemOption, setItemOption] = useState([]);
+  const handleOption = async (value) => {
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      insurance_type_fk: value,
+    }));
+    fetchComission(inputs.company_id_fk, inputs.agent_id_fk, value);
+    try {
+      // Fetch option items
+      const response = await fetch(api + `options/t/${value}`);
+      const jsonData = await response.json();
+      setItemOption(jsonData);
   
-        await showType(value); // Ensure showType is awaited here
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }   
-    };
-  
-    const showType = async (value) => {
-      try {
-        const res = await fetch(api + 'type-ins/' + value);
-        const jsonType = await res.json();
-        setTypeInsurance(jsonType.status_ins);
-        setInputs((prevInputs) => ({
-          ...prevInputs,
-          statusIns: jsonType.status_ins,
-        }));
-      } catch (error) {
-        console.error('Error fetching type:', error);
-      }
-    };
-  
+      // Fetch type insurance status
+      const res = await fetch(api + 'type-ins/' + value);
+      const jsonType = await res.json();
+      setTypeInsurance(jsonType.status_ins);
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        statusIns: jsonType.status_ins,
+      }));
+      await fetchComission(inputs.company_id_fk, inputs.agent_id_fk, value);
+     
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
     const dataOption = itemOption.map(item => ({ label: item.options_name, value: item.options_Id }));
   //======== district
   const [itemDistrict, setItemDistrict] = useState([]);
@@ -273,6 +280,20 @@ export default function FormRegistRenew() {
         setPercentEps(values);
       } else if (name === 'percent_fee_eps') {
         setPcfeeEps(values)
+      }
+    }
+
+
+    const handelChange = (name, value) => {
+      setInputs({
+        ...inputs, [name]: value
+      })
+      if (name === 'company_id_fk') {
+        fetchComission(value, inputs.agent_id_fk, inputs.insurance_type_fk);
+      } else if (name === 'agent_id_fk') {
+        fetchComission(inputs.company_id_fk, value, inputs.insurance_type_fk);
+      } else if (name === 'insurance_type_fk') {
+        fetchComission(inputs.company_id_fk, inputs.agent_id_fk, value);
       }
     }
   
