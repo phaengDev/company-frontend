@@ -59,9 +59,10 @@ export default function CommissionPay() {
                 if (response.status === 200) {
                     setOpen(false);
                     fetchCommission();
-                    Alert.successData(response.data.message);
+                    // Alert.successData(response.data.message);
+                    showNotification('success',response.data.message)
                 } else {
-                    Alert.errorData(response.data.message);
+                    showNotification('error',response.data.message)
                 }
             })
             .catch(error => {
@@ -127,7 +128,8 @@ export default function CommissionPay() {
                 if (response.status === 200) {
                     setOpened(false);
                     fetchCommission();
-                    Alert.successData(response.data.message);
+                    // Alert.successData(response.data.message);
+                    showNotification('success',response.data.message)
                 } else {
                     Alert.errorData(response.data.message);
                 }
@@ -218,9 +220,20 @@ export default function CommissionPay() {
         }
     };
 
+    const showNotification=(icon,MessageName)=>{
+        toaster.push(
+            <Message showIcon type={icon} closable>
+                <strong>ຢືນຢັນ!</strong> {MessageName}
+            </Message>,
+            { placement: 'topEnd', duration: 5000 }
+        );
+    }
+
+
     useEffect(() => {
         fetchCommission()
     }, [values])
+
 
   return (
     <div id="content" className="app-content p-3">
@@ -252,7 +265,7 @@ export default function CommissionPay() {
 
     <div className="panel">
         <div class="panel-heading ui-sortable-handle">
-            <h4 class="panel-title fs-20px">ລາຍການຄ່າຄອມມິດຊັນ ຄອມຮັບ</h4>
+            <h4 class="panel-title fs-20px">ລາຍການຄ່າຄອມມິດຊັນ ຄອມຮັບ </h4>
             <div class="panel-heading-btn">
                 <Button appearance="primary" onClick={handleShowData} ><i className="fas fa-plus"></i> ເພີ່ມຂໍ້ມູນ</Button>
             </div>
@@ -296,7 +309,7 @@ export default function CommissionPay() {
                                         <td className='text-center'>{item.percent} %</td>
                                         <td className='text-center'>
                                             <button type='button' onClick={() => headleEdit(item)} class="btn btn-blue btn-xs me-2"><i class="fa-solid fa-pen-to-square"></i></button>
-                                            <button type='button' onClick={() => headleDelete(item.comis_oac_id)} class="btn btn-red btn-xs"><i class="fa-solid fa-trash"></i></button>
+                                            <button type='button' onClick={() => headleDelete(item.comis_agent_id)} class="btn btn-red btn-xs"><i class="fa-solid fa-trash"></i></button>
                                         </td>
                                     </tr>
                                 ))

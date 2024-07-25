@@ -102,19 +102,19 @@
         {
           "subId": 12,
           "mainFk": 4,
-          "subName": "ຈັດການຮັບເງິນຈາກບໍລິສັດ",
+          "subName": "ສັນຍາຄືນເງິນລູກຄ້າ",
           "sublink": "retrun-company"
         },
         {
           "subId": 13,
           "mainFk": 4,
-          "subName": "ຈັດການຮັບເງິນຈາກຕົວແທນ",
+          "subName": "ສັນຍາຮັບເງິນຄືນຕົວແທນ",
           "sublink": "retrun-agent"
         },
         {
           "subId": 14,
           "mainFk": 4,
-          "subName": "ຈັດການຮັບເງິນຈາກໂອເອຊີ",
+          "subName": "ສັນຍາຄືນເງິນບໍລິສັດປະກັນ",
           "sublink": "retrun-oac"
         }
       ]

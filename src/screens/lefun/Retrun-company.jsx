@@ -5,7 +5,6 @@ import { Config } from '../../config/connenct';
 import axios from 'axios';
 import numeral from 'numeral';
 import moment from 'moment';
-import Swal from 'sweetalert2';
 import Alert from '../../utils/config';
 export default function RetrunCompany() {
   const api = Config.urlApi;
@@ -137,7 +136,7 @@ export default function RetrunCompany() {
     <div id="content" className="app-content p-0 bg-component">
       <div class="app-content-padding px-4 py-3">
         <div class="d-lg-flex mb-lg-3 mb-2">
-          <h3 class="page-header mb-0 flex-1 fs-20px">ຈັດການສັນຍາທີ່ຮັບເງິນຄຶນບໍລີສັດ</h3>
+          <h3 class="page-header mb-0 flex-1 fs-20px">ລາງການສັນຍາສົ່ງເງິນຄືນລູກຄ້າ</h3>
           <span class="d-none d-lg-flex align-items-center">
             <button class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
               <i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF

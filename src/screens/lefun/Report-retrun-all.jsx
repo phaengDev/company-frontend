@@ -182,13 +182,13 @@ export default function ReportRetrunAll() {
                                 <th className="">ທາງເລືອກ</th>
                                 <th className="">ຕົວແທນຂາຍ	</th>
                                 <th className="text-end">ຍອດເງິນ</th>
-                                <th className="text-center">ສະຖານະບໍລິສັດ</th>
+                                <th className="text-end">ຍອດ%ໂອເອຊີ</th>
+                                <th className="text-center">ໜີ້ໂອເອຊີ</th>
                                 <th className="text-center">ວັນທີ</th>
-                                <th className="text-end">ຍອດເງິນຕົວແທນ</th>
-                                <th className="text-center">ສະຖານະຕົວແທນ</th>
+                                <th className="text-end">ຍອດ%ຕົວແທນ</th>
+                                <th className="text-center">ໜີ້ຕົວແທນ</th>
                                 <th className="text-center">ວັນທີ</th>
-                                <th className="text-end">ຍອດເງິນໂອເອຊີ</th>
-                                <th className='text-center'>ສະຖານະໂອເອຊີ</th>
+                                <th className='text-center'>ໜີ້ລູກຄ້າ</th>
                                 <th className="text-center">ວັນທີ</th>
                                 <th className="">ໝາຍເຫດ</th>
                                 <th width='10%' className="text-center">ການຕັ້ງຄ່າ</th>
@@ -217,14 +217,14 @@ export default function ReportRetrunAll() {
                                                 <td>{item.options_name}</td>
                                                 <td>{item.agent_name}</td>
                                                 <td className='text-end'>{numeral(item.retrun_balance).format('0,00')} {item.genus}</td>
-                                                <td className="text-center">{item.status_company === 1 ? 'ຄ້າງຄືນ' : 'ຄືນແລ້ວ'}</td>
-                                                <td className="text-center">{moment(item.company_date).format('DD/MM/YYYY')}</td>
-                                                <td className='text-end'>{item.percent_agent}% / {numeral(item.balance_agent).format('0,00')} {item.genus}</td>
-                                                <td className="text-center">{item.status_agent === 1 ? 'ຄ້າງຄືນ' : 'ຄືນແລ້ວ'}</td>
-                                                <td className="text-center">{moment(item.agent_date).format('DD/MM/YYYY')}</td>
-                                                <td className='text-end'>{item.percent_oac}% / {numeral(item.balance_oac).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{item.percent_oac}% ( {numeral(item.balance_oac).format('0,00')} {item.genus})</td>
                                                 <td className="text-center">{item.status_oac === 1 ? 'ຄ້າງຄືນ' : 'ຄືນແລ້ວ'}</td>
                                                 <td className="text-center">{moment(item.oac_date).format('DD/MM/YYYY')}</td>
+                                                <td className='text-end'>{item.percent_agent}% ( {numeral(item.balance_agent).format('0,00')} {item.genus} )</td>
+                                                <td className="text-center">{item.status_agent === 1 ? 'ຄ້າງຄືນ' : 'ຄືນແລ້ວ'}</td>
+                                                <td className="text-center">{moment(item.agent_date).format('DD/MM/YYYY')}</td>
+                                                <td className="text-center">{item.status_company === 1 ? 'ຄ້າງຄືນ' : 'ຄືນແລ້ວ'}</td>
+                                                <td className="text-center">{moment(item.company_date).format('DD/MM/YYYY')}</td>
                                                 <td className="">{item.remark_text}</td>
                                                 <td className="text-center">
                                                     <button onClick={() => handleEdit(item.insurance_retrun_id)} className='btn btn-xs btn-green ms-2'> <i class="fa-solid fa-pen-to-square"></i> </button>

@@ -140,7 +140,7 @@ export default function RetrunOacborker() {
     <div id="content" className="app-content p-0 bg-component">
       <div class="app-content-padding px-4 py-3">
         <div class="d-lg-flex mb-lg-3 mb-2">
-          <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍການສັນຍາທີ່ຄຶນເງິນໃຫ້ຜູ້ຊື້ປະກັນ</h3>
+          <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍການສັນຍາສົ່ງເງິນຄືນບໍລິສັດປະກັນ</h3>
           <span class="d-none d-lg-flex align-items-center">
             <button class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
               <i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
@@ -280,7 +280,11 @@ export default function RetrunOacborker() {
         </Modal.Header>
         <form onSubmit={handledSubmit}>
           <Modal.Body>
-            <h2 className='text-center text-red'>{numeral(values.retrun_balance).format('0,00')} {values.genus}</h2>
+            <h2 className='text-center text-red'>
+              {numeral(values.retrun_balance).format('0,00.00')} {values.genus}
+            <hr className='mt-2 mb-1' />
+              <div className='text-blue fs-25px'>{numeral(values.balance_oac).format('0,00.00')} {values.genus} <span className='text-green'>({values.percent_oac} %) <i class="fa-solid fa-check"/></span> </div>
+            </h2>
             <div className="form-group mb-2">
               <label htmlFor="" className='form-label'>ໝາຍເຫດ</label>
               <Input as='textarea' value={values.remark_text} onChange={(e) => handledUseRetrun('remark_text', e)} placeholder='ໝາຍເຫດ....' />

@@ -281,9 +281,9 @@ export default function RetrunAgent() {
         <form onSubmit={handledSubmit}>
           <Modal.Body>
             <h2 className='text-center text-red'>{numeral(values.retrun_balance).format('0,00')} {values.genus}</h2>
-            <h3 className='text-center text-red'>
-              ({values.percent_agent} % ) /
-              {numeral(values.balance_agent).format('0,00')} {values.genus}
+            <h3 className='text-center text-blue'>
+              {numeral(values.balance_agent).format('0,00')} {values.genus} 
+              <span className='text-green ms-2'>({values.percent_agent} % ) <i class="fa-solid fa-check"/></span>
               </h3>
             <div className="form-group mb-2">
               <label htmlFor="" className='form-label'>ໝາຍເຫດ</label>

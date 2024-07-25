@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import { SelectPicker, Input, InputGroup, DatePicker, InputPicker, Button, Loader } from 'rsuite'
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Config, imageUrl } from '../../config/connenct';
+import { Link} from 'react-router-dom';
+import { Config } from '../../config/connenct';
 import { useAgent, useCompany, useType, useCurrency } from '../../config/select-option';
 import axios from 'axios';
 import numeral from 'numeral';
 import Alert from '../../utils/config';
 export default function RetrunInsurance() {
   const api = Config.urlApi;
-  const url = imageUrl.url;
   const itemAg = useAgent();
   const itemcn = useCompany();
   const itemType = useType();
@@ -68,7 +67,8 @@ export default function RetrunInsurance() {
     percent_oac:0,
     status_oac: 1,
     oac_date: new Date(),
-    remark_text: ''
+    remark_text: '',
+    file_doc:''
   })
   const handelChange = (name, value) => {
     setInputs({
@@ -78,10 +78,13 @@ export default function RetrunInsurance() {
   const [isLoading, setIsLoading] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
+    const imputData = new FormData();
+    for (const key in inputs) {
+      imputData.append(key, inputs[key]);
+    }
     setIsLoading(true)
-    console.log(inputs)
     try {
-      axios.post(api + 'retrun/create', inputs)
+      axios.post(api + 'retrun/create', imputData)
         .then(function (respones) {
           if (respones.status === 200) {
             Alert.successData(respones.data.message)
@@ -103,18 +106,34 @@ export default function RetrunInsurance() {
               percent_oac:0,
               status_oac: 1,
               oac_date: new Date(),
-              remark_text: ''
+              remark_text: '',
+              file_doc:''
             })
           } else {
             Alert.errorData(respones.data.message)
           }
         });
     } catch (error) {
-      console.error('Error inserting data:', error);
+      // console.error('Error inserting data:', error);
+      Alert.errorData('Error inserting data:')
     } finally {
       setIsLoading(false);
     }
   }
+
+  
+  const [fileName, setFileName] = useState('');
+  const selectFiles = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setInputs({
+        ...inputs, file_doc: file
+      })
+      setFileName(file.name);
+      const reader = new FileReader();
+      reader.readAsText(file);
+    }
+  };
 
   return (
     <>
@@ -177,12 +196,18 @@ export default function RetrunInsurance() {
               <div className="row">
 
               <div className="col-sm-4 mb-2">
-                  <div className="form-group mb-2">
-                    <label htmlFor="" className='form-label'>ສະຖານະຄືນບໍລິສັດ</label>
+                  <div className="form-group mb-2 row">
+                    <div className="col-sm-6">
+                    <label htmlFor="" className='form-label'>ສະຖານະໂອເອຊີ</label>
                     <select className='form-select' value={inputs.status_oac} onChange={(e) => handelChange('status_oac', e.target.value)}>
                       <option value="1">ຄ້າງຄືນບໍລິສັດ</option>
                       <option value="2">ຄືນບໍລິສັດແລ້ວ</option>
                     </select>
+                    </div>
+                  <div className="col-sm-6">
+                  <label htmlFor="" className='form-label'>ເປິເຊັນຈ່າຍ {inputs.percent_oac}%</label>
+                  <Input type='number' value={inputs.percent_oac} onChange={(e)=>handelChange('percent_oac',e)} />
+                  </div>
                   </div>
                   <div className="form-group">
                     <label htmlFor="" className='form-label'>ວັນທິຄືນບໍລິສັດ</label>
@@ -192,47 +217,59 @@ export default function RetrunInsurance() {
 
                 <div className="col-sm-4 mb-2">
                   <div className="form-group mb-2 row">
+                   
+                    <div className="col-sm-6">
+                    <label htmlFor="" className='form-label'>ສະຖານະຕົວແທນ</label>
+                    <select className='form-select' value={inputs.status_agent} onChange={(e) => handelChange('status_agent', e.target.value)}>
+                      <option value="1">ຄ້າງຄືນ</option>
+                      <option value="2">ຄືນແລ້ວ</option>
+                    </select>
+                    </div>
                     <div className="col-sm-6">
                     <label htmlFor="" className='form-label'>ເປິເຊັນຕົວແທນ {inputs.percent_agent}%</label>
                     <Input type='number' value={inputs.percent_agent} onChange={(e)=>handelChange('percent_agent',e)} />
-                    </div>
-                    <div className="col-sm-6">
-                    <label htmlFor="" className='form-label'>ສະຖານະຕົວແທນ</label>
-                    <select className='form-select' value={inputs.status_company} onChange={(e) => handelChange('status_company', e.target.value)}>
-                      <option value="1">ຕົວແທນຄ້າງຄືນ</option>
-                      <option value="2">ຕົວແທນຄືນແລ້ວ</option>
-                    </select>
-                    </div>
+                   </div>
                   </div>
                   <div className="form-group">
                     <label htmlFor="" className='form-label'>ວັນທິຕົວແທນຄືນ</label>
-                    <DatePicker oneTap format='dd/MM/yyyy' value={inputs.company_date} onChange={(e) => handelChange('company_date', e)} block />
+                    <DatePicker oneTap format='dd/MM/yyyy' value={inputs.agent_date} onChange={(e) => handelChange('agent_date', e)} block />
                   </div>
                 </div>
                 
                 <div className="col-sm-4 mb-2">
-                  <div className="form-group mb-2 row">
-                  <div className="col-sm-6">
-                    <label htmlFor="" className='form-label'>ເປິເຊັນໂອເອຊີ {inputs.percent_oac}%</label>
-                    <Input type='number' value={inputs.percent_oac} onChange={(e)=>handelChange('percent_oac',e)} />
-                    </div>
-                    <div className="col-sm-6">
-                    <label htmlFor="" className='form-label'>ສະຖານະໂອເອຊີ</label>
-                    <select className='form-select' value={inputs.status_agent} onChange={(e) => handelChange('status_agent', e.target.value)}>
-                      <option value="1">ໂອເອຊີຄ້າງຄືນ</option>
-                      <option value="2">ໂອເອຊີຄືນແລ້ວ</option>
+                  <div className="form-group mb-2">
+                    <label htmlFor="" className='form-label'>ສະຖານະຄືນລູກຄ້າ</label>
+                    <select className='form-select' value={inputs.status_company} onChange={(e) => handelChange('status_company', e.target.value)}>
+                      <option value="1">ຄ້າງຄືນລູກຄ້າ</option>
+                      <option value="2">ຄືນແລ້ວລູກຄ້າແລ້ວ</option>
                     </select>
-                    </div>
                   </div>
                   <div className="form-group">
                     <label htmlFor="" className='form-label'>ວັນທິໂອເອຊີຄືນ</label>
-                    <DatePicker oneTap format='dd/MM/yyyy' value={inputs.agent_date} onChange={(e) => handelChange('agent_date', e)} block />
+                    <DatePicker oneTap format='dd/MM/yyyy' value={inputs.company_date} onChange={(e) => handelChange('company_date', e)} block />
                   </div>
                 </div>
 
-                <div className="col-sm-12 mt-2">
+                <div className="col-sm-8 mt-2">
                   <label htmlFor="" className='form-label'>ໝາຍເຫດ</label>
                   <Input as='textarea' value={inputs.remark_text} onChange={(e) => handelChange('remark_text', e)} />
+                </div>
+                <div className="col-sm-4 mt-2">
+                <label htmlFor="" className='form-label'>ເອກະສານ</label>
+              <br />
+                <label className={!fileName ?'btn btn-primary':'btn btn-success'}>
+                  <input type="file" onChange={selectFiles} className='hide' />
+                  {fileName==='' ? (
+                    <>
+                    <i class="fa-solid fa-cloud-arrow-up"></i> ເລືອກໄຟລ໌ເອກະສານ....
+                    </>
+                  ):(
+                  <>
+                  <i class="fa-solid fa-folder"></i>  ເລືອກໄຟລ໌ໃຫມ່....
+                  </>
+                  )}
+                  
+                  </label>
                 </div>
               </div>
 

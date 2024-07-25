@@ -1,5 +1,5 @@
 import Swal from "sweetalert2"; 
-
+import { Notification } from "rsuite";
   const Alert = {
     errorLoing(name){ 
       Swal.fire({
