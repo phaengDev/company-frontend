@@ -50,7 +50,7 @@ const GetReportData = ({ item }) => {
             <td>{item.contract_number}</td>
             <td className='center'>{moment(item.contract_start_date).format('DD/MM/YYYY')}</td>
             <td className='center'>{moment(item.contract_end_date).format('DD/MM/YYYY')}</td>
-            <td>{item.type_buyer_name}</td>
+            <td>{item.status_ins===1? item.type_buyer_name:item.car_registration}</td>
             <td>{item.type_in_name}</td>
             <td>{item.options_name}</td>
             <td className="right">{numeral(item.initial_fee).format('0,00')}  {item.genus}</td>
