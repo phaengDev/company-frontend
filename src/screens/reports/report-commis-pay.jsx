@@ -400,7 +400,7 @@ const downloadAagentPdf= async ()=>{
                                         ))}
                                         {Object.keys(groupedData).map((currency, key) => (
                                                 <tr key={`${key}`}>
-                                                    <td colSpan={10} className='text-end'>ລວມຍອດຄ້າງຈ່າຍທັງໝົດ ({currency})</td>
+                                                    <td colSpan={11} className='text-end'>ລວມຍອດຄ້າງຈ່າຍທັງໝົດ ({currency})</td>
                                                     <td className='text-end'>{formatNumber(groupedData[currency].initial_fee)}</td>
                                                     <td></td>
                                                     <td className='text-end'>{formatNumber(groupedData[currency].money_taxes)}</td>
