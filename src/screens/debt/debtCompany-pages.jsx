@@ -304,6 +304,7 @@ const formatNumber = (num) => numeral(num).format('0,00');
                                 <tr>
                                     <th width='1%' className="text-center bg-header sticky-col first-col">ລ/ດ</th>
                                     <th width='1%' className="text-center bg-header sticky-col first-col">ຕັດໜີ້</th>
+                                    <th className="">ຊື່ລູກຄ້າ</th>
                                     <th className="">ບໍລິສັນປະກັນໄພ</th>
                                     <th className="">ເລກທີສັນຍາ</th>
                                     <th className="text-center">ວັນທີເລີມ</th>
@@ -337,6 +338,7 @@ const formatNumber = (num) => numeral(num).format('0,00');
                                                 <tr key={key}>
                                                     <td className='text-center bg-white sticky-col first-col'>{key + 1}</td>
                                                     <td className='text-center bg-white sticky-col first-col'><span onClick={() => handlePayDebt(item)} role='button' class="badge bg-primary"><i class="fa-brands fa-paypal"></i> ຕັດໜີ້ບໍລິສັດ</span></td>
+                                                    <td>{item.customer_name}</td>
                                                     <td>{item.com_name_lao}</td>
                                                     <td className='text-center'>{item.contract_number}</td>
                                                     <td className='text-center'>{moment(item.contract_start_date).format('DD/MM/YYYY')}</td>
@@ -360,7 +362,7 @@ const formatNumber = (num) => numeral(num).format('0,00');
                                            
                                             {Object.keys(sumData).map((currency, key) => (
                                         <tr key={key}>
-                                            <td colSpan={10} className='text-end'>ລວມຍອດຮັບທັງໝົດ ({currency})</td>
+                                            <td colSpan={11} className='text-end'>ລວມຍອດຮັບທັງໝົດ ({currency})</td>
                                             <td className='text-end'>{formatNumber(sumData[currency].initial_fee)}</td>
                                             <td></td>
                                             <td className='text-end'>{formatNumber(sumData[currency].money_taxes)}</td>

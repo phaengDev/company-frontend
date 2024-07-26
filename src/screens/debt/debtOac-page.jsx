@@ -304,6 +304,7 @@ export default function DebtOac() {
                                 <tr>
                                     <th width='1%' className="text-center bg-header sticky-col first-col">ລ/ດ</th>
                                     <th width='1%' className="text-center bg-header sticky-col first-col">ຕັດໜີ້</th>
+                                    <th className="">ຊື່ລູກຄ້າ</th>
                                     <th className="">ບໍລິສັນປະກັນໄພ</th>
                                     <th width="5%" className="text-center">ເລກທີສັນຍາ</th>
                                     <th className="text-center">ວັນທີເລີມ</th>
@@ -339,6 +340,7 @@ export default function DebtOac() {
                                                 <tr key={key}>
                                                     <td className='text-center bg-white sticky-col first-col'>{key + 1}</td>
                                                     <td className='text-center bg-white sticky-col first-col'>{item.status_company === 1 ? 'ຄັ້ງຈ່າຍບໍລິສັດ' : (<span onClick={() => handlePayDebt(item)} role='button' class="badge bg-primary"><i class="fa-brands fa-paypal"></i> ຕັດໜີ້ບໍລິສັດ</span>)}</td>
+                                                    <td>{item.customer_name}</td>
                                                     <td>{item.com_name_lao}</td>
                                                     <td className='text-center'>{item.contract_number}</td>
                                                     <td className='text-center'>{moment(item.contract_start_date).format('DD/MM/YYYY')}</td>
@@ -365,7 +367,7 @@ export default function DebtOac() {
                                             ))}
                                             {Object.keys(sumData).map((currency, key) => (
                                         <tr key={key}>
-                                            <td colSpan={11} className='text-end'>ລວມຍອດຮັບທັງໝົດ ({currency})</td>
+                                            <td colSpan={12} className='text-end'>ລວມຍອດຮັບທັງໝົດ ({currency})</td>
                                             <td className='text-end'>{formatNumber(sumData[currency].initial_fee)}</td>
                                             <td></td>
                                             <td className='text-end'>{formatNumber(sumData[currency].pre_tax_profit)}</td>
