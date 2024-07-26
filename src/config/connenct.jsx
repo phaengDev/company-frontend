@@ -10,11 +10,21 @@
 // };
 
 export const Config = {
-  urlApi: 'http://localhost:9494/',
+  urlApi: 'http://localhost:3030/',
   apiKey: 'your-api-key',
 };
 
 export const imageUrl = {
-  url: 'http://localhost:9494/image/',
+  url: 'http://localhost:3030/image/',
   apiKey: 'your-api-key',
 };
+
+// export const Config = {
+//   urlApi: 'http://localhost:9494/',
+//   apiKey: 'your-api-key',
+// };
+
+// export const imageUrl = {
+//   url: 'http://localhost:9494/image/',
+//   apiKey: 'your-api-key',
+// };

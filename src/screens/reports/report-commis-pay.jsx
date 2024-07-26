@@ -5,10 +5,11 @@ import { Config } from '../../config/connenct';
 import axios from 'axios';
 import moment from 'moment';
 import numeral from 'numeral';
-import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
-import * as XLSX from 'xlsx';
+import html2canvas from 'html2canvas';
+import ReactDOM from 'react-dom';
 import  GetReportData  from '../invioce/report-pays';
+import GetReportAgent from '../invioce/report-paysAgent';
 export default function ReportCommisPay() {
     const api = Config.urlApi;
     const itemcm = useCompany();
@@ -135,13 +136,103 @@ export default function ReportCommisPay() {
 
 
     // =======================\\
-    const downloadPDF = () => {
+   
+    const downloadPDF = async (item) => {
+        // Create a hidden container for the report
+        const hiddenContainer = document.createElement('div');
+        hiddenContainer.style.position = 'fixed';
+        hiddenContainer.style.top = '-9999px';
+        hiddenContainer.style.width = '100%'; // Ensure the container takes full width
+        hiddenContainer.style.height = '100%'; // Ensure the container takes full height
+        document.body.appendChild(hiddenContainer);
+        ReactDOM.render(<GetReportData item={item} />, hiddenContainer);
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second to ensure rendering is complete
+        const canvas = await html2canvas(hiddenContainer, { scale: 2 }); // Increase scale for better quality
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('landscape', 'mm', 'a4'); // Landscape mode
+        // Define padding and dimensions
+        const padding = 5; // Padding in mm
+        const pdfWidth = 297; // A4 landscape width in mm
+        const pdfHeight = 210; // A4 landscape height in mm
+        // Calculate the dimensions and positions for the image
+        const imgWidth = canvas.width / 2;
+        const imgHeight = canvas.height / 2;
+        const widthRatio = (pdfWidth - 2 * padding) / imgWidth;
+        const heightRatio = (pdfHeight - 2 * padding) / imgHeight;
+        const ratio = Math.min(widthRatio, heightRatio);
+
+        const xOffset = padding;
+        const yOffset = padding;
+        const scaledWidth = imgWidth * ratio;
+        const scaledHeight = imgHeight * ratio;
+        pdf.addImage(imgData, 'PNG', xOffset, yOffset, scaledWidth, scaledHeight);
+        pdf.save(`${item.contract_number}.pdf`);
+        document.body.removeChild(hiddenContainer);
     };
 
 
     const downloadExcel = () => {
     }
 
+//=============================
+    const [disableds,setDisableds]=useState(false)
+
+
+    const [checkedItems, setCheckedItems] = useState({});
+    const handleItemChange = (item) => {
+        setCheckedItems(prevState => ({
+            ...prevState,
+            [item.idAuto]: !prevState[item.idAuto]
+        }));
+    };
+
+    const handleAllChange = (e) => {
+        const isChecked = e.target.checked;
+        const newCheckedItems = {};
+        currentItems.forEach(item => {
+            newCheckedItems[item.idAuto] = isChecked;
+        });
+        setCheckedItems(newCheckedItems);
+    };
+
+    const areAllChecked = Object.values(checkedItems).length === currentItems.length && Object.values(checkedItems).every(Boolean);
+
+    const selectedItems = currentItems.filter(item => checkedItems[item.idAuto]);
+
+    const [isload,setIsLoad]=useState(false)
+const downloadAagentPdf= async ()=>{
+    setIsLoad(true)
+    const hiddenContainer = document.createElement('div');
+    hiddenContainer.style.position = 'fixed';
+    hiddenContainer.style.top = '-9999px';
+    hiddenContainer.style.width = '100%'; // Ensure the container takes full width
+    hiddenContainer.style.height = '100%'; // Ensure the container takes full height
+    document.body.appendChild(hiddenContainer);
+    ReactDOM.render(<GetReportAgent itemData={selectedItems} />, hiddenContainer);
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second to ensure rendering is complete
+    const canvas = await html2canvas(hiddenContainer, { scale: 2 }); // Increase scale for better quality
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('landscape', 'mm', 'a4'); // Landscape mode
+    // Define padding and dimensions
+    const padding = 5; // Padding in mm
+    const pdfWidth = 297; // A4 landscape width in mm
+    const pdfHeight = 210; // A4 landscape height in mm
+    // Calculate the dimensions and positions for the image
+    const imgWidth = canvas.width / 2;
+    const imgHeight = canvas.height / 2;
+    const widthRatio = (pdfWidth - 2 * padding) / imgWidth;
+    const heightRatio = (pdfHeight - 2 * padding) / imgHeight;
+    const ratio = Math.min(widthRatio, heightRatio);
+
+    const xOffset = padding;
+    const yOffset = padding;
+    const scaledWidth = imgWidth * ratio;
+    const scaledHeight = imgHeight * ratio;
+    pdf.addImage(imgData, 'PNG', xOffset, yOffset, scaledWidth, scaledHeight);
+    pdf.save(`ໃບແຈ້ງໜີ້ຄອມຈ່າຍ.pdf`);
+    document.body.removeChild(hiddenContainer);
+    setIsLoad(false);
+}
 
     // ================================
     const groupedData = currentItems.reduce((acc, item) => {
@@ -169,9 +260,11 @@ export default function ReportCommisPay() {
     }, {});
     const formatNumber = (num) => numeral(num).format('0,00');
     
-
+    console.log(selectedItems)
     useEffect(() => {
+        
         fetchReport();
+        setDisableds(data.agent_id_fk ==='' ?true:false)
     }, [data])
 
     return (
@@ -179,10 +272,10 @@ export default function ReportCommisPay() {
 
             <div class="app-content-padding px-4 py-3">
                 <div class="d-lg-flex mb-lg-3 mb-2">
-                    <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍງານຄອມຈ່າຍຕົວແທນ d</h3>
+                    <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍງານຄອມຈ່າຍຕົວແທນ </h3>
                     <span class="d-none d-lg-flex align-items-center">
-                        <button onClick={downloadPDF} class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
-                            <i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
+                        <button onClick={downloadAagentPdf} disabled={disableds} class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
+                          {isload===true ?(<Loader content="ກຳລັງໂຫລດ..." />):(<><i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF</>)}  
                         </button>
                         <button onClick={downloadExcel} class="btn btn-success btn-sm d-flex me-2 pe-3 rounded-3">
                             <i class="fa-solid fa-cloud-arrow-down fs-18px me-2 ms-n1"></i>
@@ -242,6 +335,7 @@ export default function ReportCommisPay() {
                         <thead className="fs-14px bg-header">
                             <tr>
                                 <th width='1%' className="text-center">ລ/ດ</th>
+                                <th width='1%' className="text-center"><input class="form-check-input" onChange={handleAllChange} checked={areAllChecked} type="checkbox"  /></th>
                                 <th className="">ຊື່ລູກຄ້າ</th>
                                 <th className="">ເລກທີສັນຍາ</th>
                                 <th className="">ວັນທີເລີມ</th>
@@ -278,6 +372,7 @@ export default function ReportCommisPay() {
                                         {currentItems.map((item, key) => (
                                             <tr key={key}>
                                                 <td className='text-center'>{item.idAuto}</td>
+                                                <td width='1%' className="text-center"><input class="form-check-input" onChange={()=> handleItemChange(item)} checked={!!checkedItems[item.idAuto]} type="checkbox"  /></td>
                                                 <td>{item.customer_name}</td>
                                                 <td>{item.contract_number}</td>
                                                 <td>{moment(item.contract_start_date).format('DD/MM/YYYY')}</td>
@@ -298,8 +393,8 @@ export default function ReportCommisPay() {
                                                 <td className='text-end'>{numeral(item.money_percent_fee).format('0,00')}  {item.genus}</td>
                                                 <td className='text-end'>{numeral(item.expences_pays_taxes).format('0,00')} {item.genus}</td>
                                                 <td>
-                                                    {/* <button type='button' className='btn btn-xs btn-red'> PDF </button>
-                                                <button className='btn btn-xs btn-green ms-2'> Excel </button> */}
+                                                    <button type='button' onClick={() => downloadPDF(item)} className='btn btn-xs btn-red'> PDF </button>
+                                                {/* <button className='btn btn-xs btn-green ms-2'> Excel </button> */}
                                                 </td>
                                             </tr>
                                         ))}
