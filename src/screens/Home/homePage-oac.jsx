@@ -6,8 +6,9 @@ import { Loader } from 'rsuite';
 import axios from 'axios';
 import numeral from 'numeral';
 export default function HomePageOac() {
-    const type = localStorage.getItem('user_type');
     const api = Config.urlApi;
+    const user_type=localStorage.getItem('user_type');
+    const companyId=localStorage.getItem('company_agent_id');
     const [balance, setBalance] = useState({
         insuranc_included: 0,
         incom_finally: 0,
@@ -19,11 +20,15 @@ export default function HomePageOac() {
         custom_qty: 0
     })
     const [isLoading, setIsLoading] = useState(true);
+    const datack = {
+        user_type: user_type,
+        companyId: companyId
+    };
+
     const fetchData = async () => {
         try {
-            const res = await axios.get(api + 'home/balanch');
+            const res = await axios.post(api + 'home/balanch', datack);
             const resData = res.data;
-            console.log(resData)
             setBalance({
                 insuranc_included: resData.data1.insuranc_included,
                 incom_finally: resData.data1.incom_finally,
@@ -138,7 +143,7 @@ export default function HomePageOac() {
                     <div class="widget widget-stats bg-blue border-4 border-top border-red rounded-4">
                         <div class="stats-icon text-white"><i class="fa-solid fa-user-shield"></i></div>
                         <div class="stats-info">
-                            <h4 className='fs-16px'>ຈຳນວນລູກຄ້າຊື້ປະກັນໄພ {type}</h4>
+                            <h4 className='fs-16px'>ຈຳນວນລູກຄ້າຊື້ປະກັນໄພ </h4>
                             <p>{isLoading === true ? (<Loader size="md" content="ກຳລັງໂຫລດ..." />) : (balance.custom_qty + ' (ຄົນ)')} </p>
                         </div>
                     </div>

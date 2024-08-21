@@ -24,10 +24,10 @@ export default function Navbar() {
           <div className={`menu-item ${path === `/${item.link}` ? 'active' : ''}`} >
             <Link to={item.link} className="menu-link">
               <div className="menu-icon">
-                <i className="fa-solid fa-house-chimney bg-info"></i>
+                <i className={item.icon}></i>
               </div>
               <div className="menu-text fs-14px">
-                ໜ້າຫຼັກ
+                {item.mainName}
               </div>
             </Link>
           </div>

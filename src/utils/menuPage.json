@@ -250,6 +250,51 @@
           "sublink": "currency"
         }
       ]
+    }, {
+      "id": 9,
+      "mainName": "ໜ້າຫຼັກ",
+      "link": "home",
+      "typeUser":"2",
+      "icon": "fa-solid fa-house-chimney bg-info",
+      "subMenu": []
+    },{
+      "id": 10,
+      "mainName": "ລາຍງານການຂາຍ",
+      "link": "report-ag",
+      "typeUser":"2",
+      "icon": "fa-solid fa-tags bg-orange-400",
+      "subMenu": []
+    }
+    ,{
+      "id": 11,
+      "mainName": "ລາຍງານຄອມຄ່າຄອມ",
+      "link": "r-commit",
+      "typeUser":"2",
+      "icon": "fa-solid fa-file-medical bg-gradient-green",
+      "subMenu": []
+    }
+    ,{
+      "id": 11,
+      "mainName": "ລາຍງານຈ່າຍຄ່າຄອມ",
+      "link": "r-payAgent",
+      "typeUser":"2",
+      "icon": "fa-solid fa-file-invoice bg-blue-800",
+      "subMenu": []
+    },{
+      "id": 12,
+      "mainName": "ລາຍງານສັນຍາສົ່ງຄືນ",
+      "link": "retrun-all",
+      "typeUser":"2",
+      "icon": "fa-solid fa-paste bg-gradient-yellow",
+      "subMenu": []
+    }
+    ,{
+      "id": 13,
+      "mainName": "ສັນຍາໝົດຄວາມຄຸ້ມຄອງ",
+      "link": "report-ends",
+      "typeUser":"2",
+      "icon": "fa-solid fa-file-circle-xmark bg-indigo-400",
+      "subMenu": []
     }
   ]
 }

@@ -8,7 +8,14 @@ import Swal from "sweetalert2";
 export default function TypeInsuance() {
     const api = Config.urlApi;
     const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
+    const handleOpen = () => {
+        setInputs({
+            type_ins_Id:'',
+            status_ins:'',
+            type_in_name:''
+        })
+        setOpen(true);
+    }
     const handleClose = () => setOpen(false);
 
     //============= action =============
@@ -231,7 +238,7 @@ export default function TypeInsuance() {
                     <form onSubmit={handleSubmit}>
                         <Modal.Body>
                             <div className="form-group mb-2">
-                                <label htmlFor="" className="form-label">ຊື່ປະເພດປະກັນ</label>
+                                <label htmlFor="" className="form-label">ຊື່ປະເພດປະກັນ </label>
                                 <input type="text" className="form-control border-blue" name="type_in_name" value={inputs.type_in_name} onChange={handleChange} placeholder="ຊື່ປະເພດປະກັນ" required />
                             </div>
                             <div className="form-group mb-2">

@@ -47,6 +47,11 @@ import RetrunAgent from '../screens/lefun/Retrun-agent';
 import RetrunOacborker from '../screens/lefun/Retrun-oacborker';
 import ComissionSale from '../screens/setting/Comission-Sale';
 import CommissionPay from '../screens/setting/Commission-Pay';
+
+import ReportCommition from '../screens/agents/Report-commition';
+import ReportPaycommition from '../screens/agents/Report-Paycommition';
+import ReportInsuranteAgent from '../screens/agents/Report-insurante-agent';
+
 import { Routes, Route, Navigate } from 'react-router-dom';
 export default function AppContent() {
   return (
@@ -100,6 +105,10 @@ export default function AppContent() {
             <Route path='/retrun-oac' element={<RetrunOacborker />}/>
             <Route path='/comission' element={<ComissionSale/>}/>
             <Route path='/comisaget' element={<CommissionPay/>}/>
+
+            <Route path='/r-commit' element={<ReportCommition/>}/>
+            <Route path='/r-payAgent' element={<ReportPaycommition/>}/>
+            <Route path='/report-ag' element={<ReportInsuranteAgent/>}/>
         </Routes>
   )
 }

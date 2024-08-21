@@ -26,13 +26,14 @@ export default function Login() {
         try {
             axios.post(api + 'login/check', inputs)
                 .then(function (res) {
+                    console.log(res.data)
                     if (res.status === 200) {
                         localStorage.setItem('token', res.data.token);
                         localStorage.setItem('userId', res.data.user_Id);
                         localStorage.setItem('username', res.data.username);
                         localStorage.setItem('user_type', res.data.user_type_fk);
                         localStorage.setItem('userEmail', res.data.userEmail);
-                        localStorage.setItem('companyID', res.data.company_agent_fk);
+                        localStorage.setItem('company_agent_id', res.data.company_agent_fk);
                         localStorage.setItem('statusUse', res.data.statusUse);
                         window.location.href = '/home';
                     }

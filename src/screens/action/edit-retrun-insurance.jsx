@@ -142,7 +142,7 @@ export default function EditRetrun() {
           <li className="breadcrumb-item active">ແບບຟອມຮັບເງິນຄືນ</li>
         </ol>
         <h3 className="page-header fs-20px">
-          <Link to={'/'} className='me-3 text-danger' ><i class="fa-solid fa-circle-arrow-left"></i> </Link>
+          <Link to={'/retrun-all'} className='me-3 text-danger' ><i class="fa-solid fa-circle-arrow-left"></i> </Link>
           ແກ້ໄຂຂໍ້ມູນຮັບເງິນຄືນ {retrunId}
         </h3>
 

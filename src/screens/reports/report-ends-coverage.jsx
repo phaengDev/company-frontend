@@ -12,6 +12,10 @@ export default function ReportEndsCoverage() {
   const itemType = useType();
   const itemagent = useAgent();
 
+  const user_type = parseInt(localStorage.getItem('user_type'), 10);
+  const companyId = parseInt(localStorage.getItem('company_agent_id'), 10);
+
+
   const [itemOption, setItemOption] = useState([]);
   const handleOption = async (name, value) => {
     try {
@@ -33,12 +37,12 @@ export default function ReportEndsCoverage() {
     end_date: '',
     company_id_fk: '',
     insurance_type_fk: '',
-    agent_id_fk: '',
+    agent_id_fk: companyId,
     type_buyer_fk: '',
     option_id_fk: '',
     day_contract: 1,
     status: 1, //=========  ສະຖານະ 1 ສັນຍາປະຈຸບັນ  2 ປະຫວັດຕໍ່ສັນຍາ
-    statusDay:2, //=========  ສະຖານະ 1 ໃກ້ຈະຫມົດ  2 ສັນຍາຫມົດຄວາມຄຸ້ມຄອງ
+    statusDay: 2, //=========  ສະຖານະ 1 ໃກ້ຈະຫມົດ  2 ສັນຍາຫມົດຄວາມຄຸ້ມຄອງ
   })
   const handleChange = (name, value) => {
     setData({
@@ -64,53 +68,53 @@ export default function ReportEndsCoverage() {
     setItemData(filter.filter(n => n.contract_number.toLowerCase().includes(event)))
   }
 
-const handleRenew=(id)=>{
-  navigate(`/from-renew?id=${btoa(id)}`);
-}
-const navigate = useNavigate();
-
-// =================== custom pages============
-const [currentPage, setcurrentPage] = useState(1);
-const [itemsPerPage, setitemsPerPage] = useState(100);
-const handleShowLimit = (value) => {
-  setitemsPerPage(value);
-};
-const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(5);
-const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
-
-const handlePageClick = (event) => {
-  setcurrentPage(Number(event.target.id));
-  setI(indexOfLastItem+1)
-};
-
-const pages = [];
-for (let i = 1; i <= Math.ceil(itemData.length / itemsPerPage); i++) {
-  pages.push(i);
-}
-
-const indexOfLastItem = currentPage * itemsPerPage;
-const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-const currentItems = itemData.slice(indexOfFirstItem, indexOfLastItem);
-
-const [i, setI] = useState(1);
-const qtyItem =itemData.length;
-const renderPageNumbers = pages.map((number) => {
-    if (number > minPageNumberLimit && number <= maxPageNumberLimit) {
-        return (
-          <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
-            <span role="button" id={number} onClick={handlePageClick} className="page-link border-blue">
-              {number}
-            </span>
-          </li>
-        );
-      } else {
-        return(
-          number=''
-        )
+  const handleRenew = (id) => {
+    navigate(`/from-renew?id=${btoa(id)}`);
   }
-});
+  const navigate = useNavigate();
 
-const handleNextbtn = () => {
+  // =================== custom pages============
+  const [currentPage, setcurrentPage] = useState(1);
+  const [itemsPerPage, setitemsPerPage] = useState(100);
+  const handleShowLimit = (value) => {
+    setitemsPerPage(value);
+  };
+  const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(5);
+  const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
+
+  const handlePageClick = (event) => {
+    setcurrentPage(Number(event.target.id));
+    setI(indexOfLastItem + 1)
+  };
+
+  const pages = [];
+  for (let i = 1; i <= Math.ceil(itemData.length / itemsPerPage); i++) {
+    pages.push(i);
+  }
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = itemData.slice(indexOfFirstItem, indexOfLastItem);
+
+  const [i, setI] = useState(1);
+  const qtyItem = itemData.length;
+  const renderPageNumbers = pages.map((number) => {
+    if (number > minPageNumberLimit && number <= maxPageNumberLimit) {
+      return (
+        <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
+          <span role="button" id={number} onClick={handlePageClick} className="page-link border-blue">
+            {number}
+          </span>
+        </li>
+      );
+    } else {
+      return (
+        number = ''
+      )
+    }
+  });
+
+  const handleNextbtn = () => {
     setcurrentPage(currentPage + 1);
 
     if (currentPage + 1 > maxPageNumberLimit) {
@@ -121,7 +125,7 @@ const handleNextbtn = () => {
 
   const handlePrevbtn = () => {
     setcurrentPage(currentPage - 1);
-    setI(indexOfLastItem-1)
+    setI(indexOfLastItem - 1)
 
     if ((currentPage - 1) % 5 == 0) {
       setmaxPageNumberLimit(maxPageNumberLimit - 5);
@@ -130,7 +134,7 @@ const handleNextbtn = () => {
   };
 
 
-    // =======================\\
+  // =======================\\
 
   const handleDownload = async (fileName) => {
     try {
@@ -196,8 +200,8 @@ const handleNextbtn = () => {
             <SelectPicker block data={dataOption} onChange={(e) => handleChange('option_id_fk', e)} />
           </div>
           <div className="col-sm-4 col-md-2">
-            <label htmlFor="" className='form-label'>ຕົວແທນຂາຍ</label>
-            <SelectPicker block data={itemagent} onChange={(e) => handleChange('agent_id_fk', e)} />
+            <label htmlFor="" className='form-label'>ຕົວແທນຂາຍ </label>
+            <SelectPicker block data={itemagent} value={data.agent_id_fk} onChange={(e) => handleChange('agent_id_fk', e)} readOnly={user_type === 2 && 'readOnly'} />
           </div>
         </div>
         <div class="d-lg-flex align-items-center mb-3">
@@ -275,20 +279,22 @@ const handleNextbtn = () => {
                         <td>{item.agent_tel}</td>
                         <td className='text-center'>{item.day_contract}</td>
                         <td className='text-center'>
-                          {item.file_doc.length > 0 &&(
+                          {item.file_doc.length > 0 && (
                             <>
-                            <button type='button' data-bs-toggle="dropdown" className='btn btn-xs text-green'> <i class="fa-regular fa-folder-open fs-4"></i></button>
-                            <div class="dropdown-menu dropdown-menu-end" >
-                            <div class="px-3 fs-16px">{item.contract_number} </div>
-                              <div className="dropdown-divider"/>
-                            {item.file_doc.map((file,index)=>
-                            <div class="dropdown-item"><a href="javascript:;" onClick={() => handleDownload(`${url}docfile/${file.file_insurance}`)}><i class="fa-solid fa-cloud-arrow-down fs-4"></i></a> : {file.file_insurance}</div>
-                            )}
-                            </div>
+                              <button type='button' data-bs-toggle="dropdown" className='btn btn-xs text-green'> <i class="fa-regular fa-folder-open fs-4"></i></button>
+                              <div class="dropdown-menu dropdown-menu-end" >
+                                <div class="px-3 fs-16px">{item.contract_number} </div>
+                                <div className="dropdown-divider" />
+                                {item.file_doc.map((file, index) =>
+                                  <div class="dropdown-item"><a href="javascript:;" onClick={() => handleDownload(`${url}docfile/${file.file_insurance}`)}><i class="fa-solid fa-cloud-arrow-down fs-4"></i></a> : {file.file_insurance}</div>
+                                )}
+                              </div>
                             </>
                           )}</td>
                         <td className='text-center'>
-                          <button type="button" onClick={()=>handleRenew(item.incuranec_code)} className='btn btn-xs btn-blue ms-2'><i class="fa-solid fa-pen-to-square"></i> ຕໍ່ສັນຍາ </button>
+                          {user_type === 1 && (
+                            <button type="button" onClick={() => handleRenew(item.incuranec_code)} className='btn btn-xs btn-blue ms-2'><i class="fa-solid fa-pen-to-square"></i> ຕໍ່ສັນຍາ </button>
+                          )}
                         </td>
                       </tr>
                     ))}
