@@ -226,6 +226,16 @@ export default function RegisterInsurance() {
         ...valueComis,agentId:value
       })
     }
+
+if(name==='contract_start_date'){
+  setInputs({
+    ...inputs, 
+    company_date: new Date(value),
+    agent_date: new Date(value),
+    oac_date: new Date(value)
+  })
+}
+
   }
 
 

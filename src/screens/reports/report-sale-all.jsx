@@ -62,10 +62,12 @@ export default function ReportSaleAll() {
     const Filter = (event) => {
         setItemData(dataFilter.filter(n => 
             n.contract_number.toLowerCase().includes(event)||
-            n.currency_name.toLowerCase().includes(event)
-    ))
+            n.currency_name.toLowerCase().includes(event) ||
+            n.customer_name.toLowerCase().includes(event)
+    ));
     }
 
+    
     
     // =================== custom pages============
     const [currentPage, setcurrentPage] = useState(1);

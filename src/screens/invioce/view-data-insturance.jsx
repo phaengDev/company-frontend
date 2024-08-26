@@ -3,18 +3,60 @@ import '../../View-insurance.css'
 import { calculateAge } from '../../utils/utils';
 import moment from 'moment';
 import numeral from 'numeral';
-import {imageUrl } from '../../config/connenct';
+import { imageUrl } from '../../config/connenct';
 export const ViewInsturance = ({ data }) => {
-    const url=imageUrl.url
+    const url = imageUrl.url
     const item = data;
     const age = calculateAge(item.agent_dob);
+
+
+    const handleDownload = async (fileName) => {
+        try {
+            const response = await fetch(fileName); // Replace with your server URL
+            if (!response.ok) {
+                throw new Error('File download failed');
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+        } catch (error) {
+            alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
+        }
+    };
+
+    const downloadFilePay = async (fileName) => {
+        try {
+            const response = await fetch(fileName); // Replace with your server URL
+            if (!response.ok) {
+                throw new Error('File download failed');
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+        } catch (error) {
+            alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
+        }
+    }
+
     return (
         <div class="container">
             <table class="policy-table ">
                 <thead>
                     <tr>
                         <th colspan="4" class="header ">
-                            <img src={item.com_logo?(url+'logo/'+item.com_logo):('./assets/img/logo/oac.png')} alt="Logo" class="logo" />
+                            <img src={item.com_logo ? (url + 'logo/' + item.com_logo) : ('./assets/img/logo/oac.png')} alt="Logo" class="logo" />
                             <div class="company-details">
                                 <h3> {item.com_name_lao}</h3>
                                 <h3 className=''> {item.com_name_eng}</h3>
@@ -133,24 +175,46 @@ export const ViewInsturance = ({ data }) => {
                     </tr>
                     <tr>
                         <th>ສະຖານະຈ່າຍບໍລິສັດ:</th>
-                        <td>{item.status_company===1?'ຄ້າງຈ່າຍບໍ່ລິສັດ ('+item.day_company+' )':'ຈ່າຍແລ້ວ'}</td>
+                        <td>{item.status_company === 1 ? 'ຄ້າງຈ່າຍບໍ່ລິສັດ (' + item.day_company + ' )' : 'ຈ່າຍແລ້ວ'}</td>
                         <th>ວັນທີ:</th>
-                        <td>{moment(item.company_date).format('DD/MM/YYYY')}</td>
+                        <td>{moment(item.company_date).format('DD/MM/YYYY')}  
+                        {item.file_comits
+                                .filter(pay => pay.status_doc === 1)
+                                .map((pay, key) => (
+                                    <span className='float-end text-red' onClick={() => downloadFilePay(`${url}docPay/${pay.docom_file}`)} role='button'><i class="fa-solid fa-download" /> {pay.docom_file}</span>
+                                ))}
+                        </td>
                     </tr>
                     <tr>
                         <th>ສະຖານະຈ່າຍຕົວແທນ:</th>
-                        <td>{item.status_agent===1?'ຄ້າງຈ່າຍຕົວແທນ ('+item.day_agent+' )':'ຈ່າຍແລ້ວ'}</td>
+                        <td>{item.status_agent === 1 ? 'ຄ້າງຈ່າຍຕົວແທນ (' + item.day_agent + ' )' : 'ຈ່າຍແລ້ວ'}</td>
                         <th>ວັນທີຈ່າຍ:</th>
-                        <td>{moment(item.agent_date).format('DD/MM/YYYY')}</td>
+                        <td>{moment(item.agent_date).format('DD/MM/YYYY')} 
+                        {item.file_comits
+                                .filter(pay => pay.status_doc === 2)
+                                .map((pay, key) => (
+                                    <span className='float-end text-red' onClick={() => downloadFilePay(`${url}docPay/${pay.docom_file}`)} role='button'><i class="fa-solid fa-download" /> {pay.docom_file}</span>
+                                ))}
+                        </td>
                     </tr>
                     <tr>
                         <th>ສະຖານະຮັບ:</th>
-                        <td>{item.status_oac===1?'ຄ້າງຮັບ ('+item.day_oac+' )':'ຮັບແລ້ວ'}</td>
+                        <td>{item.status_oac === 1 ? 'ຄ້າງຮັບ (' + item.day_oac + ' )' : 'ຮັບແລ້ວ'}</td>
                         <th>ວັນທີຮັບ:</th>
-                        <td>{moment(item.oac_date).format('DD/MM/YYYY')}</td>
+                        <td>{moment(item.oac_date).format('DD/MM/YYYY')}
+                            {item.file_comits
+                                .filter(pay => pay.status_doc === 3)
+                                .map((pay, key) => (
+                                    <span className='float-end text-red' onClick={() => downloadFilePay(`${url}docPay/${pay.docom_file}`)} role='button'><i class="fa-solid fa-download" /> {pay.docom_file}</span>
+                                ))}
+                        </td>
                     </tr>
                 </tbody>
             </table>
+            {item.file_doc.map((doc, key) => (
+                <div className='link ' onClick={() => handleDownload(`${url}docfile/${doc.file_insurance}`)} role='button'><i class="fa-solid fa-cloud-arrow-down text-red" /> {doc.file_insurance}</div>
+            ))}
+
         </div>
     )
 }
