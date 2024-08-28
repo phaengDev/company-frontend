@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { DatePicker, SelectPicker, Input, InputGroup, Placeholder, Loader } from 'rsuite'
 import { useCompany, useType, useAgent } from '../../config/select-option';
-import { Config } from '../../config/connenct';
+import { Config,imageUrl } from '../../config/connenct';
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import numeral from 'numeral';
@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import Alert from '../../utils/config';
 export default function ReportRetrunAll() {
     const api = Config.urlApi;
+    const url=imageUrl.url;
     const itemcm = useCompany();
     const itemType = useType();
     const itemAg = useAgent();
@@ -50,7 +51,8 @@ export default function ReportRetrunAll() {
         const query = event.toLowerCase();
         setItemData(dataFilter.filter(n =>
             n.contract_number.toLowerCase().includes(query) ||
-            n.currency_name.toLowerCase().includes(query)
+            n.currency_name.toLowerCase().includes(query)||
+            n.customer_name.toLowerCase().includes(query)
         ));
     };
     const [itemsPerPage, setitemsPerPage] = useState(100);
@@ -107,6 +109,30 @@ export default function ReportRetrunAll() {
         return acc;
     }, {});
     const formatNumber = (num) => numeral(num).format('0,00');
+
+
+    const handleDownload = async (fileName) => {
+        try {
+          const response = await fetch(fileName); // Replace with your server URL
+          if (!response.ok) {
+            throw new Error('File download failed');
+          }
+      
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(new Blob([blob]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', fileName);
+          document.body.appendChild(link);
+          link.click();
+          link.parentNode.removeChild(link);
+        } catch (error) {
+          alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
+          // Handle error as needed
+        }
+      };
+
+
 
     useEffect(() => {
         fetchReport();
@@ -198,6 +224,7 @@ export default function ReportRetrunAll() {
                                 <th className='text-center'>ໜີ້ລູກຄ້າ</th>
                                 <th className="text-center">ວັນທີ</th>
                                 <th className="">ໝາຍເຫດ</th>
+                                <th className="text-center">#</th>
                                 <th width='10%' className="text-center">ການຕັ້ງຄ່າ</th>
                             </tr>
                         </thead>
@@ -238,6 +265,11 @@ export default function ReportRetrunAll() {
                                                 <td className="text-center">{moment(item.company_date).format('DD/MM/YYYY')}</td>
                                                 <td className="">{item.remark_text}</td>
                                                 <td className="text-center">
+                                                    {item.file_doc !=='' &&(
+                                                        <a href="javascript:;" onClick={() => handleDownload(`${url}docfile/${item.file_doc}`)} className='link'> <i class="fa-solid fa-cloud-arrow-down fs-4"/></a>
+                                                    )}
+                                                </td>
+                                                <td className="text-center">
                                                     {user_type === '1' && (
                                                         <>
                                                             <button onClick={() => handleEdit(item.insurance_retrun_id)} className='btn btn-xs btn-green ms-2'> <i class="fa-solid fa-pen-to-square"></i> </button>
@@ -259,12 +291,12 @@ export default function ReportRetrunAll() {
                                                 )}
                                                 <td colSpan={2} className='text-end'>{formatNumber(sumData[currency].balance_agent)}</td>
                                                 <td className='text-end'></td>
-                                                <td colSpan={4}></td>
+                                                <td colSpan={5}></td>
 
                                             </tr>
                                         ))}
                                     </>
-                                ) : (<tr><td colSpan={20} className='text-center text-red'>ບໍ່ພົບຂໍ້ມູນທີ່ມີການຄົ້ນຫາ.......</td></tr>)
+                                ) : (<tr><td colSpan={21} className='text-center text-red'>ບໍ່ພົບຂໍ້ມູນທີ່ມີການຄົ້ນຫາ.......</td></tr>)
                             )}
                         </tbody>
                     </table>
