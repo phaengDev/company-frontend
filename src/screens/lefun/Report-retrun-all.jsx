@@ -266,7 +266,7 @@ export default function ReportRetrunAll() {
                                                 <td className="">{item.remark_text}</td>
                                                 <td className="text-center">
                                                     {item.file_doc !=='' &&(
-                                                        <a href="javascript:;" onClick={() => handleDownload(`${url}docfile/${item.file_doc}`)} className='link'> <i class="fa-solid fa-cloud-arrow-down fs-4"/></a>
+                                                        <a href="javascript:;" onClick={() => handleDownload(`${url}docfile/${item.file_doc}`)} className='link'> <i class="fa-solid fa-cloud-arrow-down fs-4"/> {item.file_doc}</a>
                                                     )}
                                                 </td>
                                                 <td className="text-center">

@@ -70,19 +70,19 @@ export const ViewInsturance = ({ data }) => {
                     <tr>
                         <th>ເລກທີສັນຍາ:</th>
                         <td>{item.contract_number}</td>
-                        <th>{moment(item.contract_start_date).format('DD/MM/YYYY')}</th>
-                        <td>{moment(item.contract_end_date).format('DD/MM/YYYY')}</td>
+                        <th className='text-end'>ວັນທີຄຸມຄ້ອງ</th>
+                        <td>{moment(item.contract_start_date).format('DD/MM/YYYY')} - {moment(item.contract_end_date).format('DD/MM/YYYY')}</td>
                     </tr>
                     <tr>
                         <th>ປະເພດປະກັນ:</th>
                         <td >{item.type_in_name} </td>
-                        <th>ທາງເລືອກ:</th>
+                        <th className='text-end'>ທາງເລືອກ:</th>
                         <td >{item.options_name} </td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="section">
-                        <th colspan="4" className='fs-17px'>1. ຂໍ້ມູນຜູ້ຊື້ປະກັນ</th>
+                        <th colspan="4" className='fs-17px'>ຂໍ້ມູນຜູ້ຊື້ປະກັນ</th>
                     </tr>
                     <tr>
                         <th>ຊື່ລູກຄ້າ:</th>
@@ -96,117 +96,158 @@ export const ViewInsturance = ({ data }) => {
                         <th>ເບີໂທລະສັບ:</th>
                         <td colspan="3">{item.registra_tel}</td>
                     </tr>
+                    {item.status_ins === 2 && (
+                        <>
+                            <tr class="section">
+                                <th colspan="4" className='fs-17px'>2. ຂໍ້ມູນລົດ</th>
+                            </tr>
+                            <tr>
+                                <th>ທະບຽນລົດ:</th>
+                                <td colspan="3">{item.car_registration}</td>
+                            </tr>
+                            <tr>
+                                <th>ເລກຈັກ:</th>
+                                <td>{item.vehicle_number}</td>
+                                <th>ເລກຖັງ:</th>
+                                <td>{item.tank_number}</td>
+                            </tr>
+                        </>
+                    )}
+
+                    {item.beneficiaries && item.beneficiaries.length > 0 && (
+                        <>
+
+                            {item.beneficiaries.map((rows, key) => (
+                                <React.Fragment key={key}>
+                                    <tr class="section">
+                                        <th colspan="4" className='fs-17px text-blue'>ຂໍ້ມູນຜູ້ທີ່ໄດ້ຮັບຄວາມຄຸ້ມຄອງ ( ຜູ້ທີ່ {key + 1})</th>
+                                    </tr>
+                                    <tr>
+                                        <th>ຊື່ ແລະ ນາມສະກຸນ:</th>
+                                        <td>{rows.user_fname} {rows.user_lname}</td>
+                                        <th className='text-end'>ວັນເດືອນປີເກິດ:</th>
+                                        <td>{moment(rows.user_dob).format('DD/MM/YYYY')}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>ເບີໂທລະສັບ:</th>
+                                        <td>{rows.user_tel}</td>
+                                        <th className='text-end'>ທີ່ຢູ່:</th>
+                                        <td>{rows.user_village + ', ' + rows.district_name + ', ' + rows.province_name}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>ສະຖານະ:</th>
+                                        <td>{rows.status_name} </td>
+                                        <th className='text-end'>ລະຫັດບັດ :</th>
+                                        <td>{rows.no_contract}</td>
+                                    </tr>
+                                </React.Fragment>
+                            ))}
+                        </>
+                    )}
                     <tr class="section">
-                        <th colspan="4" className='fs-17px'>2. ຂໍ້ມູນລົດ</th>
-                    </tr>
-                    <tr>
-                        <th>ທະບຽນລົດ:</th>
-                        <td colspan="3">{item.car_registration}</td>
-                    </tr>
-                    <tr>
-                        <th>ເລກຈັກ:</th>
-                        <td>{item.vehicle_number}</td>
-                        <th>ເລກຖັງ:</th>
-                        <td>{item.tank_number}</td>
-                    </tr>
-                    <tr class="section">
-                        <th colspan="4" className='fs-17px'>3. ຕົວແທນຂາຍ</th>
+                        <th colspan="4" className='fs-17px'>ຕົວແທນຂາຍ</th>
                     </tr>
                     <tr>
                         <th>ຊື່ຕົວແທນຂາຍ:</th>
                         <td>{item.agent_name}</td>
-                        <th>ອາຍຸ:</th>
+                        <th className='text-end'>ອາຍຸ:</th>
                         <td>{age} ປີ</td>
                     </tr>
                     <tr>
                         <th>ເບີໂທລະສັບ:</th>
                         <td>{item.agent_tel}</td>
-                        <th>ທີ່ຢູ່:</th>
+                        <th className='text-end'>ທີ່ຢູ່:</th>
                         <td>{item.agent_village + ', ' + item.district_name + ', ' + item.province_name}</td>
                     </tr>
                     <tr>
                         <th>ເປິເຊັນຂາຍ (%):</th>
                         <td>{item.percent_eps} %</td>
-                        <th>ຄ່າຄອມມິດຊັນ :</th>
+                        <th className='text-end'>ຄ່າຄອມມິດຊັ່ນ :</th>
                         <td>{numeral(item.expences_pays_taxes).format('0,00')}</td>
                     </tr>
                     <tr class="section">
-                        <th colspan="4" className='fs-17px'>4. ຂໍ້ມູນຄ່າທຳນຽມປະກັນໄພ</th>
+                        <th colspan="4" className='fs-17px'>ຂໍ້ມູນຄ່າທຳນຽມປະກັນໄພ</th>
                     </tr>
                     <tr>
                         <th>ຄ່າທຳນຽມເບື້ອງຕົ້ນ:</th>
                         <td>{numeral(item.initial_fee).format('0,00')}</td>
-                        <th>ຄ່າອາກອນ {item.percent_taxes}%:</th>
+                        <th className='text-end'>ຄ່າອາກອນ {item.percent_taxes}%:</th>
                         <td>{numeral(item.money_taxes).format('0,00')}</td>
                     </tr>
                     <tr>
                         <th>ຄ່າລົງທະບຽນ:</th>
                         <td>{numeral(item.registration_fee).format('0,00')}</td>
-                        <th>ຄ່າປະກັນໄພລວມ:</th>
+                        <th className='text-end'>ຄ່າປະກັນໄພລວມ:</th>
                         <td>{numeral(item.insuranc_included).format('0,00')}</td>
                     </tr>
                     <tr>
                         <th>ເປີເຊັນຮັບ (%): </th>
                         <td> {item.precent_incom}%</td>
-                        <th>ຄ່າຄອມຮັບ:</th>
+                        <th className='text-end'>ຄ່າຄອມຮັບ:</th>
                         <td>{numeral(item.pre_tax_profit).format('0,00')}</td>
                     </tr>
                     <tr>
                         <th>ຄ່າອາກອນ :</th>
                         <td>({item.percent_akorn}%)  /=  {numeral(item.incom_money).format('0,00')}</td>
-                        <th>ຄອມຫຼັງຫັກອາກອນ:</th>
+                        <th className='text-end'>ຄອມຫຼັງຫັກອາກອນ:</th>
                         <td >{numeral(item.incom_finally).format('0,00')}</td>
                     </tr>
 
                     <tr>
                         <th>ຄອມຈ່າຍ ({item.percent_eps}%):</th>
                         <td>{numeral(item.pays_advance_fee).format('0,00')}</td>
-                        <th>ຫັກອາກອນ: ({item.percent_fee_eps}%)</th>
+                        <th className='text-end'>ຫັກອາກອນ: ({item.percent_fee_eps}%)</th>
                         <td >{numeral(item.money_percent_fee).format('0,00')}</td>
                     </tr>
                     <tr>
                         <th>ຄອມຈ່າຍຫຼັງຫັກອາກອນ:</th>
                         <td>{numeral(item.expences_pays_taxes).format('0,00')}</td>
-                        <th>ລາຍຮັບສຸທິ:</th>
+                        <th className='text-end'>ລາຍຮັບສຸທິ:</th>
                         <td>{numeral(item.net_income).format('0,00')}</td>
                     </tr>
                     <tr>
-                        <th colspan='4' className='fs-17px'>5. ຕິດຕາມໜີ້</th>
+                        <th colspan='4' className='fs-17px'>ຕິດຕາມໜີ້</th>
                     </tr>
                     <tr>
                         <th>ສະຖານະຈ່າຍບໍລິສັດ:</th>
                         <td>{item.status_company === 1 ? 'ຄ້າງຈ່າຍບໍ່ລິສັດ (' + item.day_company + ' )' : 'ຈ່າຍແລ້ວ'}</td>
-                        <th>ວັນທີ:</th>
-                        <td>{moment(item.company_date).format('DD/MM/YYYY')}  
-                        {item.file_comits
-                                .filter(pay => pay.status_doc === 1)
-                                .map((pay, key) => (
-                                    <span className='float-end text-red' onClick={() => downloadFilePay(`${url}docPay/${pay.docom_file}`)} role='button'><i class="fa-solid fa-download" /> {pay.docom_file}</span>
-                                ))}
+                        <th className='text-end'>ວັນທີ:</th>
+                        <td>{moment(item.company_date).format('DD/MM/YYYY')}
+                            {
+                                item.file_comits && (
+                                    item.file_comits.filter(pay => pay.status_doc === 1)
+                                        .map((pay, key) => (
+                                            <span className='float-end text-red' onClick={() => downloadFilePay(`${url}docPay/${pay.docom_file}`)} role='button'><i class="fa-solid fa-download" /> {pay.docom_file}</span>
+                                        ))
+                                )
+                            }
                         </td>
                     </tr>
                     <tr>
                         <th>ສະຖານະຈ່າຍຕົວແທນ:</th>
                         <td>{item.status_agent === 1 ? 'ຄ້າງຈ່າຍຕົວແທນ (' + item.day_agent + ' )' : 'ຈ່າຍແລ້ວ'}</td>
-                        <th>ວັນທີຈ່າຍ:</th>
-                        <td>{moment(item.agent_date).format('DD/MM/YYYY')} 
-                        {item.file_comits
-                                .filter(pay => pay.status_doc === 2)
-                                .map((pay, key) => (
-                                    <span className='float-end text-red' onClick={() => downloadFilePay(`${url}docPay/${pay.docom_file}`)} role='button'><i class="fa-solid fa-download" /> {pay.docom_file}</span>
-                                ))}
+                        <th className='text-end'>ວັນທີຈ່າຍ:</th>
+                        <td>{moment(item.agent_date).format('DD/MM/YYYY')}
+                            {
+                                item.file_comits  &&(
+                                item.file_comits
+                                    .filter(pay => pay.status_doc === 2)
+                                    .map((pay, key) => (
+                                        <span className='float-end text-red' onClick={() => downloadFilePay(`${url}docPay/${pay.docom_file}`)} role='button'><i class="fa-solid fa-download" /> {pay.docom_file}</span>
+                                  )  ))}
                         </td>
                     </tr>
                     <tr>
                         <th>ສະຖານະຮັບ:</th>
                         <td>{item.status_oac === 1 ? 'ຄ້າງຮັບ (' + item.day_oac + ' )' : 'ຮັບແລ້ວ'}</td>
-                        <th>ວັນທີຮັບ:</th>
+                        <th className='text-end'>ວັນທີຮັບ:</th>
                         <td>{moment(item.oac_date).format('DD/MM/YYYY')}
-                            {item.file_comits
-                                .filter(pay => pay.status_doc === 3)
-                                .map((pay, key) => (
-                                    <span className='float-end text-red' onClick={() => downloadFilePay(`${url}docPay/${pay.docom_file}`)} role='button'><i class="fa-solid fa-download" /> {pay.docom_file}</span>
-                                ))}
+                            {item.file_comits &&(
+                                item.file_comits
+                                    .filter(pay => pay.status_doc === 3)
+                                    .map((pay, key) => (
+                                        <span className='float-end text-red' onClick={() => downloadFilePay(`${url}docPay/${pay.docom_file}`)} role='button'><i class="fa-solid fa-download" /> {pay.docom_file}</span>
+                                   ) ))}
                         </td>
                     </tr>
                 </tbody>

@@ -87,6 +87,16 @@ Successlocation(Url){
   });
 }
   }
+
+
+  // const Notific ={
+  //   NotiSuccess(name){ 
+  //     <Notification type="success" header="Operation successful">
+  //     {name}
+  //   </Notification>
+
+  //   }
+  // }
   export default Alert;
 
   

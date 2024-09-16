@@ -80,7 +80,7 @@ export default function DebtOac() {
     const [inputs, setInputs] = useState({
         contract_code_fk: '',
         contract_no: '',
-        doccm_file: '',
+        docom_file: '',
         status_pay: 1,
         status_doc: 3,
         debt_remark: '',
@@ -99,7 +99,7 @@ export default function DebtOac() {
         if (file) {
             setFileName(file.name);
             setInputs({
-                ...inputs, doccm_file: file
+                ...inputs, docom_file: file
             })
         } else {
             setFileName('');
@@ -108,7 +108,7 @@ export default function DebtOac() {
     const closeFile = () => {
         setFileName('');
         setInputs({
-            doccm_file: ''
+           ...inputs, docom_file: ''
         })
     }
     const handleSubmit = (event) => {
@@ -117,6 +117,7 @@ export default function DebtOac() {
         for (const key in inputs) {
             imputData.append(key, inputs[key])
         }
+        console.log(inputs);
         try {
             axios.post(api + 'pays/create', imputData)
                 .then(function (respones) {
@@ -203,8 +204,8 @@ export default function DebtOac() {
             <h3 className="page-header fs-20px">ຂໍ້ມູນໜີ້ທັງໝົດ </h3>
 
             <div class="row">
-                <div class="col-xl-4 col-md-6">
-                    <div class="widget widget-stats bg-orange">
+                <div class="col-lg-4 col-md-6">
+                    <div class="widget widget-stats bg-orange rounded-4">
                         <div class="stats-icon text-white"><i class="fa-solid fa-wallet" /></div>
                         <div class="stats-info">
                             <h4 className='fs-16px'>ໜີ້ຄ້າງຈ່າຍບໍລິສັດປະກັນໄພ</h4>
@@ -220,8 +221,8 @@ export default function DebtOac() {
                     </div>
                 </div>
 
-                <div class="col-xl-4 col-md-6">
-                    <div class="widget widget-stats  bg-orange ">
+                <div class="col-lg-4  col-md-6">
+                    <div class="widget widget-stats  bg-orange rounded-4">
                         <div class="stats-icon text-white"><i class="fa fa-users" /></div>
                         <div class="stats-info">
                             <h4 className='fs-16px'>ໜີ້ຄ້າງຈ່າຍຕົວແທນ</h4>
@@ -238,7 +239,7 @@ export default function DebtOac() {
                 </div>
 
 
-                <div class="col-xl-4 col-md-6">
+                <div class="col-lg-4 col-md-6">
                     <div class="widget widget-stats bg-blue border-4 border-top border-orange rounded-4">
                         <div class="stats-icon text-white"><i class="fa-solid fa-wallet" /></div>
                         <div class="stats-info">
@@ -261,7 +262,7 @@ export default function DebtOac() {
                     <h4 class="panel-title text-dark fs-18px">ລາຍການໜີ້ຄ້າງຮັບຄ່າຄອມ OAC</h4>
                     <div class="panel-heading-btn">
                     {checkedItems.length > 0 ? (
-                            <button onClick={handlePayDebtMouti} className="btn btn-md btn-danger">ຢືນຢັນສຳລະໜີ້</button>
+                            <button onClick={handlePayDebtMouti} className="btn btn-md btn-danger">ຢືນຢັນຕັດໜີ້</button>
                         ) : (
                             <>
                                 <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>

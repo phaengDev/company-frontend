@@ -260,13 +260,12 @@ const downloadAagentPdf= async ()=>{
     }, {});
     const formatNumber = (num) => numeral(num).format('0,00');
     
-    console.log(selectedItems)
+    // console.log(selectedItems.length)
     useEffect(() => {
-        
         fetchReport();
-        setDisableds(data.agent_id_fk ==='' ?true:false)
+        setDisableds(data.agent_id_fk ===null ?true:false)
     }, [data])
-
+// alert(data.agent_id_fk)
     return (
         <div id="content" className="app-content p-0 bg-component">
 

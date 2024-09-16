@@ -126,8 +126,10 @@ export default function MoveInsurance() {
     const [view, setView] = useState(false)
     const handleSetMove = (value) => {
             setContractEnd(value)
-        if (value) {
+        if (value !==null) {
             setView(true);
+        }else{
+            setView(false);
         }
     }
 
@@ -170,7 +172,7 @@ export default function MoveInsurance() {
                         <SelectPicker data={itemCustom} value={contract_end} onChange={(e) => handleSetMove(e)} loading={loading} placeholder='ເລືອກ' block />
                     </div>
                     <div className="col-sm-3 mt-4">
-                    {view && (
+                    {view===true  && (
                     <Button color="blue" onClick={handleSubmit} appearance="primary" startIcon={<i class="fa-solid fa-share-from-square" />}> ຢືນຢັນການຍ້າຍຂໍ້ມູນ</Button>
                     )}  
                     </div>
@@ -193,10 +195,8 @@ export default function MoveInsurance() {
                                 </th>
                                 <th className="">ຊື່ລູກຄ້າ</th>
                                 <th className="">ເລກທີສັນຍາ</th>
-                                <th className="">ວັນທີເລີມ</th>
-                                <th className="">ວັນທີສິນສຸດ</th>
-                                <th className="">ຊື່ຜູ້ໄດ້ຮັບຄວາມຄຸ້ມຄອງ</th>
-                                <th className="">ເບີໂທລະສັບ</th>
+                                <th className="text-center">ວັນທີເລີມ</th>
+                                <th className="text-center">ວັນທີສິນສຸດ</th>
                                 <th className="">ບໍລິສັດປະກັນໄພ</th>
                                 <th className="">ປະເພດຜູ້ຊື້</th>
                                 <th className="">ປະເພດປະກັນ	</th>
@@ -223,11 +223,10 @@ export default function MoveInsurance() {
                                                  onChange={() => handleCheckboxChange(index)}  />
                                                 </td>
                                                 <td className=''>{item.customer_name}</td>
-                                                <td className='text-center'>{item.contract_number}</td>
+                                                <td className=''>{item.contract_number}</td>
                                                 <td className='text-center'>{moment(item.contract_start_date).format('DD/MM/YYYY')}</td>
                                                 <td className='text-center'>{moment(item.contract_end_date).format('DD/MM/YYYY')}</td>
-                                                <td className=''>{item.user_fname + ' ' + item.user_lname}</td>
-                                                <td className=''>{item.user_tel}</td>
+                                                
                                                 <td>{item.com_name_lao}</td>
                                                 <td>{item.type_buyer_name}</td>
                                                 <td>{item.type_in_name}</td>

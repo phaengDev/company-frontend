@@ -3,8 +3,6 @@ import {Input,InputGroup, DatePicker,SelectPicker,Loader, Placeholder  } from 'r
 import SearchIcon from '@rsuite/icons/Search';
 import {Config} from "../config/connenct";
 import axios from 'axios';
-import moment from "moment";
-import numeral from "numeral";
 export default function ReportsPay() {
   const api = Config.urlApi;
   const [itemtype,setItimeType] = useState([]);

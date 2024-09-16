@@ -1,28 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import { Input, InputNumber, SelectPicker, InputGroup, DatePicker, Button, InputPicker } from 'rsuite';
-import { useAgent, useCompany, useType, useTypeCar, useBrandCar, useProvince,useCurrency } from '../../config/select-option';
+import { useAgent, useCompany, useType, useTypeCar, useBrandCar, useProvince, useCurrency } from '../../config/select-option';
 import Select from 'react-select'
-import { Config} from '../../config/connenct';
+import { Config } from '../../config/connenct';
 import axios from 'axios';
 import numeral from 'numeral';
 import Alert from '../../utils/config';
 
 export default function FormRegistRenew() {
-    const api = Config.urlApi;
-    const itemAg = useAgent();
-    const itemcn = useCompany();
-    const itemType = useType();
-    const itemTypeCar = useTypeCar();
-    const itemBrand = useBrandCar();
-    const location = useLocation();
-    const itemPv=useProvince();
-    const itemCry=useCurrency();
-    const searchParams = new URLSearchParams(location.search);
-    const Id = atob(searchParams.get('id'));
-  
+  const api = Config.urlApi;
+  const itemAg = useAgent();
+  const itemcn = useCompany();
+  const itemType = useType();
+  const itemTypeCar = useTypeCar();
+  const itemBrand = useBrandCar();
+  const location = useLocation();
+  const itemCry = useCurrency();
+  const searchParams = new URLSearchParams(location.search);
+  const Id = atob(searchParams.get('id'));
+
   //============fetchComission===============
-  const fetchComission = async (companyId,agentId,typeinsId) => {
+  const fetchComission = async (companyId, agentId, typeinsId) => {
     try {
       const response = await axios.post(`${api}comisget/single`, {
         companyId: companyId,
@@ -32,8 +31,6 @@ export default function FormRegistRenew() {
       const jsonData = response.data;
       console.log('Commission data received:', jsonData);
 
-      setTaxProfit(jsonData.percentGet);
-      setPercentEps(jsonData.percentPay);
       setInputs((prevInputs) => ({
         ...prevInputs,
         precent_incom: jsonData.percentGet,
@@ -44,159 +41,123 @@ export default function FormRegistRenew() {
     }
   };
 
-  
-    //===========================
-  
-    const [typeInsurance, setTypeInsurance] = useState(2);
-    const [inputs, setInputs] = useState({
-      incuranecCode: '',
-      custom_id_fk: '',
-      company_id_fk: '',
-      agent_id_fk: '',
-      insurance_type_fk: '',
-      option_id_fk: '',
-      contract_number: '',
-      contract_start_date: '',
-      contract_end_date: '',
-      user_fname: '',
-      user_lname: '',
-      user_gender: 'F',
-      user_dob: '',
-      user_tel: '',
-      user_province_id:'',
-      user_district_fk: '',
-      user_village: '',
-      file_doct: '',
-  
-      // ----------- ຂໍມູນລົດ
-      statusIns: '',
-      car_type_id_fk: '',
-      car_brand_id_fk: '',
-      version_name: '',
-      car_registration: '',
-      vehicle_number: '',
-      tank_number: '',
-      // ---------- ຂໍ້ມູນຄ່າປະກັນໄພ
-      initial_fee: '',
-      percent_taxes: '10',
-      money_taxes: '',
-      registration_fee: '0',
-      insuranc_included: '',
-      precent_incom: '',
-      pre_tax_profit: '',
-      percent_akorn: '5',
-      incom_money: '',
-      incom_finally: '',
-      percent_eps: '',
-      pays_advance_fee: '',
-      percent_fee_eps: '5',
-      money_percent_fee: '',
-      expences_pays_taxes: '',
-      net_income: '',
-      status_company: '1',
-      company_date: new Date(),
-      status_agent: '1',
-      agent_date: new Date(),
-      status_oac: '1',
-      oac_date: new Date()
-    });
-   
-    
-    const showDataInsurance = async () => {
-      try {
-        const response = await fetch(api + `insurance/${Id}`);
-        const data = await response.json();
-        if(data.user_province_id){
-          handelShowDist(data.user_province_id)
-        }
-        setTypeInsurance(data.status_ins);
-        setInputs({
-          incuranecCode: data.incuranec_code,
-          custom_id_fk: data.custom_id_fk,
-          company_id_fk: data.company_id_fk,
-          agent_id_fk: data.agent_id_fk,
-          insurance_type_fk: data.insurance_type_fk,
-          option_id_fk: data.option_id_fk,
-          currency_id_fk:data.currency_id_fk,
-          contract_number: data.contract_number,
-          contract_start_date: new Date(data.contract_start_date),
-          contract_end_date: new Date(data.contract_end_date),
-          user_fname: data.user_fname,
-          user_lname: data.user_lname,
-          user_gender: data.user_gender,
-          user_dob: new Date(data.user_dob),
-          user_tel: data.user_tel,
-          user_province_id:data.user_province_id,
-          user_district_fk: data.user_district_fk,
-          user_village: data.user_village,
-          file_doct: '',
-      
-          // ----------- ຂໍມູນລົດ
-          statusIns: data.statusIns,
-          car_type_id_fk: data.car_type_id_fk,
-          car_brand_id_fk: data.car_brand_id_fk,
-          version_name: data.version_name,
-          car_registration: data.car_registration,
-          vehicle_number: data.vehicle_number,
-          tank_number: data.tank_number,
-          // ---------- ຂໍ້ມູນຄ່າປະກັນໄພ
-          initial_fee: data.initial_fee,
-          percent_taxes: data.percent_taxes,
-          money_taxes: data.money_taxes,
-          registration_fee: data.registration_fee,
-          insuranc_included: data.insuranc_included,
-          precent_incom: data.precent_incom,
-          pre_tax_profit: data.pre_tax_profit,
-          percent_akorn: data.percent_akorn,
-          incom_money: data.incom_money,
-          incom_finally: data.incom_finally,
-          percent_eps: data.percent_eps,
-          pays_advance_fee: data.pays_advance_fee,
-          percent_fee_eps: data.percent_fee_eps,
-          money_percent_fee: data.money_percent_fee,
-          expences_pays_taxes: data.expences_pays_taxes,
-          net_income: data.net_income,
-          status_company: data.status_company,
-          company_date: new Date(data.company_date),
-          status_agent: data.status_agent,
-          agent_date: new Date(data.agent_date),
-          status_oac: data.status_oac,
-          oac_date: new Date(data.oac_date)
-        })
-        setInitialFee(parseInt(data.initial_fee));
-        setPercentTaxes(data.percent_taxes);
-        setRegistrationFee(parseInt(data.registration_fee));
-        setTaxProfit(data.precent_incom);
-        stePercentAkorn(data.percent_akorn)
-        setPercentEps(parseInt(data.percent_eps));
-        setPcfeeEps(data.percent_fee_eps);
-        handleOption(data.insurance_type_fk)
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-  
-    const handleSubmit = (event) => {
-      event.preventDefault();
-      const imputData=new FormData();
-      for(const key in inputs){
-          imputData.append(key,inputs[key])
-      }
-      try {
-        axios.post(api + 'insurance/renew', imputData)
-          .then(function (respones) {
-            if (respones.status === 200) {
-              // Alert.successData(respones.data.message)
-              Alert.Successlocation('/regis-renew');
-            } else {
-              Alert.errorData(respones.data.error)
-            }
-          });
-      } catch (error) {
-        console.error('Error inserting data:', error);
-      }
+
+  //===========================
+
+  const [typeInsurance, setTypeInsurance] = useState(2);
+  const [inputs, setInputs] = useState({
+    incuranecCode: '',
+    custom_id_fk: '',
+    company_id_fk: '',
+    agent_id_fk: '',
+    insurance_type_fk: '',
+    option_id_fk: '',
+    contract_number: '',
+    contract_start_date: '',
+    contract_end_date: '',
+    file_doct: '',
+
+    // ----------- ຂໍມູນລົດ
+    statusIns: '',
+    car_type_id_fk: '',
+    car_brand_id_fk: '',
+    version_name: '',
+    car_registration: '',
+    vehicle_number: '',
+    tank_number: '',
+    // ---------- ຂໍ້ມູນຄ່າປະກັນໄພ
+    initial_fee: '',//c
+    percent_taxes: '10',//c
+    registration_fee: '0',//c
+    insuranc_included: '',//c
+    precent_incom: '',//c
+    percent_akorn: '5',//c
+    percent_eps: '',//c
+    percent_fee_eps: '5',//c
+    money_percent_fee: '',
+    expences_pays_taxes: '',
+    net_income: '',
+    status_company: '1',
+    company_date: new Date(),
+    status_agent: '1',
+    agent_date: new Date(),
+    status_oac: '1',
+    oac_date: new Date()
+  });
+
+
+  const showDataInsurance = async () => {
+    try {
+      const response = await fetch(api + `insurance/${Id}`);
+      const data = await response.json();
+      setTypeInsurance(data.status_ins);
+      setInputs({
+        incuranecCode: data.incuranec_code,
+        custom_id_fk: data.custom_id_fk,
+        company_id_fk: data.company_id_fk,
+        agent_id_fk: data.agent_id_fk,
+        insurance_type_fk: data.insurance_type_fk,
+        option_id_fk: data.option_id_fk,
+        currency_id_fk: data.currency_id_fk,
+        contract_number: data.contract_number,
+        contract_start_date: new Date(data.contract_start_date),
+        contract_end_date: new Date(data.contract_end_date),
+        file_doct: '',
+
+        // ----------- ຂໍມູນລົດ
+        statusIns: data.statusIns,
+        car_type_id_fk: data.car_type_id_fk,
+        car_brand_id_fk: data.car_brand_id_fk,
+        version_name: data.version_name,
+        car_registration: data.car_registration,
+        vehicle_number: data.vehicle_number,
+        tank_number: data.tank_number,
+        // ---------- ຂໍ້ມູນຄ່າປະກັນໄພ
+        initial_fee: data.initial_fee,//c
+        percent_taxes: data.percent_taxes === '' ? 0 : data.percent_taxes,//cc
+        registration_fee: data.registration_fee,//c
+        insuranc_included: data.insuranc_included,//c
+        precent_incom: data.precent_incom,//c
+        percent_akorn: data.percent_akorn,//c
+        percent_eps: data.percent_eps,//c
+        percent_fee_eps: data.percent_fee_eps,//c
+        status_company: data.status_company,
+        company_date: new Date(data.company_date),
+        status_agent: data.status_agent,
+        agent_date: new Date(data.agent_date),
+        status_oac: data.status_oac,
+        oac_date: new Date(data.oac_date)
+      })
+      setInitialFee(parseFloat(data.initial_fee));
+      setPercentTaxes(data.percent_taxes);
+      setRegistrationFee(parseFloat(data.registration_fee));
+      handleOption(data.insurance_type_fk)
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
-  
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const imputData = new FormData();
+    for (const key in inputs) {
+      imputData.append(key, inputs[key])
+    }
+    try {
+      axios.post(api + 'insurance/renew', imputData)
+        .then(function (respones) {
+          if (respones.status === 200) {
+            // Alert.successData(respones.data.message)
+            Alert.Successlocation('/regis-renew');
+          } else {
+            Alert.errorData(respones.data.error)
+          }
+        });
+    } catch (error) {
+      console.error('Error inserting data:', error);
+    }
+  }
+
   const [itemOption, setItemOption] = useState([]);
   const handleOption = async (value) => {
     setInputs((prevInputs) => ({
@@ -209,7 +170,7 @@ export default function FormRegistRenew() {
       const response = await fetch(api + `options/t/${value}`);
       const jsonData = await response.json();
       setItemOption(jsonData);
-  
+
       // Fetch type insurance status
       const res = await fetch(api + 'type-ins/' + value);
       const jsonType = await res.json();
@@ -219,107 +180,105 @@ export default function FormRegistRenew() {
         statusIns: jsonType.status_ins,
       }));
       await fetchComission(inputs.company_id_fk, inputs.agent_id_fk, value);
-     
+
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
-    const dataOption = itemOption.map(item => ({ label: item.options_name, value: item.options_Id }));
+  const dataOption = itemOption.map(item => ({ label: item.options_name, value: item.options_Id, percent: item.option_vat }));
   //======== district
-  const [itemDistrict, setItemDistrict] = useState([]);
-  const handelShowDist = async (value) => {
-    try {
-      const response = await fetch(api+`district/pv/${value}`);
-      const jsonData = await response.json();
-      setItemDistrict(jsonData);
-    } catch (error) {
-      console.error('Error fetching data:', error);
+
+  const [initialFee, setInitialFee] = useState(0);//---- ຄ່າທຳນຽມເບື້ອງຕົ້ນ
+  const [percentTaxes, setPercentTaxes] = useState(10);
+  const moneyTaxes = (initialFee * percentTaxes) / 100;
+
+  const [registrationFee, setRegistrationFee] = useState(0)
+  const insurancIncluded = numeral(parseFloat(initialFee) + parseFloat(moneyTaxes) + parseFloat(registrationFee)).format('0,00.00');
+
+  const onkeyup_premiums = (name, value) => {
+    // const values = parseFloat(isNaN(value) ? 0 : value);
+    const values = isNaN(value) ? 0 : value
+    setInputs({
+      ...inputs, [name]: values
+    })
+
+    if (name === 'initial_fee') {
+      toThousands(values)
+      setInitialFee(values);
+    }
+    if (name === 'percent_taxes') {
+      setPercentTaxes(values)
+    }
+    if (name === 'registration_fee') {
+      toThousandsFee(values)
+      setRegistrationFee(values)
     }
   }
-  const dataDist = itemDistrict.map(item => ({ label: item.district_name, value: item.district_id }));
 
-  
-    const [initialFee, setInitialFee] = useState(0);//---- ຄ່າທຳນຽມເບື້ອງຕົ້ນ
-    const [percentTaxes, setPercentTaxes] = useState(7);
-    const moneyTaxes = (initialFee * percentTaxes) / 100;
-  
-    const [registrationFee, setRegistrationFee] = useState(0)
-    const insurancIncluded = numeral(parseInt(initialFee) + parseInt(moneyTaxes) + parseInt(registrationFee)).format('0,00');
-  
-    // -------------------- ຄ່າຄອມຮັບ
-    const [taxProfit, setTaxProfit] = useState(0);//----ເປີເຊັນຮັບ 
-    const [percentAkorn, stePercentAkorn] = useState(5)
-    const precentIncom = (initialFee * taxProfit) / 100; //----- ຄອມກ່ອນອາກອນ
-  
-    const incomMoney = (precentIncom * percentAkorn) / 100; //-- ອ.ກ ລາຍໄດ້  (ຄອມຮັບ)
-    const incomFinally = (precentIncom - incomMoney) //-- ຄອມຫຼັງຫັກອາກອນ
-    //-------------------- ຄ່າຄອມຈ່າຍ
-    const [percentEps, setPercentEps] = useState(0); //-------ເປີເຊັນຈ່າຍ
-    const advanceFee = (initialFee * percentEps) / 100; //-------ຄອມຈ່າຍກ່ອນອາກອນ
-    const [pcfeeEps, setPcfeeEps] = useState(5); //---ອ/ກ.ຈ່າຍ
-    const moneyPsFee = (advanceFee * pcfeeEps) / 100; //---ອ.ກ ລາຍໄດ້ (ຄອມຈ່າຍ)
-    const expencesTaxes = (advanceFee - moneyPsFee);  //----ຄອມຈ່າຍຫຼັງຫັກອາກອນ
-    const netIncome = (incomFinally - expencesTaxes);//--ລາຍຮັບສຸທິ
-    const onkeyup_premiums = (name, value) => {
-      const values = parseFloat(value.replace(/,/g, ''));
-      setInputs({
-        ...inputs, [name]: value
-      })
-      if (name === 'initial_fee') {
-        setInitialFee(isNaN(values) ? 0 : parseInt(values));
-      } else if (name === 'percent_taxes') {
-        setPercentTaxes(values)
-      } else if (name === 'registration_fee') {
-        setRegistrationFee(isNaN(values) ? 0 : parseInt(values))
-      }
-      else if (name === 'precent_incom') {
-        setTaxProfit(values)
-      } else if (name === 'percent_akorn') {
-        stePercentAkorn(values)
-      } else if (name === 'percent_eps') {
-        setPercentEps(values);
-      } else if (name === 'percent_fee_eps') {
-        setPcfeeEps(values)
-      }
+  //================ change data to input============
+  const handelChange = (name, value) => {
+    setInputs({
+      ...inputs, [name]: value
+    })
+    if (name === 'company_id_fk') {
+      fetchComission(value, inputs.agent_id_fk, inputs.insurance_type_fk);
+    } else if (name === 'agent_id_fk') {
+      fetchComission(inputs.company_id_fk, value, inputs.insurance_type_fk);
+    } else if (name === 'insurance_type_fk') {
+      fetchComission(inputs.company_id_fk, inputs.agent_id_fk, value);
     }
 
 
-    const handelChange = (name, value) => {
+    if (name === 'contract_start_date') {
       setInputs({
-        ...inputs, [name]: value
-      })
-      if (name === 'company_id_fk') {
-        fetchComission(value, inputs.agent_id_fk, inputs.insurance_type_fk);
-      } else if (name === 'agent_id_fk') {
-        fetchComission(inputs.company_id_fk, value, inputs.insurance_type_fk);
-      } else if (name === 'insurance_type_fk') {
-        fetchComission(inputs.company_id_fk, inputs.agent_id_fk, value);
-      }
+        ...inputs,
+        company_date: new Date(value),
+        agent_date: new Date(value),
+        oac_date: new Date(value)
+      });
     }
-  
-    const [fileName, setFileName] = useState('');
-    const handleFileChange = (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        setInputs({
-          ...inputs,file_doct:file
-        })
-        setFileName(file.name);
-        const reader = new FileReader();
-        reader.readAsText(file);
-      }
-    };
-  
-    useEffect(() => {
-      showDataInsurance();
-    }, []);
+
+    if (name === 'option_id_fk') {
+      const selectedOption = dataOption.find(option => option.value === value);
+      const percent_taxes = selectedOption ? selectedOption.percent : '10';
+      alert(percent_taxes)
+      setInputs(prevInputs => ({
+        ...prevInputs,
+        percent_taxes: percent_taxes,
+      }));
+    }
+  }
+  //============= select file doct ================
+  const [fileName, setFileName] = useState('');
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setInputs({
+        ...inputs, file_doct: file
+      })
+      setFileName(file.name);
+      const reader = new FileReader();
+      reader.readAsText(file);
+    }
+  };
+
+  function toThousands(value) {
+    return value ? `${value}`.replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,') : value;
+  }
+  function toThousandsFee(value) {
+    return value ? `${value}`.replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,') : value;
+  }
+
+  useEffect(() => {
+    showDataInsurance();
+  }, []);
   return (
     <div id="content" className="app-content">
       <ol className="breadcrumb float-end">
         <li className="breadcrumb-item">ໜ້າຫຼັກ</li>
-        <li className="breadcrumb-item active">ຟອມແກ້ໄຂສັນຍາຊື້ປະກັນໄພ</li>
+        <li className="breadcrumb-item active">ຕໍ່ສັນຍາຊື້ປະກັນໄພ</li>
       </ol>
-      <h3 className="page-header fs-20px"><Link to={'/regis-renew'} className='me-3 text-danger' ><i class="fa-solid fa-circle-arrow-left"></i></Link> ຟອມແກ້ໄຂສັນຍາຊື້ປະກັນໄພ </h3>
+      <h3 className="page-header fs-20px"><Link to={'/regis-renew'} className='me-3 text-danger' ><i class="fa-solid fa-circle-arrow-left"></i></Link> ຟອມລົງທະບຽນຕໍ່ສັນຍາຊື້ປະກັນໄພ </h3>
       <form onSubmit={handleSubmit}>
         <div className="panel  border-4 border-top border-red rounded-top-4">
           <div className="panel-body ">
@@ -334,7 +293,7 @@ export default function FormRegistRenew() {
               </div>
               <div className="col-sm-6  mb-2">
                 <label htmlFor="" className='form-label'>ຕົວແທນຂາຍປະກັນ</label>
-                <SelectPicker data={itemAg} value={inputs.agent_id_fk}  onChange={(e) => handelChange('agent_id_fk', e)} placeholder={'ຕົວແທນຂາຍ'} block required />
+                <SelectPicker data={itemAg} value={inputs.agent_id_fk} onChange={(e) => handelChange('agent_id_fk', e)} placeholder={'ຕົວແທນຂາຍ'} block required />
               </div>
               <div className="col-sm-6  mb-2">
                 <label htmlFor="" className='form-label'>ປະເພດປະກັນໄພ </label>
@@ -360,56 +319,6 @@ export default function FormRegistRenew() {
                 <DatePicker oneTap format="dd/MM/yyyy" value={inputs.contract_end_date} onChange={(e) => handelChange('contract_end_date', e)} placeholder='ວັນທີສິນສຸດ' block required />
               </div>
             </div>
-          </div>
-        </div>
-        <div className="panel border-4 border-top border-red rounded-top-4 mb-3 text-dark">
-          <div className="panel-body accordion" id="accordion">
-            <div class="bg-white" id="headingOne">
-              <span class="accordion-button bg-white py-5px " type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
-                <h5>ຂໍ້ມູນຜູ້ທີ່ໄດ້ຮັບຄວາມຄຸ້ມຄອງ</h5>
-              </span>
-            </div>
-            <div id="collapseOne" class={`accordion-collapse collapse ${inputs.type_buyer_fk===2201 ? 'show':''}`} data-bs-parent="#accordion">
-              <div className="accordion-body row fs-15px">
-                <div className="col-sm-1 col-6 mb-2">
-                  <label htmlFor="" className='form-label'>ເພດ</label>
-                  <select className='form-select' onChange={(e) => handelChange('user_gender', e.target.value)} >
-                    <option value="F">ເພດຍິງ</option>
-                    <option value="M">ເພດຊາຍ</option>
-                  </select>
-                  {/* <InputPicker data={gender}  defaultValue={'F'} onChange={(e) => handelChange('user_gender', e)} placeholder="ເລືອກ" /> */}
-                </div>
-                <div className="col-sm-4 col-6 mb-2">
-                  <label htmlFor="" className='form-label'>ຊື່ແທ້</label>
-                  <Input value={inputs.user_fname} onChange={(e) => handelChange('user_fname', e)} placeholder="ຊື່ແທ້" />
-                </div>
-                <div className="col-sm-4 col-6 mb-2">
-                  <label htmlFor="" className='form-label'>ນາມສະກຸນ</label>
-                  <Input value={inputs.user_lname} onChange={(e) => handelChange('user_lname', e)} placeholder="ນາມສະກຸນ" />
-                </div>
-                <div className="col-sm-3 col-6 mb-2">
-                  <label htmlFor="" className='form-label'>ວັນເດືອນປີເກິດ</label>
-                  <DatePicker format='dd/MM/yyyy' value={inputs.user_dob}  oneTap block onChange={(e) => handelChange('user_dob', e)} placeholder="ເລືອກ" />
-                </div>
-                <div className="col-sm-3 col-6 mb-2">
-                  <label htmlFor="" className='form-label'>ແຂວງ </label>
-                  <SelectPicker data={itemPv} defaultValue={inputs.user_province_id} onChange={(e) => handelShowDist(e)} placeholder='ເລືອກ' block />
-                </div>
-                <div className="col-sm-3 col-6 mb-2">
-                  <label htmlFor="" className='form-label'>ເມືອງ</label>
-                  <SelectPicker data={dataDist} value={inputs.user_district_fk} onChange={(e) => handelChange('user_district_fk', e)} placeholder='ເລືອກ' block />
-                </div>
-                <div className="col-sm-3 col-6 mb-2">
-                  <label htmlFor="" className='form-label'>ບ້ານ</label>
-                  <Input value={inputs.user_village} onChange={(e) => handelChange('user_village', e)} placeholder='ບ້ານ' block />
-                </div>
-                <div className="col-sm-3 col-6 mb-2">
-                  <label htmlFor="" className='form-label'>ເບີໂທລະສັບ</label>
-                  <Input type='tel' value={inputs.user_tel} onChange={(e) => handelChange('user_tel', e)} placeholder='020 999999999' block />
-                </div>
-              </div>
-            </div>
-
           </div>
         </div>
         {typeInsurance === 2 && (
@@ -457,21 +366,18 @@ export default function FormRegistRenew() {
             </div>
 
             <div className="row fs-15px">
-              <div className="col-sm-3 col-6 mb-2">
+              <div className="col-sm-4 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄ່າທຳນຽມເບື້ອງຕົ້ນ</label>
-                <Input value={numeral(inputs.initial_fee).format('0,00')} onChange={(e) => onkeyup_premiums('initial_fee', e)} placeholder='xxx xxxx' block required />
+                <InputNumber value={inputs.initial_fee} formatter={toThousands} onChange={(e) => onkeyup_premiums('initial_fee', e)} placeholder='xxx xxxx' className='bg-red-200' block required />
               </div>
-              <div className="col-sm-1 col-6 mb-2">
+              <div className="col-sm-2 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ອາກອນ</label>
                 <InputNumber value={inputs.percent_taxes} onChange={(e) => onkeyup_premiums('percent_taxes', e)} block placeholder='0.%' required />
               </div>
-              <div className="col-sm-2 col-6 mb-2">
-                <label htmlFor="" className='form-label'>ຄ່າອາກອນ {inputs.percent_taxes}%</label>
-                <Input value={inputs.money_taxes = numeral(moneyTaxes).format('0,00')} placeholder='00.000' className='bg-teal-100' block readOnly />
-              </div>
+
               <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄ່າລົງທະບຽນ </label>
-                <Input value={numeral(inputs.registration_fee).format('0,00')} onChange={(e) => onkeyup_premiums('registration_fee', e)} placeholder='00.000' block required />
+                <InputNumber value={inputs.registration_fee} formatter={toThousandsFee} onChange={(e) => onkeyup_premiums('registration_fee', e)} placeholder='00.000' block required />
               </div>
               <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄ່າທຳນຽມປະກັນໄພລວມ </label>
@@ -486,56 +392,23 @@ export default function FormRegistRenew() {
                 <label htmlFor="" className='form-label'>ເປີເຊັນ ຮັບ</label>
                 <InputNumber value={inputs.precent_incom} onChange={(e) => onkeyup_premiums('precent_incom', e)} placeholder='0.%' block required />
               </div>
-              <div className="col-sm-3 col-6 mb-2">
-                <label htmlFor="" className='form-label'>ຄອມກ່ອນອາກອນ {inputs.pre_tax_profit}</label>
-                <Input value={inputs.pre_tax_profit = numeral(precentIncom).format('0,00')} placeholder='00.000' className='bg-lime-100' block readOnly />
-              </div>
               <div className="col-sm-2 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ອ/ກ.ຮ  </label>
                 <InputNumber value={inputs.percent_akorn} onChange={(e) => onkeyup_premiums('percent_akorn', e)} placeholder='0.%' block required />
               </div>
               <div className="col-sm-2 col-6 mb-2">
-                <label htmlFor="" className='form-label'>ອ.ກ ລາຍໄດ້ {inputs.percent_akorn}% (ຄອມຮັບ)</label>
-                <Input value={inputs.incom_money = numeral(incomMoney).format('0,00')} placeholder='00.000' className='bg-lime-100' block readOnly />
-              </div>
-              <div className="col-sm-3 col-6 mb-2">
-                <label htmlFor="" className='form-label'>ຄອມຫຼັງຫັກອາກອນ </label>
-                <Input value={inputs.incom_finally = numeral(incomFinally).format('0,00')} placeholder='00.000' className='bg-lime-100' block readOnly />
-              </div>
-            </div>
-
-            <div className="mb-3">
-              <h5>II. ລາຍຈ່າຍຄ່າຄອມ</h5>
-            </div>
-            <div className="row fs-15px">
-              <div className="col-sm-2 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ເປີເຊັນ ຈ່າຍ</label>
                 <InputNumber value={inputs.percent_eps} onChange={(e) => onkeyup_premiums('percent_eps', e)} placeholder='0.%' block required />
               </div>
-              <div className="col-sm-3 col-6 mb-2">
-                <label htmlFor="" className='form-label'>ຄອມຈ່າຍກ່ອນອາກອນ</label>
-                <Input value={inputs.pays_advance_fee = numeral(advanceFee).format(0.00)} placeholder='00.000' className='bg-orange-100' block readOnly />
-              </div>
+
               <div className="col-sm-2 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ອ/ກ.ຮ {inputs.percent_fee_eps}% </label>
                 <InputNumber value={inputs.percent_fee_eps} onChange={(e) => onkeyup_premiums('percent_fee_eps', e)} placeholder='0.%' block required />
               </div>
-              <div className="col-sm-2 col-6 mb-2">
-                <label htmlFor="" className='form-label'>ອ.ກ ລາຍໄດ້ {inputs.percent_fee_eps}% (ຄອມຈ່າຍ)</label>
-                <Input value={inputs.money_percent_fee = numeral(moneyPsFee).format('0,00')} placeholder='00.000' className='bg-orange-100' block readOnly />
-              </div>
-              <div className="col-sm-3 col-6 mb-2">
-                <label htmlFor="" className='form-label'>ຄອມຈ່າຍຫຼັງຫັກອາກອນ </label>
-                <Input value={inputs.expences_pays_taxes = numeral(expencesTaxes).format('0,00')} placeholder='00.000' className='bg-orange-100' block readOnly />
-              </div>
 
-              <div className="col-sm-4 col-6 mt-4 text-center">
-                <label htmlFor="" className='form-label'>ລາຍຮັບສຸທິ </label>
-                <Input value={inputs.net_income = numeral(netIncome).format('0,00')} placeholder='00.000' size="lg" className='bg-green-100 text-center' block readOnly />
-              </div>
-              <div className="col-sm-3 col-6 mt-4">
+              <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ສະກຸນ </label>
-                <InputPicker defaultValue={inputs.currency_id_fk} data={itemCry} onChange={(e) => handelChange('currency_id_fk', e)} block/>
+                <InputPicker defaultValue={inputs.currency_id_fk} data={itemCry} onChange={(e) => handelChange('currency_id_fk', e)} block />
               </div>
               <div className="col-sm-5 mt-4 ">
                 <label htmlFor="" className='form-label'>ເອກະສານຕິດຄັດ </label>
@@ -545,13 +418,14 @@ export default function FormRegistRenew() {
                   <input type="file" onChange={handleFileChange} className='hide' />
                 </label>
                 {fileName && (
-                <div class="alert alert-green alert-dismissible fade show mt-3">
-                <i class="fa-solid fa-paperclip"></i>  :{fileName}
-                <button type="button" class="btn-close" ></button>
-                </div>
+                  <div class="alert alert-green alert-dismissible fade show mt-3">
+                    <i class="fa-solid fa-paperclip"></i>  :{fileName}
+                    <button type="button" class="btn-close" ></button>
+                  </div>
                 )}
               </div>
             </div>
+
           </div>
         </div>
 

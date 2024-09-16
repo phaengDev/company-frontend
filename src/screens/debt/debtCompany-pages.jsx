@@ -80,7 +80,7 @@ export default function DebtCompany() {
     const [inputs, setInputs] = useState({
         contract_code_fk: '',
         contract_no: '',
-        doccm_file: '',
+        docom_file: '',
         status_pay: 1,
         status_doc: 1,
         debt_remark: '',
@@ -99,7 +99,7 @@ export default function DebtCompany() {
         if (file) {
             setFileName(file.name);
             setInputs({
-                ...inputs, doccm_file: file
+                ...inputs, docom_file: file
             })
         } else {
             setFileName('');
@@ -108,7 +108,7 @@ export default function DebtCompany() {
     const closeFile = () => {
         setFileName('');
         setInputs({
-            doccm_file: ''
+           ...inputs, docom_file: ''
         })
     }
 const handleSubmit =(event)=>{
@@ -221,7 +221,7 @@ const formatNumber = (num) => numeral(num).format('0,00');
                 </div>
 
                 <div class="col-xl-4 col-md-6">
-                    <div class="widget widget-stats bg-orange">
+                    <div class="widget widget-stats bg-orange rounded-4">
                         <div class="stats-icon text-white"><i class="fa fa-users" /></div>
                         <div class="stats-info">
                             <h4 className='fs-16px'>ໜີ້ຄ້າງຈ່າຍຕົວແທນ</h4>
@@ -239,7 +239,7 @@ const formatNumber = (num) => numeral(num).format('0,00');
 
 
                 <div class="col-xl-4 col-md-6">
-                    <div class="widget widget-stats bg-orange">
+                    <div class="widget widget-stats bg-orange rounded-4">
                         <div class="stats-icon text-white"><i class="fa-solid fa-wallet" /></div>
                         <div class="stats-info">
                             <h4 className='fs-16px'>ໜີ້ຄ້າງຮັບ oac</h4>
@@ -261,7 +261,7 @@ const formatNumber = (num) => numeral(num).format('0,00');
                     <h4 class="panel-title text-dark fs-18px">ລາຍການໜີ້ຄ້າງຈ່າຍບໍລິສັດ</h4>
                     <div class="panel-heading-btn">
                     {checkedItems.length > 0 ? (
-                            <button onClick={handlePayDebtMouti} className="btn btn-md btn-danger">ຢືນຢັນສຳລະໜີ້</button>
+                            <button onClick={handlePayDebtMouti} className="btn btn-md btn-danger">ຢືນຢັນຕັດໜີ້</button>
                         ) : (
                             <>
                                 <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>

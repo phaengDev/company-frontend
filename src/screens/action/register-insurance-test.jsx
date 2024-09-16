@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Input, InputNumber, SelectPicker, InputGroup, DatePicker, Button, InputPicker, DateInput } from 'rsuite';
-import { useAgent, useCompany, useType, useTypeCar, useBrandCar, useProvince, useCurrency, useStatus } from '../../config/select-option';
+import { Input, InputNumber, SelectPicker, InputGroup, DatePicker, Button, InputPicker } from 'rsuite';
+import { useAgent, useCompany, useType, useTypeCar, useBrandCar, useProvince, useCurrency } from '../../config/select-option';
 import Select from 'react-select'
 import { Config, imageUrl } from '../../config/connenct';
 import axios from 'axios';
@@ -15,7 +15,7 @@ export default function RegisterInsurance() {
   const itemType = useType();
   const itemTypeCar = useTypeCar();
   const itemBrand = useBrandCar();
-  const itemStatus = useStatus();
+  // const itemVersion = useVersion();
   const itemPv = useProvince()
   const itemCry = useCurrency();
   const location = useLocation();
@@ -35,7 +35,7 @@ export default function RegisterInsurance() {
       console.error('Error fetching data:', error);
     }
   };
-  const dataOption = itemOption.map(item => ({ label: item.options_name, value: item.options_Id, percent: item.option_vat }));
+  const dataOption = itemOption.map(item => ({ label: item.options_name, value: item.options_Id }));
 
   //===========================
   const [profile, setProfile] = useState('./assets/img/logo/camera.png');
@@ -65,17 +65,20 @@ export default function RegisterInsurance() {
     }
   }
   const dataDist = itemDistrict.map(item => ({ label: item.district_name, value: item.district_id }));
-  const [typeInsurance, setTypeInsurance] = useState(2);
 
-  const [valueComis, setValueComis] = useState({
-    companyId: '',
-    agentId: '',
-    typeinsId: ''
+
+
+  const [typeInsurance, setTypeInsurance] = useState(2);
+  
+  const [valueComis,setValueComis]=useState({
+    companyId:'',
+    agentId:'',
+    typeinsId:''
   })
 
   const handleOption = async (name, value) => {
     setValueComis({
-      ...valueComis, typeinsId: value
+      ...valueComis,typeinsId:value
     })
     setOpId(value);
     setInputs({
@@ -83,29 +86,29 @@ export default function RegisterInsurance() {
     })
     const response = await fetch(api + 'type-ins/' + value)
     const data = await response.json();
-    setTypeInsurance(data.status_ins)
-    setInputs({
-      ...inputs, statusIns: data.status_ins
-    })
+        setTypeInsurance(data.status_ins)
+        setInputs({
+          ...inputs, statusIns: data.status_ins
+        })
   }
 
   // const [comis, setComis] = useState({ comisget: 0, comispay: 0 });
 
-  const fetchComission = async () => {
+  const fetchComission = async ()=>{
     try {
       const response = await axios.post(api + 'comisget/single', valueComis);
       const jsonData = response.data;
-
-      // setTaxProfit(jsonData.percentGet);
-      // setPercentEps(jsonData.percentPay);
+     
+      setTaxProfit(jsonData.percentGet);
+      setPercentEps(jsonData.percentPay);
       setInputs((prevInputs) => ({
         ...prevInputs,
         precent_incom: jsonData.percentGet,
         percent_eps: jsonData.percentPay,
       }));
-    } catch (error) {
+  } catch (error) {
       console.error('Error fetching data:', error);
-    }
+  }
   }
 
 
@@ -115,24 +118,47 @@ export default function RegisterInsurance() {
   const moneyTaxes = (initialFee * percentTaxes) / 100;
 
   const [registrationFee, setRegistrationFee] = useState(0)
-  const insurancIncluded = numeral(parseFloat(initialFee) + parseFloat(moneyTaxes) + parseFloat(registrationFee)).format('0,00.00');
+  const insurancIncluded = numeral(parseInt(initialFee) + parseInt(moneyTaxes) + parseInt(registrationFee)).format('0,00');
 
+  // -------------------- ຄ່າຄອມຮັບ
+   const [taxProfit, setTaxProfit] = useState(0);//----ເປີເຊັນຮັບ 
+  const [percentAkorn, stePercentAkorn] = useState(5)
+  const precentIncom = (initialFee * taxProfit) / 100; //----- ຄອມກ່ອນອາກອນ
+
+  const incomMoney = (precentIncom * percentAkorn) / 100; //-- ອ.ກ ລາຍໄດ້  (ຄອມຮັບ)
+  const incomFinally = (precentIncom - incomMoney) //-- ຄອມຫຼັງຫັກອາກອນ
+  //-------------------- ຄ່າຄອມຈ່າຍ
+  const [percentEps, setPercentEps] = useState(0); //-------ເປີເຊັນຈ່າຍ
+  const advanceFee = (initialFee * percentEps) / 100; //-------ຄອມຈ່າຍກ່ອນອາກອນ
+  const [pcfeeEps, setPcfeeEps] = useState(5); //---ອ/ກ.ຈ່າຍ
+  const moneyPsFee = (advanceFee * pcfeeEps) / 100; //---ອ.ກ ລາຍໄດ້ (ຄອມຈ່າຍ)
+  const expencesTaxes = (advanceFee - moneyPsFee);  //----ຄອມຈ່າຍຫຼັງຫັກອາກອນ
+  const netIncome = (incomFinally - expencesTaxes);//--ລາຍຮັບສຸທິ
   const onkeyup_premiums = (name, value) => {
-    // const valuese = parseFloat(value.replace(/,/g, ''));
-    const values = isNaN(value) ? 0 : value
+    const values = parseFloat(value.replace(/,/g, ''));
     setInputs({
       ...inputs, [name]: values
     })
     if (name === 'initial_fee') {
-      toThousands(values);
-      setInitialFee(values);
+      setInitialFee(isNaN(values) ? 0 : parseInt(values));
     } else if (name === 'percent_taxes') {
       setPercentTaxes(values)
     } else if (name === 'registration_fee') {
-      toThousandsFee(values)
-      setRegistrationFee(values)
+      setRegistrationFee(isNaN(values) ? 0 : parseInt(values))
+    }
+    else if (name === 'precent_incom') {
+      setTaxProfit(values)
+    } else if (name === 'percent_eps') {
+      setPercentEps(values);
+    }
+    
+    else if (name === 'percent_akorn') {
+      stePercentAkorn(values)
+    } else if (name === 'percent_fee_eps') {
+      setPcfeeEps(values)
     }
 
+   
   }
 
 
@@ -147,9 +173,6 @@ export default function RegisterInsurance() {
     contract_number: '',
     contract_start_date: new Date(),
     contract_end_date: new Date(),
-    file_doct: '',
-    // statuStaff: [{}],
-    no_contract: '',
     user_fname: '',
     user_lname: '',
     user_gender: 'F',
@@ -157,7 +180,8 @@ export default function RegisterInsurance() {
     user_tel: '',
     user_district_fk: '',
     user_village: '',
-    status_use: '',
+    file_doct: '',
+
     // ----------- ຂໍມູນລົດ
     statusIns: '',
     car_type_id_fk: '',
@@ -167,14 +191,22 @@ export default function RegisterInsurance() {
     vehicle_number: '',
     tank_number: '',
     // ---------- ຂໍ້ມູນຄ່າປະກັນໄພ
-    initial_fee: 0,//c
-    percent_taxes: '10',//c
-    registration_fee: '0',//c
-    insuranc_included: 0,//c
-    precent_incom: 0,//c
-    percent_akorn: '5',//c
-    percent_eps: 0,//c
-    percent_fee_eps: '5',//c
+    initial_fee: 0,
+    percent_taxes: '10',
+    money_taxes: 0,
+    registration_fee: '0',
+    insuranc_included: 0,
+    precent_incom: 0,
+    pre_tax_profit: 0,
+    percent_akorn: '5',
+    incom_money: 0,
+    incom_finally: 0,
+    percent_eps: 0,
+    pays_advance_fee: 0,
+    percent_fee_eps: '5',
+    money_percent_fee: 0,
+    expences_pays_taxes: 0,
+    net_income: 0,
     status_company: '1',
     company_date: new Date(),
     status_agent: '1',
@@ -186,34 +218,25 @@ export default function RegisterInsurance() {
     setInputs({
       ...inputs, [name]: value
     })
-    if (name === 'company_id_fk') {
+    if(name==='company_id_fk'){
       setValueComis({
-        ...valueComis, companyId: value
+        ...valueComis,companyId:value
       })
     }
-    if (name === 'agent_id_fk') {
+    if(name==='agent_id_fk'){
       setValueComis({
-        ...valueComis, agentId: value
+        ...valueComis,agentId:value
       })
     }
 
-    if (name === 'contract_start_date') {
-      setInputs({
-        ...inputs,
-        company_date: new Date(value),
-        agent_date: new Date(value),
-        oac_date: new Date(value)
-      });
-    }
-
-    if (name === 'option_id_fk') {
-      const selectedOption = dataOption.find(option => option.value === value);
-      const percent_taxes = selectedOption ? selectedOption.percent : '10';
-      setInputs(prevInputs => ({
-        ...prevInputs,
-        percent_taxes: percent_taxes,
-      }));
-    }
+if(name==='contract_start_date'){
+  setInputs({
+    ...inputs, 
+    company_date: new Date(value),
+    agent_date: new Date(value),
+    oac_date: new Date(value)
+  })
+}
 
   }
 
@@ -232,19 +255,18 @@ export default function RegisterInsurance() {
     }
   };
 
-  //=================================== insert data to datablse============
+//=================================== insert data to datablse============
   const handleSubmit = (event) => {
     event.preventDefault();
-    // console.log(inputs);return;
     const imputData = new FormData();
     for (const key in inputs) {
       imputData.append(key, inputs[key])
     }
-
     try {
       axios.post(api + 'insurance/create', imputData)
         .then(function (respones) {
           if (respones.status === 200) {
+
             Alert.Successreload(respones.data.message)
           } else {
             Alert.errorData(respones.data.error)
@@ -254,21 +276,24 @@ export default function RegisterInsurance() {
       console.error('Error inserting data:', error);
     }
   }
+
+
   useEffect(() => {
     showOption();
     showCustom();
     fetchComission();
+    setInputs({
+      ...inputs, 
+      pre_tax_profit:precentIncom,
+      incom_money:incomMoney,
+      incom_finally:incomFinally,
+      expences_pays_taxes: expencesTaxes,
+      money_percent_fee:moneyPsFee,
+      net_income:netIncome,
+      pays_advance_fee:advanceFee,
+    })
 
-
-  }, [opId, customId, valueComis]);
-  // const [rows, setRows] = useState([{}]);
-  function toThousands(value) {
-    return value ? `${value}`.replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,') : value;
-  }
-  function toThousandsFee(value) {
-    return value ? `${value}`.replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,') : value;
-  }
-
+  }, [opId, customId,valueComis,expencesTaxes,moneyPsFee,netIncome,advanceFee,precentIncom,incomFinally]);
   return (
     <div id="content" className="app-content">
       <ol className="breadcrumb float-end">
@@ -276,10 +301,10 @@ export default function RegisterInsurance() {
         <li className="breadcrumb-item active">ແບບຟອມລົງທະບຽນ</li>
       </ol>
       <h3 className="page-header fs-20px"><Link to={'/report'} className='me-3 text-danger' ><i class="fa-solid fa-circle-arrow-left"></i></Link> ລົງທະບຽນຊື້ປະກັນ </h3>
-      <form onSubmit={handleSubmit} >
-
+      <form onSubmit={handleSubmit}>
         <div className="panel  border-4 border-top border-red rounded-top-4">
           <div className="panel-body ">
+
             <div className="d-flex align-items-center mb-15px">
               <div className="widget-img rounded-3 me-10px bg-white w-80px h-80px">
                 <img src={profile} className='w-80px h-80px' alt="" />
@@ -338,62 +363,46 @@ export default function RegisterInsurance() {
               </span>
             </div>
             <div id="collapseOne" class={`accordion-collapse collapse ${custom.type_buyer_fk === 2201 ? 'show' : ''}`} data-bs-parent="#accordion">
-              <div className="accordion-body ">
-                {/* {inputs.statuStaff.map((row, index) => ( */}
-                <>
-                  <fieldset className='px-3 mb-2'>
-                    <legend className='fs-18px'>ຜູ້ທີ່ໄດ້ຮັບຄວາມຄຸ້ມຄອງ</legend>
-                    <div className="row fs-15px mb-3">
-                      <div className="col-sm-2 col-6 mb-2">
-                        <label htmlFor="" className='form-label'>ເພດ</label>
-                        <select className='form-select' value={inputs.user_gender || 'F'} onChange={(e) => handelChange('user_gender', e.target.value)} >
-                          <option value="F">ເພດຍິງ</option>
-                          <option value="M">ເພດຊາຍ</option>
-                        </select>
-                      </div>
-                      <div className="col-sm-4 col-6 mb-2">
-                        <label htmlFor="" className='form-label'>ຊື່ແທ້</label>
-                        <Input onChange={(e) => handelChange('user_fname', e)} placeholder="ຊື່ແທ້" />
-                      </div>
-                      <div className="col-sm-3 col-6 mb-2">
-                        <label htmlFor="" className='form-label'>ນາມສະກຸນ</label>
-                        <Input onChange={(e) => handelChange('user_lname', e)} placeholder="ນາມສະກຸນ" />
-                      </div>
-                      <div className="col-sm-3 col-6 mb-2">
-                        <label htmlFor="" className='form-label'>ວັນເດືອນປີເກິດ</label>
-                        <DateInput format='dd/MM/yyyy' oneTap block onChange={(e) => handelChange('user_dob', e)} placeholder="ວັນ/ເດືອນ/ປີ" />
-                      </div>
-                      <div className="col-sm-3 col-6 mb-2">
-                        <label htmlFor="" className='form-label'>ແຂວງ</label>
-                        <SelectPicker data={itemPv} onChange={(e) => handelShowDist(e)} placeholder='ເລືອກ' block />
-                      </div>
-                      <div className="col-sm-3 col-6 mb-2">
-                        <label htmlFor="" className='form-label'>ເມືອງ</label>
-                        <SelectPicker data={dataDist} onChange={(e) => handelChange('user_district_fk', e)} placeholder='ເລືອກ' block />
-                      </div>
-                      <div className="col-sm-3 col-6 mb-2">
-                        <label htmlFor="" className='form-label'>ບ້ານ</label>
-                        <Input onChange={(e) => handelChange('user_village', e)} placeholder='ບ້ານ' block />
-                      </div>
-                      <div className="col-sm-3 col-6 mb-2">
-                        <label htmlFor="" className='form-label'>ເບີໂທລະສັບ</label>
-                        <Input type='tel' onChange={(e) => handelChange('user_tel', e)} placeholder='020 999999999' block />
-                      </div>
-                      <div className="col-sm-4 col-6 mb-2">
-                        <label htmlFor="" className='form-label'>ລະຫັດບັດ</label>
-                        <Input type='text' onChange={(e) => handelChange('no_contract', e)} placeholder='XXX-XXXX-XXXXXX' block />
-                      </div>
-                      <div className="col-sm-3 col-6 mb-2">
-                        <label htmlFor="" className='form-label'>ສະຖານະພະນັກງານ</label>
-                        <SelectPicker data={itemStatus} onChange={(e) => handelChange('status_use', e)} placeholder='ເລືອກ' block />
-                      </div>
-                    </div>
-                  </fieldset>
-                </>
-                {/* ))} */}
-
+              <div className="accordion-body row fs-15px">
+                <div className="col-sm-1 col-6 mb-2">
+                  <label htmlFor="" className='form-label'>ເພດ</label>
+                  <select className='form-select' onChange={(e) => handelChange('user_gender', e.target.value)} >
+                    <option value="F">ເພດຍິງ</option>
+                    <option value="M">ເພດຊາຍ</option>
+                  </select>
+                  {/* <InputPicker data={gender} defaultValue={'F'} onChange={(e) => handelChange('user_gender', e)} placeholder="ເລືອກ" /> */}
+                </div>
+                <div className="col-sm-4 col-6 mb-2">
+                  <label htmlFor="" className='form-label'>ຊື່ແທ້</label>
+                  <Input onChange={(e) => handelChange('user_fname', e)} placeholder="ຊື່ແທ້" />
+                </div>
+                <div className="col-sm-4 col-6 mb-2">
+                  <label htmlFor="" className='form-label'>ນາມສະກຸນ</label>
+                  <Input onChange={(e) => handelChange('user_lname', e)} placeholder="ນາມສະກຸນ" />
+                </div>
+                <div className="col-sm-3 col-6 mb-2">
+                  <label htmlFor="" className='form-label'>ວັນເດືອນປີເກິດ</label>
+                  <DatePicker format='dd/MM/yyyy' oneTap block onChange={(e) => handelChange('user_dob', e)} placeholder="ເລືອກ" />
+                </div>
+                <div className="col-sm-3 col-6 mb-2">
+                  <label htmlFor="" className='form-label'>ແຂວງ</label>
+                  <SelectPicker data={itemPv} onChange={(e) => handelShowDist(e)} placeholder='ເລືອກ' block />
+                </div>
+                <div className="col-sm-3 col-6 mb-2">
+                  <label htmlFor="" className='form-label'>ເມືອງ</label>
+                  <SelectPicker data={dataDist} onChange={(e) => handelChange('user_district_fk', e)} placeholder='ເລືອກ' block />
+                </div>
+                <div className="col-sm-3 col-6 mb-2">
+                  <label htmlFor="" className='form-label'>ບ້ານ</label>
+                  <Input onChange={(e) => handelChange('user_village', e)} placeholder='ບ້ານ' block />
+                </div>
+                <div className="col-sm-3 col-6 mb-2">
+                  <label htmlFor="" className='form-label'>ເບີໂທລະສັບ</label>
+                  <Input type='tel' onChange={(e) => handelChange('user_tel', e)} placeholder='020 999999999' block />
+                </div>
               </div>
             </div>
+
           </div>
         </div>
         {typeInsurance === 2 && (
@@ -415,6 +424,7 @@ export default function RegisterInsurance() {
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ລຸ່ນລົດ</label>
                   <Input value={inputs.version_name} onChange={(e) => handelChange('version_name', e)} placeholder='ລຸ່ນລົດ' />
+                  {/* <Select options={itemVersion} onChange={(e) => handelChange('version_name', e.value)} placeholder="ເລືອກ" /> */}
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ທະບຽນລົດ</label>
@@ -436,21 +446,25 @@ export default function RegisterInsurance() {
         <div className="panel border-4 border-top border-red rounded-top-4 mb-3 text-dark">
           <div className="panel-body">
             <div className="mb-3">
-              <h5>I. ຄ່າທຳນຽມທັງໝົດ </h5>
+              <h5>I. ຄ່າທຳນຽມທັງໝົດ {typeInsurance}</h5>
             </div>
 
             <div className="row fs-15px">
-              <div className="col-sm-4 col-6 mb-2">
+              <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄ່າທຳນຽມເບື້ອງຕົ້ນ</label>
-                <InputNumber value={inputs.initial_fee} formatter={toThousands} onChange={(e) => onkeyup_premiums('initial_fee', e)} placeholder='xxx xxxx' block required />
+                <Input value={numeral(inputs.initial_fee).format('0,00')} onChange={(e) => onkeyup_premiums('initial_fee', e)} placeholder='xxx xxxx' block required />
+              </div>
+              <div className="col-sm-1 col-6 mb-2">
+                <label htmlFor="" className='form-label'>ອາກອນ</label>
+                <InputNumber value={inputs.percent_taxes} onChange={(e) => onkeyup_premiums('percent_taxes', e)} block placeholder='0.%' required />
               </div>
               <div className="col-sm-2 col-6 mb-2">
-                <label htmlFor="" className='form-label'>ອາກອນ {inputs.money_taxes}</label>
-                <InputNumber value={inputs.percent_taxes} onChange={(e) => onkeyup_premiums('percent_taxes', e)} block placeholder='0.%' min={0} required />
+                <label htmlFor="" className='form-label'>ຄ່າອາກອນ {inputs.percent_taxes}%</label>
+                <Input value={inputs.money_taxes = numeral(moneyTaxes).format('0,00')} placeholder='00.000' className='bg-teal-100' block readOnly />
               </div>
               <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄ່າລົງທະບຽນ </label>
-                <InputNumber value={inputs.registration_fee} formatter={toThousandsFee} onChange={(e) => onkeyup_premiums('registration_fee', e)} placeholder='00.000' block required />
+                <Input value={numeral(inputs.registration_fee).format('0,00')} onChange={(e) => onkeyup_premiums('registration_fee', e)} placeholder='00.000' block required />
               </div>
               <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄ່າທຳນຽມປະກັນໄພລວມ </label>
@@ -465,24 +479,58 @@ export default function RegisterInsurance() {
                 <label htmlFor="" className='form-label'>ເປີເຊັນ ຮັບ </label>
                 <InputNumber value={inputs.precent_incom} onChange={(e) => onkeyup_premiums('precent_incom', e)} placeholder='0.%' block required readOnly />
               </div>
+              <div className="col-sm-3 col-6 mb-2">
+                <label htmlFor="" className='form-label'>ຄອມກ່ອນອາກອນ</label>
+                <Input value={numeral(inputs.pre_tax_profit).format('0,00')} placeholder='00.000' className='bg-lime-100' block readOnly />
+              </div>
               <div className="col-sm-2 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ອ/ກ.ຮ  </label>
                 <InputNumber value={inputs.percent_akorn} onChange={(e) => onkeyup_premiums('percent_akorn', e)} placeholder='0.%' block required />
               </div>
               <div className="col-sm-2 col-6 mb-2">
+                <label htmlFor="" className='form-label'>ອ.ກ ລາຍໄດ້ {inputs.percent_akorn}% (ຄອມຮັບ)</label>
+                <Input value={numeral(inputs.incom_money).format('0,00')} placeholder='00.000' className='bg-lime-100' block readOnly />
+              </div>
+              <div className="col-sm-3 col-6 mb-2">
+                <label htmlFor="" className='form-label'>ຄອມຫຼັງຫັກອາກອນ </label>
+                <Input value={numeral(inputs.incom_finally).format('0,00')} placeholder='00.000' className='bg-lime-100' block readOnly />
+              </div>
+            </div>
+
+            <div className="mb-3">
+              <h5>II. ລາຍຈ່າຍຄ່າຄອມ</h5>
+            </div>
+            <div className="row fs-15px">
+              <div className="col-sm-2 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ເປີເຊັນ ຈ່າຍ</label>
                 <InputNumber value={inputs.percent_eps} onChange={(e) => onkeyup_premiums('percent_eps', e)} placeholder='0.%' block required readOnly />
+              </div>
+              <div className="col-sm-3 col-6 mb-2">
+                <label htmlFor="" className='form-label'>ຄອມຈ່າຍກ່ອນອາກອນ</label>
+                <Input value={numeral(inputs.pays_advance_fee).format(0.00)} placeholder='00.000' className='bg-orange-100' block readOnly />
               </div>
               <div className="col-sm-2 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ອ/ກ.ຮ {inputs.percent_fee_eps}% </label>
                 <InputNumber value={inputs.percent_fee_eps} onChange={(e) => onkeyup_premiums('percent_fee_eps', e)} placeholder='0.%' block required />
               </div>
+              <div className="col-sm-2 col-6 mb-2">
+                <label htmlFor="" className='form-label'>ອ.ກ ລາຍໄດ້ {inputs.percent_fee_eps}% (ຄອມຈ່າຍ)</label>
+                <Input value={numeral(inputs.money_percent_fee).format('0,00')} placeholder='00.000' className='bg-orange-100' block readOnly />
+              </div>
               <div className="col-sm-3 col-6 mb-2">
+                <label htmlFor="" className='form-label'>ຄອມຈ່າຍຫຼັງຫັກອາກອນ </label>
+                <Input value={numeral(inputs.expences_pays_taxes).format('0,00')} placeholder='00.000' className='bg-orange-100' block readOnly />
+              </div>
+
+              <div className="col-sm-4 col-6 mt-4 text-center">
+                <label htmlFor="" className='form-label'>ລາຍຮັບສຸທິ </label>
+                <Input value={numeral(inputs.net_income).format('0,00')} placeholder='00.000' size="lg" className='bg-green-100 text-center' block readOnly />
+              </div>
+              <div className="col-sm-3 col-6 mt-4">
                 <label htmlFor="" className='form-label'>ສະກຸນ </label>
                 <InputPicker defaultValue={inputs.currency_id_fk} data={itemCry} onChange={(e) => handelChange('currency_id_fk', e)} block />
               </div>
-
-              <div className="col-sm-12 mt-4 ">
+              <div className="col-sm-5 mt-4 ">
                 <label htmlFor="" className='form-label'>ເອກະສານຕິດຄັດ </label>
                 <br />
                 <label className='btn btn-primary'>
@@ -497,8 +545,6 @@ export default function RegisterInsurance() {
                 )}
               </div>
             </div>
-
-
           </div>
         </div>
 

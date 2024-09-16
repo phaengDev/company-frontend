@@ -1,6 +1,24 @@
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Config } from "./connenct";
 const api = Config.urlApi;
+
+export function useStatus() {
+  const [itemStatus, setItemStatus] = useState([]);
+  useEffect(() => {
+    const showStatus = async () => {
+      try {
+        const response = await fetch(api + 'status');
+        const jsonData = await response.json();
+        setItemStatus(jsonData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    showStatus();
+  }, []);
+  const data = itemStatus.map(item => ({ label: item.status_name, value: item.stauts_use_id }));
+  return data;
+}
 
 export function useProvince() {
   const [itemProvince, setItemProvince] = useState([]);
@@ -15,10 +33,29 @@ export function useProvince() {
       }
     };
     showProvince();
-  }, []); 
+  }, []);
   const data = itemProvince.map(item => ({ label: item.province_name, value: item.province_id }));
   return data;
 }
+
+export function useDistrict(id) {
+  const [itemDistrict, setItemDistrict] = useState([]);
+  useEffect(() => {
+    const showDistrict = async () => {
+      try {
+        const response = await fetch(api + `district/pv/${id}`);
+        const jsonData = await response.json();
+        setItemDistrict(jsonData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    showDistrict();
+  }, [id]);
+  const dataDist = itemDistrict.map(item => ({ label: item.district_name, value: item.district_id }));
+  return dataDist;
+}
+
 
 export function useCompany() {
   const [itemCompany, setItemCompany] = useState([]);
@@ -33,7 +70,7 @@ export function useCompany() {
       }
     };
     showCompany();
-  }, []); 
+  }, []);
   const data = itemCompany.map(item => ({ label: item.com_name_lao, value: item.company_Id }));
   return data;
 }
@@ -52,7 +89,7 @@ export function useAgent() {
       }
     };
     showAgent();
-  }, []); 
+  }, []);
   const data = itemAgent.map(item => ({ label: item.agent_name, value: item.agent_Id }));
   return data;
 }
@@ -71,7 +108,7 @@ export function useType() {
       }
     };
     showType();
-  }, []); 
+  }, []);
   const data = itemType.map(item => ({ label: item.type_in_name, value: item.type_insid }));
   return data;
 }
@@ -89,7 +126,7 @@ export function useTypeCar() {
       }
     };
     showTypecar();
-  }, []); 
+  }, []);
   const data = itemTypecar.map(item => ({ label: item.typecar_name, value: item.typecar_Id }));
   return data;
 }
@@ -108,7 +145,7 @@ export function useBrandCar() {
       }
     };
     showBrandCar();
-  }, []); 
+  }, []);
   const data = itemBrandCar.map(item => ({ label: item.brands_name, value: item.brands_Id }));
   return data;
 }
@@ -127,7 +164,7 @@ export function useVersion() {
       }
     };
     showVersionCar();
-  }, []); 
+  }, []);
   const data = itemVersion.map(item => ({ label: item.version_name, value: item.version_Id }));
   return data;
 }
@@ -146,7 +183,7 @@ export function useTypeBuyer() {
       }
     };
     showTypeBuyer();
-  }, []); 
+  }, []);
   const data = itemBuyer.map(item => ({ label: item.type_buyer_name, value: item.type_buyer_id }));
   return data;
 }
@@ -165,7 +202,7 @@ export function useCurrency() {
       }
     };
     showCurrency();
-  }, []); 
-  const data = itemCurrency.map(item => ({ label: item.currency_name+'/'+item.genus, value: item.currency_id }));
+  }, []);
+  const data = itemCurrency.map(item => ({ label: item.currency_name + '/' + item.genus, value: item.currency_id }));
   return data;
 }
