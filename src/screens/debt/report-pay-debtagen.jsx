@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DatePicker, SelectPicker, Placeholder, Loader } from 'rsuite'
+import { DatePicker, SelectPicker, Placeholder, Loader, Input } from 'rsuite'
 import { useCompany, useType, useAgent } from '../../config/select-option';
 import { Config } from '../../config/connenct';
 import axios from 'axios';
@@ -58,10 +58,14 @@ export default function ReportPayDebtagen() {
       setIsLoading(false);
     }
   };
-  const Filter = (event) => {
-    setItemData(dataFilter.filter(n => n.contract_number.toLowerCase().includes(event)))
-  }
-
+  const handleFilter = (event) => {
+    const searchTerm = event.toLowerCase(); // Convert input to lowercase for case-insensitive filtering
+    setItemData(dataFilter.filter(item => 
+        item.contract_number.toLowerCase().includes(searchTerm) || 
+        item.customer_name.toLowerCase().includes(searchTerm) || 
+        item.currency_name.toLowerCase().includes(searchTerm)
+    ));
+};
   // ================================
   const sumData = itemData.reduce((acc, item) => {
     const currency = item.currency_name;
@@ -128,13 +132,14 @@ export default function ReportPayDebtagen() {
             <label htmlFor="" className='form-label'>ປະເພດປະກັນ</label>
             <SelectPicker block data={itemType} onChange={(e) => handleOption('insurance_type_fk', e)} />
           </div>
-          <div className="col-sm-4 col-md-2  col-6">
-            <label htmlFor="" className='form-label'>ທາງເລືອກ</label>
-            <SelectPicker block data={dataOption} onChange={(e) => handleChange('option_id_fk', e)} />
-          </div>
+         
           <div className="col-sm-4 col-md-2">
             <label htmlFor="" className='form-label'>ຕົວແທນຂາຍ</label>
             <SelectPicker block data={itemAgent} onChange={(e) => handleChange('agent_id_fk', e)} />
+          </div>
+          <div className="col-sm-4 col-md-2  col-6">
+            <label htmlFor="" className='form-label'>ຄົ້ນຫາ</label>
+            <Input block  onChange={(e) => handleFilter(e)} placeholder='ຊື່ລູກຄ້າ/ສະກຸນເງິນ/ເລກທີສັນຍາ' />
           </div>
         </div>
 

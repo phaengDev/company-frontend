@@ -44,7 +44,8 @@ export default function DebtCompany() {
     const Filter = (value) => {
         setItemData(filter.filter(n => 
             n.contract_number.toLowerCase().includes(value) ||
-            n.currency_name.toLowerCase().includes(value)
+            n.currency_name.toLowerCase().includes(value) ||
+            n.customer_name.toLowerCase().includes(value) 
         ));
     };
     const [sum, steSum] = useState({});
@@ -291,7 +292,7 @@ const formatNumber = (num) => numeral(num).format('0,00');
                         <div className="col-sm-3 mb-2">
                             <label htmlFor="" className='form-label'>ຄົ້ນຫາ</label>
                             <div class="input-group">
-                                <input type='search' onChange={(e) => Filter(e.target.value)} className='form-control rounded fs-14px' placeholder='ຄົ້ນຫາ...' />
+                                <input type='search' onChange={(e) => Filter(e.target.value)} className='form-control rounded fs-14px' placeholder='ເລກທີສັນຍາ/ສະກຸນເງິນ/ຊື່ລູກຄ້າ' />
                                 <button type="button" class="btn btn-blue  rounded ms-2" >
                                     <i className="fas fa-search fs-5"></i>
                                 </button>

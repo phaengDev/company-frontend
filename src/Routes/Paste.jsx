@@ -52,6 +52,12 @@ import ReportCommition from '../screens/agents/Report-commition';
 import ReportPaycommition from '../screens/agents/Report-Paycommition';
 import ReportInsuranteAgent from '../screens/agents/Report-insurante-agent';
 
+
+import ReportInsurnceBuy from '../screens/custom-buy/report-insurnce-buy';
+import HistoryInsurnceBay from '../screens/custom-buy/history-insurnce-bay';
+import InsuranceRetrun from '../screens/custom-buy/insurance-rutrun';
+
+
 import { Routes, Route, Navigate } from 'react-router-dom';
 export default function AppContent() {
   return (
@@ -109,6 +115,9 @@ export default function AppContent() {
             <Route path='/r-commit' element={<ReportCommition/>}/>
             <Route path='/r-payAgent' element={<ReportPaycommition/>}/>
             <Route path='/report-ag' element={<ReportInsuranteAgent/>}/>
+            <Route path='/report-c' element={<ReportInsurnceBuy/> } />
+            <Route path='/history-c' element={<HistoryInsurnceBay/> } />
+            <Route path='/retrun-c' element={<InsuranceRetrun />} />
         </Routes>
   )
 }

@@ -38,11 +38,13 @@ export default function ReportEndsCoverage() {
     company_id_fk: '',
     insurance_type_fk: '',
     agent_id_fk: companyId,
+    custom_id_fk:companyId,
     type_buyer_fk: '',
     option_id_fk: '',
     day_contract: 1,
     status: 1, //=========  ສະຖານະ 1 ສັນຍາປະຈຸບັນ  2 ປະຫວັດຕໍ່ສັນຍາ
     statusDay: 2, //=========  ສະຖານະ 1 ໃກ້ຈະຫມົດ  2 ສັນຍາຫມົດຄວາມຄຸ້ມຄອງ
+    user_type:user_type
   })
   const handleChange = (name, value) => {
     setData({
@@ -199,10 +201,12 @@ export default function ReportEndsCoverage() {
             <label htmlFor="" className='form-label'>ທາງເລືອກ</label>
             <SelectPicker block data={dataOption} onChange={(e) => handleChange('option_id_fk', e)} />
           </div>
+          {user_type !==3 && (
           <div className="col-sm-4 col-md-2">
             <label htmlFor="" className='form-label'>ຕົວແທນຂາຍ </label>
             <SelectPicker block data={itemagent} value={data.agent_id_fk} onChange={(e) => handleChange('agent_id_fk', e)} readOnly={user_type === 2 && 'readOnly'} />
           </div>
+          )}
         </div>
         <div class="d-lg-flex align-items-center mb-3">
           <div class="d-lg-flex d-none align-items-center text-nowrap">

@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { DatePicker, Input, InputGroup, SelectPicker, Placeholder, Loader } from 'rsuite'
-import { useCompany, useType, useTypeBuyer,useAgent } from '../../config/select-option';
-import { Config } from '../../config/connenct';
+import { DatePicker, Input, InputGroup, SelectPicker, Placeholder, Loader, Dropdown, IconButton, InputPicker } from 'rsuite'
+import { useCompany, useType, useTypeBuyer } from '../../config/select-option';
+import { Config, imageUrl } from '../../config/connenct';
 import axios from 'axios';
 import moment from 'moment';
 import numeral from 'numeral';
 import { ViewInsturance } from '../invioce/view-data-insturance';
-import Alert from '../../utils/config';
-import Swal from 'sweetalert2';
-import FormBeneficiaries from '../Modal/Form-Beneficiaries';
-export default function ReportSaleAll() {
+import FileDownloadIcon from '@rsuite/icons/FileDownload';
+function HistoryInsurnceBay() {
     const api = Config.urlApi;
+    const url = imageUrl.url;
     const itemcm = useCompany();
     const itemType = useType();
-    const itemAgent = useAgent();
-    const navigate = useNavigate();
+    const typebuyer = useTypeBuyer();
+    const customId = localStorage.getItem('company_agent_id')
 
     const [itemOption, setItemOption] = useState([]);
     const handleOption = async (name, value) => {
@@ -32,13 +30,12 @@ export default function ReportSaleAll() {
     };
     const dataOption = itemOption.map(item => ({ label: item.options_name, value: item.options_Id }));
     const [data, setData] = useState({
-        start_date: new Date(),
-        end_date: new Date(),
+        years_start: new Date().getFullYear(),
+        years_end: new Date().getFullYear(),
         company_id_fk: '',
         insurance_type_fk: '',
-        agent_id_fk: '',
-        type_buyer_fk: '',
-        option_id_fk: ''
+        custom_id_fk: customId,
+        option_id_fk: '',
     })
     const handleChange = (name, value) => {
         setData({
@@ -51,26 +48,21 @@ export default function ReportSaleAll() {
     const fetchReport = async () => {
         setIsLoading(true);
         try {
-            const response = await axios.post(api + 'report/all', data);
-            setItemData(response.data); // Axios already parses the response
-            setDataFilter(response.data)
+            const response = await axios.post(api + 'report/historybuy', data);
+            setItemData(response.data);
+            setDataFilter(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
             setIsLoading(false);
         }
     };
-
-
-    const handleFilter = (event) => {
-        const searchTerm = event.toLowerCase(); // Ensure it's coming from an input event
+    const Filter = (event) => {
         setItemData(dataFilter.filter(n =>
-            n.contract_number.toLowerCase().includes(searchTerm) ||
-            n.currency_name.toLowerCase().includes(searchTerm) ||
-            n.customer_name.toLowerCase().includes(searchTerm)
-        ));
-    };
-
+            n.contract_number.toLowerCase().includes(event) ||
+            n.currency_name.toLowerCase().includes(event)
+        ))
+    }
 
     // =================== custom pages============
     const [currentPage, setcurrentPage] = useState(1);
@@ -143,43 +135,13 @@ export default function ReportSaleAll() {
 
     }
 
-    const handleEdit = (id) => {
-        navigate(`/editIn?id=${btoa(id)}`);
-    }
-
 
     const [view, setView] = useState(false);
     const handleView = (index, value) => {
         setView(value)
-        console.log(value)
     }
 
-    const handleDelete = (id) => {
-        Swal.fire({
-            title: "ຢືນຢັນ?",
-            text: "ທ່ານຕ້ອງການລົບຂໍ້ມູນນີ້ແທ້ບໍ່!",
-            icon: "warning",
-            width: 400,
-            showDenyButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "ຕົກລົງ",
-            denyButtonText: `ຍົກເລີກ`
-        }).then((result) => {
-            if (result.isConfirmed) {
-                axios.delete(api + `insurance/${id}`).then(function (response) {
-                    if (response.status === 200) {
-                        fetchReport();
-                        Alert.successData(response.data.message)
-                    } else {
-                        Alert.errorData(response.data.message)
-                    }
-                });
-            }
-        });
-    }
-
-    const groupedData = currentItems.reduce((acc, item) => {
+    const sumData = currentItems.reduce((acc, item) => {
         const currency = item.currency_name;
         if (!acc[currency]) {
             acc[currency] = {
@@ -187,13 +149,7 @@ export default function ReportSaleAll() {
                 money_taxes: 0,
                 registration_fee: 0,
                 insuranc_included: 0,
-                pre_tax_profit: 0,
-                incom_money: 0,
-                incom_finally: 0,
-                pays_advance_fee: 0,
-                money_percent_fee: 0,
-                expences_pays_taxes: 0,
-                net_income: 0
+                genus: item.genus
             };
         }
 
@@ -201,33 +157,68 @@ export default function ReportSaleAll() {
         acc[currency].money_taxes += parseFloat(item.money_taxes);
         acc[currency].registration_fee += parseFloat(item.registration_fee);
         acc[currency].insuranc_included += parseFloat(item.insuranc_included);
-        acc[currency].pre_tax_profit += parseFloat(item.pre_tax_profit);
-        acc[currency].incom_money += parseFloat(item.incom_money);
-        acc[currency].incom_finally += parseFloat(item.incom_finally);
-        acc[currency].pays_advance_fee += parseFloat(item.pays_advance_fee);
-        acc[currency].money_percent_fee += parseFloat(item.money_percent_fee);
-        acc[currency].expences_pays_taxes += parseFloat(item.expences_pays_taxes);
-        acc[currency].net_income += parseFloat(item.net_income);
 
         return acc;
     }, {});
-    const formatNumber = (num) => numeral(num).format('0,00.00');
+    const formatNumber = (num) => numeral(num).format('0,00');
 
+    // ============
 
+    const renderIconButton = (props, ref) => {
+        return (
+            <IconButton {...props} ref={ref} icon={<i class="fa-regular fa-folder-open" />} size='xs' color="blue" appearance="primary" />
+        );
+    };
 
+    const handleDownload = async (fileName) => {
+        try {
+            const response = await fetch(fileName); // Replace with your server URL
+            if (!response.ok) {
+                throw new Error('File download failed');
+            }
 
-    const [show, setShow] = useState(false);
-    const [idInsrance, setIdInsrance] = useState('');
-    const addBeneficiaRies = (id) => {
-        setIdInsrance(id);
-        setShow(true)
-    }
-
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+        } catch (error) {
+            alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
+        }
+    };
 
     useEffect(() => {
         fetchReport();
-    }, [data])
+    }, [data, customId])
 
+   
+    
+    const currentYear = new Date().getFullYear();
+  const years = [];
+  for (let i = 0; i <= 10; i++) {
+    years.push({ label: (currentYear - i).toString(), value: currentYear - i });
+  }
+
+  const [selectedStartYear, setSelectedStartYear] = useState(currentYear); // Default to current year
+  const [selectedEndYear, setSelectedEndYear] = useState(currentYear + 1); // Default to next year
+
+  const handleStartYearChange = (value) => {
+    setData({
+        ...data, years_start: value
+    })
+    setSelectedStartYear(value); 
+    if (value > selectedEndYear) {
+      setSelectedEndYear(value);
+    }
+  };
+
+  const endYears = [];
+  for (let i = selectedStartYear; i <= currentYear + 0; i++) {
+    endYears.push({ label: i.toString(), value: i });
+  }
 
 
     return (
@@ -235,7 +226,7 @@ export default function ReportSaleAll() {
 
             <div class="app-content-padding px-4 py-3">
                 <div class="d-lg-flex mb-lg-3 mb-2">
-                    <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍການສັນຍາປະກັນໄພທັງໝົດ</h3>
+                    <h3 class="page-header mb-0 flex-1 fs-20px">ປະຫວັດການຕໍ່ສັນຍາປະກັນໄຟ </h3>
                     <span class="d-none d-lg-flex align-items-center">
                         <button onClick={handleEportPdf} class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
                             <i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
@@ -244,33 +235,28 @@ export default function ReportSaleAll() {
                             <i class="fa-solid fa-cloud-arrow-down fs-18px me-2 ms-n1"></i>
                             Export Excel
                         </button>
-
                     </span>
                 </div>
                 <div className="row mb-3">
                     <div className="col-sm-4 col-md-2 col-6">
-                        <label htmlFor="" className='form-label'>ວັນທີ</label>
-                        <DatePicker oneTap defaultValue={data.start_date} onChange={(e) => handleChange('start_date', e)} format="dd/MM/yyyy" block />
+                        <label htmlFor="" className='form-label'>ປີສິນສຸດ</label>
+                        <SelectPicker  data={years} defaultValue={data.years_start} onChange={(e)=>handleStartYearChange(e)}   block  />
                     </div>
-                    <div className="col-sm-4 col-md-2  col-6">
-                        <label htmlFor="" className='form-label'>ຫາວັນທີ</label>
-                        <DatePicker oneTap defaultValue={data.end_date} onChange={(e) => handleChange('end_date', e)} format="dd/MM/yyyy" block />
+                    <div className="col-sm-4 col-md-2 col-6">
+                        <label htmlFor="" className='form-label'>ຫາປີສິນສຸດ</label>
+                        <SelectPicker  data={endYears} defaultValue={data.years_end} onChange={(e) => handleChange('years_end', e)} block />
                     </div>
-                    <div className="col-sm-4 col-md-2">
+                    <div className="col-sm-4 col-md-3">
                         <label htmlFor="" className='form-label'>ບໍລິສັດປະກັນໄພ</label>
                         <SelectPicker block data={itemcm} onChange={(e) => handleChange('company_id_fk', e)} />
                     </div>
-                    <div className="col-sm-4 col-md-2  col-6">
+                    <div className="col-sm-4 col-md-3 col-6">
                         <label htmlFor="" className='form-label'>ປະເພດປະກັນ</label>
                         <SelectPicker block data={itemType} onChange={(e) => handleOption('insurance_type_fk', e)} />
                     </div>
-                    <div className="col-sm-4 col-md-2  col-6">
+                    <div className="col-sm-4 col-md-2 col-6">
                         <label htmlFor="" className='form-label'>ທາງເລືອກ</label>
                         <SelectPicker block data={dataOption} onChange={(e) => handleChange('option_id_fk', e)} />
-                    </div>
-                    <div className="col-sm-4 col-md-2">
-                        <label htmlFor="" className='form-label'>ຕົວແທນຂາຍ</label>
-                        <SelectPicker block data={itemAgent} onChange={(e) => handleChange('agent_id_fk', e)} />
                     </div>
                 </div>
                 <div class="d-lg-flex align-items-center mb-3">
@@ -290,7 +276,7 @@ export default function ReportSaleAll() {
                     <ul class="pagination pagination-sm mb-0 ms-auto justify-content-center">
                         <InputGroup inside>
                             <InputGroup.Addon> <i className="fas fa-search" /> </InputGroup.Addon>
-                            <Input block onChange={(e) => handleFilter(e)} className='w-250px' placeholder='ໍຊື່ລູກຄ້າ/ສະກຸນເງິນ/ເລກທີສັນຍາ...' />
+                            <Input block onChange={(e) => Filter(e)} className='w-250px' placeholder='ຄົ້ນຫາ...' />
                         </InputGroup>
                     </ul>
                 </div>
@@ -299,39 +285,25 @@ export default function ReportSaleAll() {
                         <thead className="fs-14px bg-header">
                             <tr>
                                 <th width='1%' className="text-center">ລ/ດ</th>
-                                <th className="">ຊື່ລູກຄ້າ</th>
                                 <th className="">ເລກທີສັນຍາ</th>
                                 <th className="">ວັນທີເລີມ</th>
                                 <th className="">ວັນທີສິນສຸດ</th>
                                 <th className="">ບໍລິສັດປະກັນໄພ</th>
-                                <th className="">ປະເພດຜູ້ຊື້</th>
                                 <th className="">ປະເພດປະກັນ	</th>
                                 <th className="">ທາງເລືອກ</th>
-                                <th className="">ຕົວແທນຂາຍ</th>
+                                <th className="">ທະບຽນລົດ</th>
                                 <th className="text-end">ຄ່າທຳນຽມເບື້ອງຕົ້ນ</th>
+                                <th className="text-end">ອາກອນ</th>
                                 <th className="text-end">ຄ່າອາກອນ</th>
-                                <th className="text-end">ເປັນເງິນ</th>
                                 <th className="text-end">ຄ່າລົງທະບຽນ</th>
                                 <th className="text-end">ຄ່າປະກັນໄພລວມ</th>
-                                <th className='text-center'>ເປີເຊັນ ຮັບ</th>
-                                <th className="text-end">ຄອມກ່ອນ ອກ</th>
-                                <th className='text-center'>ອ.ກ ລາຍໄດ້</th>
-                                <th className="text-end">ອ.ກ ລາຍໄດ້(ຄອມຮັບ)</th>
-                                <th className="text-end">ຄອມຫຼັງຫັກອາກອນ</th>
-                                <th className='text-center'>ເປີເຊັນ ຈ່າຍ</th>
-                                <th className="text-end">ຄອມຈ່າຍກ່ອນອາກອນ</th>
-                                <th className="text-center">ອ.ກ ຈ່າຍ</th>
-                                <th className="text-end">ອ.ກ ລາຍໄດ້(ຄອມຈ່າຍ)</th>
-                                <th className="text-end">ຄອມຈ່າຍຫຼັງຫັກອາກອນ</th>
-                                <th className="text-end">ລາຍຮັບສຸທິ</th>
-                                <th width='10%' className="text-center">ຈັດການ</th>
                                 <th width='10%' className="text-center">ການຕັ້ງຄ່າ</th>
                             </tr>
                         </thead>
                         <tbody>
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan={28}>
+                                    <td colSpan={27}>
                                         <Placeholder.Grid rows={6} columns={20} active />
                                         <Loader size="lg" center content="ກຳລັງໂຫດ......" />
                                     </td>
@@ -342,69 +314,41 @@ export default function ReportSaleAll() {
                                         {currentItems.map((item, key) => (
                                             <tr key={key}>
                                                 <td className='text-center'>{item.idAuto}</td>
-                                                <td>{item.customer_name}</td>
                                                 <td>{item.contract_number}</td>
                                                 <td>{moment(item.contract_start_date).format('DD/MM/YYYY')}</td>
                                                 <td>{moment(item.contract_end_date).format('DD/MM/YYYY')}</td>
                                                 <td>{item.com_name_lao}</td>
-                                                <td>{item.type_buyer_name}</td>
                                                 <td>{item.type_in_name}</td>
                                                 <td>{item.options_name}</td>
-                                                <td>{item.agent_name}</td>
-                                                <td className='text-end'>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
+                                                <td>{item.car_registration}</td>
+                                                <td className='text-end'>{numeral(item.initial_fee).format('0,00')} {item.genus}</td>
                                                 <td className='text-center'>{item.percent_taxes}%</td>
-                                                <td className='text-end'>{numeral(item.money_taxes).format('0,00.00')} {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.registration_fee).format('0,00.00')} {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.insuranc_included).format('0,00.00')} {item.genus}</td>
-                                                <td className='text-center'>{item.precent_incom}%</td>
-                                                <td className='text-end'>{numeral(item.pre_tax_profit).format('0,00.00')} {item.genus}</td>
-                                                <td className='text-center'>{item.percent_akorn}%</td>
-                                                <td className='text-end'>{numeral(item.incom_money).format('0,00.00')} {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.incom_finally).format('0,00.00')} {item.genus}</td>
-                                                <td className='text-center'>{item.percent_eps}%</td>
-                                                <td className='text-end'>{numeral(item.pays_advance_fee).format('0,00.00')} {item.genus}</td>
-                                                <td className='text-center'>{item.percent_fee_eps}%</td>
-                                                <td className='text-end'>{numeral(item.money_percent_fee).format('0,00.00')} {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.expences_pays_taxes).format('0,00.00')} {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.net_income).format('0,00.00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.money_taxes).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.registration_fee).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.insuranc_included).format('0,00')} {item.genus}</td>
                                                 <td className='text-center'>
-                                                    <button type='button' onClick={() => handleView(true, item)} className='btn btn-xs btn-orange me-2'> <i class="fa-solid fa-eye"></i> </button>
-                                                    <button type='button' onClick={() => addBeneficiaRies(item.incuranec_code)} className='btn btn-xs btn-blue'> <i class="fa-solid fa-user-shield"/> </button>
+                                                    <Dropdown renderToggle={renderIconButton} placement="bottomEnd">
+                                                        {item.file_doc.map((val, index) =>
+                                                            <Dropdown.Item icon={<FileDownloadIcon />} onClick={() => handleDownload(`${url}docfile/${val.file_insurance}`)}> {val.file_insurance}</Dropdown.Item>
+                                                        )}
+                                                    </Dropdown>
+                                                    <button type='button' onClick={() => handleView(true, item)} className='btn btn-xs btn-orange ms-2'> <i class="fa-solid fa-eye"></i> </button>
                                                 </td>
-                                                <td>
-                                                    {item.contract_status===1 && (
-                                                        <>
-                                                    <button onClick={() => handleEdit(item.incuranec_code)} className='btn btn-xs btn-green ms-2'> <i class="fa-solid fa-file-pen"></i> </button>
-                                                    <button onClick={() => handleDelete(item.incuranec_code)} className='btn btn-xs btn-danger ms-2'> <i class="fa-solid fa-trash"></i> </button>
-                                                    </>
-                                                 )}
-                                                    </td>
                                             </tr>
                                         ))}
-                                        {Object.keys(groupedData).map((currency, key) => (
+                                        {Object.keys(sumData).map((currency, key) => (
                                             <tr key={`${key}`}>
-                                                <td colSpan={10} className='text-end'>ລວມຍອດຄ້າງຮັບທັງໝົດ ({currency})</td>
-                                                <td className='text-end'>{formatNumber(groupedData[currency].initial_fee)}</td>
+                                                <td colSpan={8} className='text-end'>ລວມຍອດຄ້າງຮັບທັງໝົດ ({currency})</td>
+                                                <td className='text-end'>{formatNumber(sumData[currency].initial_fee)} {sumData[currency].genus}</td>
                                                 <td></td>
-                                                <td className='text-end'>{formatNumber(groupedData[currency].money_taxes)}</td>
-                                                <td className='text-end'>{formatNumber(groupedData[currency].registration_fee)}</td>
-                                                <td className='text-end'>{formatNumber(groupedData[currency].insuranc_included)}</td>
+                                                <td className='text-end'>{formatNumber(sumData[currency].money_taxes)} {sumData[currency].genus}</td>
+                                                <td className='text-end'>{formatNumber(sumData[currency].registration_fee)} {sumData[currency].genus}</td>
+                                                <td className='text-end'>{formatNumber(sumData[currency].insuranc_included)} {sumData[currency].genus}</td>
                                                 <td></td>
-                                                <td className='text-end'>{formatNumber(groupedData[currency].pre_tax_profit)}</td>
-                                                <td></td>
-                                                <td className='text-end'>{formatNumber(groupedData[currency].incom_money)}</td>
-                                                <td className='text-end'>{formatNumber(groupedData[currency].incom_finally)}</td>
-                                                <td></td>
-                                                <td className='text-end'>{formatNumber(groupedData[currency].pays_advance_fee)}</td>
-                                                <td></td>
-                                                <td className='text-end'>{formatNumber(groupedData[currency].money_percent_fee)}</td>
-                                                <td className='text-end'>{formatNumber(groupedData[currency].expences_pays_taxes)}</td>
-                                                <td className='text-end'>{formatNumber(groupedData[currency].net_income)}</td>
-                                                <td colSpan={2}></td>
                                             </tr>
                                         ))}
                                     </>
-                                ) : (<tr><td colSpan={28} className='text-center text-red'>ບໍ່ພົບຂໍ້ມູນທີ່ມີການຄົ້ນຫາ.......</td></tr>)
+                                ) : (<tr><td colSpan={27} className='text-center text-red'>ບໍ່ພົບຂໍ້ມູນທີ່ມີການຄົ້ນຫາ.......</td></tr>)
                             )}
                         </tbody>
                     </table>
@@ -439,13 +383,10 @@ export default function ReportSaleAll() {
                         </div>
                     </div>
                 )}
-            </div>
 
-            <FormBeneficiaries
-                show={show}
-                handleClose={() => setShow(false)}
-                idIn={idInsrance}
-            />
+            </div>
         </div >
     )
 }
+
+export default HistoryInsurnceBay

@@ -135,19 +135,19 @@
         {
           "subId": 16,
           "mainFk": 5,
-          "subName": "ລາຍງານໜີ້ຈ່າຍບໍລິສັດ",
+          "subName": "ການຈ່າຍບໍລິສັດ",
           "sublink": "r-debcom"
         },
         {
           "subId": 17,
           "mainFk": 5,
-          "subName": "ລາຍງານໜີ້ຈ່າຍຕົວແທນ",
+          "subName": "ການຈ່າຍຕົວແທນ",
           "sublink": "r-debagent"
         },
         {
           "subId": 18,
           "mainFk": 5,
-          "subName": "ລາຍງານໜີ້ຮັບບໍລິສັດ",
+          "subName": "ການຮັບຄອມ",
           "sublink": "r-deboac"
         }
       ]
@@ -293,6 +293,46 @@
       "mainName": "ສັນຍາໝົດຄວາມຄຸ້ມຄອງ",
       "link": "report-ends",
       "typeUser":"2",
+      "icon": "fa-solid fa-file-circle-xmark bg-indigo-400",
+      "subMenu": []
+    },
+
+
+    {
+      "id": 10,
+      "mainName": "ໜ້າຫຼັກ",
+      "link": "home",
+      "typeUser":"3",
+      "icon": "fa-solid fa-house-chimney bg-info",
+      "subMenu": []
+    },{
+      "id": 11,
+      "mainName": "ລາຍການສັນຍາປະກັນໄພ",
+      "link": "report-c",
+      "typeUser":"3",
+      "icon": "fa-solid fa-tags bg-orange-400",
+      "subMenu": []
+    }
+    ,{
+      "id": 13,
+      "mainName": "ປະຫວັດການຕໍ່ສັນຍາ",
+      "link": "history-c",
+      "typeUser":"3",
+      "icon": "fa-solid fa-file-invoice bg-blue-800",
+      "subMenu": []
+    },{
+      "id": 14,
+      "mainName": "ສັນຍາຍົກເລີກ",
+      "link": "retrun-c",
+      "typeUser":"3",
+      "icon": "fa-solid fa-paste bg-orange-600",
+      "subMenu": []
+    }
+    ,{
+      "id": 15,
+      "mainName": "ສັນຍາໝົດຄວາມຄຸ້ມຄອງ",
+      "link": "report-ends",
+      "typeUser":"3",
       "icon": "fa-solid fa-file-circle-xmark bg-indigo-400",
       "subMenu": []
     }

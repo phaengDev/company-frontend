@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DatePicker,SelectPicker, Placeholder, Loader } from 'rsuite'
+import { DatePicker,SelectPicker, Placeholder, Loader, Input } from 'rsuite'
 import { useCompany, useType, useAgent } from '../../config/select-option';
 import { Config } from '../../config/connenct';
 import axios from 'axios';
@@ -58,9 +58,14 @@ export default function ReportPayDebtcom() {
       setIsLoading(false);
     }
   };
-  const Filter = (event) => {
-    setItemData(dataFilter.filter(n => n.contract_number.toLowerCase().includes(event)))
-  }
+  const handleFilter = (event) => {
+    const searchTerm = event.toLowerCase(); // Convert input to lowercase for case-insensitive filtering
+    setItemData(dataFilter.filter(item => 
+        item.contract_number.toLowerCase().includes(searchTerm) || 
+        item.customer_name.toLowerCase().includes(searchTerm) || 
+        item.currency_name.toLowerCase().includes(searchTerm)
+    ));
+};
 
 
   const sumData = itemData.reduce((acc, item) => {
@@ -119,13 +124,14 @@ export default function ReportPayDebtcom() {
             <label htmlFor="" className='form-label'>ປະເພດປະກັນ</label>
             <SelectPicker block data={itemType} onChange={(e) => handleOption('insurance_type_fk', e)} />
           </div>
-          <div className="col-sm-4 col-md-2  col-6">
-            <label htmlFor="" className='form-label'>ທາງເລືອກ</label>
-            <SelectPicker block data={dataOption} onChange={(e) => handleChange('option_id_fk', e)} />
-          </div>
+         
           <div className="col-sm-4 col-md-2">
             <label htmlFor="" className='form-label'>ຕົວແທນຂາຍ</label>
             <SelectPicker block data={itemAgent} onChange={(e) => handleChange('agent_id_fk', e)} />
+          </div>
+          <div className="col-sm-4 col-md-2  col-6">
+            <label htmlFor="" className='form-label'>ຄົ້ນຫາ</label>
+            <Input block  onChange={(e) => handleFilter(e)} placeholder='ຊື່ລູກຄ້າ/ສະກຸນເງິນ/ເລກທີສັນຍາ' />
           </div>
         </div>
 
@@ -183,13 +189,13 @@ export default function ReportPayDebtcom() {
                         <td className='text-end'>{numeral(item.registration_fee).format('0,00')} {item.genus}</td>
                         <td className='text-end'>{numeral(item.insuranc_included).format('0,00')} {item.genus}</td>
                         <td>{item.debt_remark}</td>
-                        <td>{item.docom_file && (<span role='button' className='text-danger fs-16px'><i class="fa-solid fa-download"></i></span>)}</td>
+                        <td className='text-center'>{item.docom_file && (<span role='button' className='text-danger fs-16px'><i class="fa-solid fa-download"></i> ໄຟລ໌...</span>)}</td>
                       </tr>
                     ))}
                   
                     {Object.keys(sumData).map((currency, key) => (
                       <tr key={key}>
-                        <td colSpan={10} className='text-end'>ລວມຍອດຄ້າງຮັບທັງໝົດ ({currency})</td>
+                        <td colSpan={11} className='text-end'>ລວມຍອດຄ້າງຮັບທັງໝົດ ({currency})</td>
                         <td className='text-end'>{formatNumber(sumData[currency].initial_fee)}</td>
                         <td></td>
                         <td className='text-end'>{formatNumber(sumData[currency].money_taxes)}</td>

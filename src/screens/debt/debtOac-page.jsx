@@ -44,7 +44,8 @@ export default function DebtOac() {
     const Filter = (value) => {
         setItemData(filter.filter(n => 
             n.contract_number.toLowerCase().includes(value) ||
-            n.currency_name.toLowerCase().includes(value)
+            n.currency_name.toLowerCase().includes(value) ||
+            n.customer_name.toLowerCase().includes(value) 
         ));
     };
     const [sum, steSum] = useState({})
@@ -117,7 +118,6 @@ export default function DebtOac() {
         for (const key in inputs) {
             imputData.append(key, inputs[key])
         }
-        console.log(inputs);
         try {
             axios.post(api + 'pays/create', imputData)
                 .then(function (respones) {
@@ -292,7 +292,7 @@ export default function DebtOac() {
                         <div className="col-sm-3 mb-2">
                             <label htmlFor="" className='form-label'>ຄົ້ນຫາ</label>
                             <div class="input-group">
-                                <input type='search' onChange={(e) => Filter(e.target.value)} className='form-control rounded fs-14px' placeholder='ຄົ້ນຫາ...' />
+                                <input type='search' onChange={(e) => Filter(e.target.value)} className='form-control rounded fs-14px' placeholder='ເລກທີສັນຍາ/ສະກຸນເງິນ/ຊື່ລູກຄ້າ' />
                                 <button type="button" class="btn btn-blue  rounded ms-2" >
                                     <i className="fas fa-search fs-5"></i>
                                 </button>
@@ -337,7 +337,7 @@ export default function DebtOac() {
                                 ) : (
                                     itemData.length > 0 ? (
                                         <>
-                                            {itemData.map((item, key) => (
+                                            {itemData.sort((a, b) => (b.status_company === 1 ? -1 : 1)).map((item, key) => (
                                                 <tr key={key}>
                                                     <td className='text-center bg-white sticky-col first-col'>{key + 1}</td>
                                                     <td className='text-center bg-white sticky-col first-col'>{item.status_company === 1 ? 'ຄັ້ງຈ່າຍບໍລິສັດ' : (<span onClick={() => handlePayDebt(item)} role='button' class="badge bg-primary"><i class="fa-brands fa-paypal"></i> ຕັດໜີ້ບໍລິສັດ</span>)}</td>

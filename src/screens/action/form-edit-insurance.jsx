@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import { Input, InputNumber, SelectPicker, InputGroup, DatePicker, Button, InputPicker } from 'rsuite';
-import { useAgent, useCompany, useType, useTypeCar, useBrandCar, useProvince, useCurrency } from '../../config/select-option';
+import { useAgent, useCompany, useType, useTypeCar, useBrandCar,  useCurrency } from '../../config/select-option';
 import Select from 'react-select'
 import { Config } from '../../config/connenct';
 import axios from 'axios';
@@ -16,7 +16,6 @@ export default function FormEditInsurance() {
   const itemTypeCar = useTypeCar();
   const itemBrand = useBrandCar();
   const location = useLocation();
-  const itemPv = useProvince();
   const itemCry = useCurrency();
   const searchParams = new URLSearchParams(location.search);
   const Id = atob(searchParams.get('id'));
@@ -31,7 +30,7 @@ export default function FormEditInsurance() {
         typeinsId: typeinsId
       });
       const jsonData = response.data;
-      console.log('Commission data received:', jsonData);
+      // console.log('Commission data received:', jsonData);
 
       setInputs((prevInputs) => ({
         ...prevInputs,
@@ -44,17 +43,6 @@ export default function FormEditInsurance() {
   };
 
 
-  // const [itemDistrict, setItemDistrict] = useState([]);
-  // const handelShowDist = async (value) => {
-  //   try {
-  //     const response = await fetch(api + `district/pv/${value}`);
-  //     const jsonData = await response.json();
-  //     setItemDistrict(jsonData);
-  //   } catch (error) {
-  //     console.error('Error fetching data:', error);
-  //   }
-  // }
-  // const dataDist = itemDistrict.map(item => ({ label: item.district_name, value: item.district_id }));
 
   const [typeInsurance, setTypeInsurance] = useState(2);
   const [inputs, setInputs] = useState({});
@@ -63,9 +51,6 @@ export default function FormEditInsurance() {
     try {
       const response = await fetch(api + `insurance/${Id}`);
       const data = await response.json();
-      // if (data.user_province_id) {
-      //   handelShowDist(data.user_province_id)
-      // }
       setTypeInsurance(data.status_ins);
       setInputs({
         incuranecCode: data.incuranec_code,
@@ -166,6 +151,7 @@ export default function FormEditInsurance() {
     setInputs({
       ...inputs, [name]: value
     })
+
     if (name === 'company_id_fk') {
       fetchComission(value, inputs.agent_id_fk, inputs.insurance_type_fk);
     } else if (name === 'agent_id_fk') {
@@ -177,6 +163,7 @@ export default function FormEditInsurance() {
     if (name === 'contract_start_date') {
       setInputs({
         ...inputs,
+        contract_start_date:value, 
         company_date: new Date(value),
         agent_date: new Date(value),
         oac_date: new Date(value)
@@ -327,7 +314,7 @@ export default function FormEditInsurance() {
                 </InputGroup>
               </div>
               <div className="col-sm-4  mb-2">
-                <label htmlFor="" className='form-label'>ວັນທີເລີມສັນຍາ</label>
+                <label htmlFor="" className='form-label'>ວັນທີເລີມສັນຍາ </label>
                 <DatePicker oneTap format="dd/MM/yyyy" value={inputs.contract_start_date} onChange={(e) => handelChange('contract_start_date', e)} placeholder='ວັນທີເລີມ' block required />
               </div>
               <div className="col-sm-4  mb-2">

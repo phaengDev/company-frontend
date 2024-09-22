@@ -23,7 +23,7 @@ export default function UserInurance() {
     userName: '',
     userEmail: '',
     userPassword: '',
-    user_type_fk: '2',
+    user_type_fk: '3',
     company_agent_fk: '',
     depart_id_fk: '',
     statusUse: '1',
@@ -47,7 +47,7 @@ export default function UserInurance() {
       setLoading(false)
     }
   }
-  const data = itembuyer.map(item => ({ label: item.customer_name, value: item.customer_Id }));
+  const data = itembuyer.map(item => ({ label: item.customer_name, value: item.custom_uuid }));
   //=================
   const [inputs, setInputs] = useState({
     userId:'',
