@@ -56,7 +56,7 @@ export default function Login() {
                     <div class="news-feed">
                         <div class="news-image" style={{ backgroundImage: "url('/assets/img/login-bg/bg-insurance.png')", backgroundRepeat: 'no-repeat' }} ></div>
                         <div class="news-caption">
-                            <h4 class="caption-title"><b>OAC</b> Insurance Broker </h4>
+                            <h4 class="caption-title"><b>OAC</b> Insurance Broker  </h4>
                         </div>
                     </div>
                     {isLoading === true ? (
@@ -110,7 +110,7 @@ export default function Login() {
                                 )}
                                 <hr class="bg-gray-600 opacity-2" />
                                 <div class="text-gray-600 text-center mb-0">
-                                    &copy; OAC Broker -@- V 2.1.0
+                                    &copy; OAC Broker -@- V 2.2.10
                                 </div>
                             </form>
                         </div>
