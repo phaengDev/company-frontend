@@ -51,7 +51,7 @@ import CommissionPay from '../screens/setting/Commission-Pay';
 import ReportCommition from '../screens/agents/Report-commition';
 import ReportPaycommition from '../screens/agents/Report-Paycommition';
 import ReportInsuranteAgent from '../screens/agents/Report-insurante-agent';
-
+import ReportDebtPayAgent from '../screens/reports/report-debt-pays-agent';
 
 import ReportInsurnceBuy from '../screens/custom-buy/report-insurnce-buy';
 import HistoryInsurnceBay from '../screens/custom-buy/history-insurnce-bay';
@@ -111,7 +111,7 @@ export default function AppContent() {
             <Route path='/retrun-oac' element={<RetrunOacborker />}/>
             <Route path='/comission' element={<ComissionSale/>}/>
             <Route path='/comisaget' element={<CommissionPay/>}/>
-
+            <Route path='/r-debt' element={<ReportDebtPayAgent />} />
             <Route path='/r-commit' element={<ReportCommition/>}/>
             <Route path='/r-payAgent' element={<ReportPaycommition/>}/>
             <Route path='/report-ag' element={<ReportInsuranteAgent/>}/>

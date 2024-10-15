@@ -267,7 +267,7 @@
     }
     ,{
       "id": 11,
-      "mainName": "ລາຍງານຄອມຄ່າຄອມ",
+      "mainName": "ລາຍງານຄອມຄ້າງຮັບ",
       "link": "r-commit",
       "typeUser":"2",
       "icon": "fa-solid fa-file-medical bg-gradient-green",
@@ -275,7 +275,7 @@
     }
     ,{
       "id": 11,
-      "mainName": "ລາຍງານຈ່າຍຄ່າຄອມ",
+      "mainName": "ລາຍງານຄອມຮັບແລ້ວ",
       "link": "r-payAgent",
       "typeUser":"2",
       "icon": "fa-solid fa-file-invoice bg-blue-800",
@@ -296,17 +296,24 @@
       "icon": "fa-solid fa-file-circle-xmark bg-indigo-400",
       "subMenu": []
     },
-
+    {
+      "id": 14,
+      "mainName": "ລາຍງານໜີ້",
+      "link": "r-debt",
+      "typeUser":"2",
+      "icon": "fa-solid fa-bars-staggered bg-teal-600",
+      "subMenu": []
+    },
 
     {
-      "id": 10,
+      "id": 15,
       "mainName": "ໜ້າຫຼັກ",
       "link": "home",
       "typeUser":"3",
       "icon": "fa-solid fa-house-chimney bg-info",
       "subMenu": []
     },{
-      "id": 11,
+      "id": 16,
       "mainName": "ລາຍການສັນຍາປະກັນໄພ",
       "link": "report-c",
       "typeUser":"3",
@@ -314,22 +321,22 @@
       "subMenu": []
     }
     ,{
-      "id": 13,
+      "id": 17,
       "mainName": "ປະຫວັດການຕໍ່ສັນຍາ",
       "link": "history-c",
       "typeUser":"3",
       "icon": "fa-solid fa-file-invoice bg-blue-800",
       "subMenu": []
     },{
-      "id": 14,
-      "mainName": "ສັນຍາຍົກເລີກ",
+      "id": 18,
+      "mainName": "ລາຍງານຄືນເງິນ",
       "link": "retrun-c",
       "typeUser":"3",
       "icon": "fa-solid fa-paste bg-orange-600",
       "subMenu": []
     }
     ,{
-      "id": 15,
+      "id": 19,
       "mainName": "ສັນຍາໝົດຄວາມຄຸ້ມຄອງ",
       "link": "report-ends",
       "typeUser":"3",

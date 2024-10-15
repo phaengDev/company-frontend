@@ -172,6 +172,7 @@ function ReportCommition() {
 
 
     const downloadExcel = () => {
+
     }
 
 //=============================
@@ -340,7 +341,7 @@ const downloadAagentPdf= async ()=>{
                 <thead className="fs-14px bg-header">
                     <tr>
                         <th width='1%' className="text-center">ລ/ດ</th>
-                        <th width='1%' className="text-center"><input class="form-check-input" onChange={handleAllChange} checked={areAllChecked} type="checkbox"  /></th>
+                        {/* <th width='1%' className="text-center"><input class="form-check-input" onChange={handleAllChange} checked={areAllChecked} type="checkbox"  /></th> */}
                         <th className="">ຊື່ລູກຄ້າ</th>
                         <th className="">ເລກທີສັນຍາ</th>
                         <th className="">ວັນທີເລີມ</th>
@@ -359,7 +360,7 @@ const downloadAagentPdf= async ()=>{
                         <th className="text-center">ອ.ກ ຈ່າຍ</th>
                         <th className="text-end">ອ.ກ ລາຍໄດ້(ຄອມຈ່າຍ)</th>
                         <th className="text-end">ຄອມຈ່າຍຫຼັງຫັກອາກອນ</th>
-                        <th width='10%' className="text-center">ການຕັ້ງຄ່າ</th>
+                        {/* <th width='10%' className="text-center">ການຕັ້ງຄ່າ</th> */}
                         <th width='10%' className="text-center sticky-col first-col-end">ສະຖານະ</th>
                     </tr>
                 </thead>
@@ -377,7 +378,7 @@ const downloadAagentPdf= async ()=>{
                                 {currentItems.map((item, key) => (
                                     <tr key={key}>
                                         <td className='text-center'>{item.idAuto}</td>
-                                        <td width='1%' className="text-center"><input class="form-check-input" onChange={()=> handleItemChange(item)} checked={!!checkedItems[item.idAuto]} type="checkbox"  /></td>
+                                        {/* <td width='1%' className="text-center"><input class="form-check-input" onChange={()=> handleItemChange(item)} checked={!!checkedItems[item.idAuto]} type="checkbox"  /></td> */}
                                         <td>{item.customer_name}</td>
                                         <td>{item.contract_number}</td>
                                         <td>{moment(item.contract_start_date).format('DD/MM/YYYY')}</td>
@@ -396,15 +397,15 @@ const downloadAagentPdf= async ()=>{
                                         <td className='text-center'>{item.percent_fee_eps}%</td>
                                         <td className='text-end'>{numeral(item.money_percent_fee).format('0,00')}  {item.genus}</td>
                                         <td className='text-end'>{numeral(item.expences_pays_taxes).format('0,00')} {item.genus}</td>
-                                        <td className='text-center'>
+                                        {/* <td className='text-center'>
                                             <button type='button' onClick={() => downloadPDF(item)} className='btn btn-xs btn-red'> PDF </button>
-                                        </td>
-                                        <td className={`text-center bg-white sticky-col first-col-end ${item.status_agent=== 1?'text-orange':'text-green'}`}>{item.status_agent===1?'ຄ້າງຈ່າຍ':'ຈ່າຍແລ້ວ'}</td>
+                                        </td> */}
+                                        <td className={`text-center bg-white sticky-col first-col-end ${item.status_agent=== 1?'text-orange':'text-green'}`}>{item.status_agent===1? item.day_agent +' ວັນ':'ຈ່າຍແລ້ວ'}</td>
                                     </tr>
                                 ))}
                                 {Object.keys(sumData).map((currency, key) => (
                                         <tr key={`${key}`}>
-                                            <td colSpan={10} className='text-end'>ລວມຍອດຄ້າງຈ່າຍທັງໝົດ ({currency})</td>
+                                            <td colSpan={9} className='text-end'>ລວມຍອດຄ້າງຈ່າຍທັງໝົດ ({currency})</td>
                                             <td className='text-end'>{formatNumber(sumData[currency].initial_fee)} {sumData[currency].genus}</td>
                                             <td></td>
                                             <td className='text-end'>{formatNumber(sumData[currency].money_taxes)} {sumData[currency].genus}</td>
@@ -415,7 +416,7 @@ const downloadAagentPdf= async ()=>{
                                             <td></td>
                                             <td className='text-end'>{formatNumber(sumData[currency].money_percent_fee)} {sumData[currency].genus}</td>
                                             <td className='text-end'>{formatNumber(sumData[currency].expences_pays_taxes)} {sumData[currency].genus}</td>
-                                            <td colSpan={2}></td>
+                                            <td></td>
                                         </tr>
                                 ))}
                             </>

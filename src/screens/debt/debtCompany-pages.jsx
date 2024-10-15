@@ -201,7 +201,7 @@ const formatNumber = (num) => numeral(num).format('0,00');
                 <li className="breadcrumb-item">ໜ້າຫຼັກ</li>
                 <li className="breadcrumb-item active">ລາຍການໜີ້</li>
             </ol>
-            <h3 className="page-header fs-20px">ຂໍ້ມູນໜີ້ທັງໝົດ</h3>
+            <h3 className="page-header fs-20px">ຂໍ້ມູນໜີ້ທັງໝົດ </h3>
 
             <div class="row">
                 <div class="col-xl-4 col-md-6">

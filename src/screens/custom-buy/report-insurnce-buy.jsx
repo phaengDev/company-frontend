@@ -5,7 +5,7 @@ import { Config,imageUrl } from '../../config/connenct';
 import axios from 'axios';
 import moment from 'moment';
 import numeral from 'numeral';
-import { ViewInsturance } from '../invioce/view-data-insturance';
+import { ViewInsturance } from '../invioce/view-buy-insturance';
 import FileDownloadIcon from '@rsuite/icons/FileDownload';
 function ReportInsurnceBuy() {
     const api = Config.urlApi;
@@ -308,11 +308,11 @@ function ReportInsurnceBuy() {
                                                 <td className='text-end'>{numeral(item.registration_fee).format('0,00')} {item.genus}</td>
                                                 <td className='text-end'>{numeral(item.insuranc_included).format('0,00')} {item.genus}</td>
                                                 <td className='text-center'>
-                                                    <Dropdown renderToggle={renderIconButton} placement="bottomEnd">
+                                                    {/* <Dropdown renderToggle={renderIconButton} placement="bottomEnd">
                                                         {item.file_doc.map((val,index)=>
                                                         <Dropdown.Item icon={<FileDownloadIcon/>}  onClick={() => handleDownload(`${url}docfile/${val.file_insurance}`)}> {val.file_insurance}</Dropdown.Item>
                                                             )}
-                                                        </Dropdown>
+                                                        </Dropdown> */}
                                                     <button type='button' onClick={() => handleView(true, item)} className='btn btn-xs btn-orange ms-2'> <i class="fa-solid fa-eye"></i> </button>
                                                 </td>
                                             </tr>
