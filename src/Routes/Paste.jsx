@@ -56,7 +56,7 @@ import ReportDebtPayAgent from '../screens/reports/report-debt-pays-agent';
 import ReportInsurnceBuy from '../screens/custom-buy/report-insurnce-buy';
 import HistoryInsurnceBay from '../screens/custom-buy/history-insurnce-bay';
 import InsuranceRetrun from '../screens/custom-buy/insurance-rutrun';
-
+import ReportDebtCustomer from '../screens/reports/report-debt-customer'
 
 import { Routes, Route, Navigate } from 'react-router-dom';
 export default function AppContent() {
@@ -118,6 +118,7 @@ export default function AppContent() {
             <Route path='/report-c' element={<ReportInsurnceBuy/> } />
             <Route path='/history-c' element={<HistoryInsurnceBay/> } />
             <Route path='/retrun-c' element={<InsuranceRetrun />} />
+            <Route path='/rc-debt' element={<ReportDebtCustomer />} />
         </Routes>
   )
 }

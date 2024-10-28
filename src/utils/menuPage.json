@@ -343,5 +343,13 @@
       "icon": "fa-solid fa-file-circle-xmark bg-indigo-400",
       "subMenu": []
     }
+    ,{
+      "id": 19,
+      "mainName": "ລາຍງານໜີ້",
+      "link": "rc-debt",
+      "typeUser":"3",
+      "icon": "fa-solid fa-book-bookmark bg-teal-600",
+      "subMenu": []
+    }
   ]
 }

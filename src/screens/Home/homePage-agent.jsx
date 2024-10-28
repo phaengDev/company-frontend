@@ -56,7 +56,7 @@ export default function HomePageAgent() {
       animationEnabled: true,
       title: {
           fontFamily: "LAOS",
-          text: "ຍອດຂາຍ,ຍອດຮັບ"
+          text: "ຍອດຂາຍ, ຍອດຮັບ"
       },
       data: [{
           type: "pie",
@@ -136,7 +136,7 @@ export default function HomePageAgent() {
   useEffect(() => {
     fetchDataMonth();
     fetchData();
-  }, [datack]);
+  }, [companyId,user_type]);
   return (
     <div id="content" class="app-content">
       <div class="row">
@@ -144,7 +144,7 @@ export default function HomePageAgent() {
           <div class="widget widget-stats  bg-blue border-4 border-top border-red rounded-4">
             <div class="stats-icon text-white"><img src="./assets/img/icon/insurannce-All.png" width={'100%'} alt="" /></div>
             <div class="stats-info">
-              <h4 className='fs-16px'>ຈຳນວນສັນຍາປະກັນໄພທັງໝົດ </h4>
+              <h4 className='fs-16px'>ຈຳນວນສັນຍາປະກັນໄພທັງໝົດ  </h4>
               <p>{isLoading === true ? (<Loader size="md" content="ກຳລັງໂຫລດ..." />) : (balance.qtyAll + ' (ສັນຍາ)')}</p>
 
             </div>

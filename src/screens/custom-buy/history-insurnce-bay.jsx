@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { DatePicker, Input, InputGroup, SelectPicker, Placeholder, Loader, Dropdown, IconButton, InputPicker } from 'rsuite'
-import { useCompany, useType, useTypeBuyer } from '../../config/select-option';
+import { useCompanyCust, useTypeCust } from '../../config/select-option';
 import { Config, imageUrl } from '../../config/connenct';
 import axios from 'axios';
 import moment from 'moment';
@@ -10,11 +10,10 @@ import FileDownloadIcon from '@rsuite/icons/FileDownload';
 function HistoryInsurnceBay() {
     const api = Config.urlApi;
     const url = imageUrl.url;
-    const itemcm = useCompany();
-    const itemType = useType();
-    const typebuyer = useTypeBuyer();
     const customId = localStorage.getItem('company_agent_id')
 
+    const itemType = useTypeCust(customId);
+    const itemcm = useCompanyCust(customId);
     const [itemOption, setItemOption] = useState([]);
     const handleOption = async (name, value) => {
         try {

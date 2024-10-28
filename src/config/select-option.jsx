@@ -76,6 +76,24 @@ export function useCompany() {
 }
 
 
+export function useCompanyCust(id) {
+  const [itemCompany, setItemCompany] = useState([]);
+  useEffect(() => {
+    const showCompanyCust = async () => {
+      try {
+        const response = await fetch(api + 'company/cust/'+id);
+        const jsonData = await response.json();
+        setItemCompany(jsonData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    showCompanyCust();
+  }, [id]);
+  const data = itemCompany.map(item => ({ label: item.com_name_lao, value: item.company_Id }));
+  return data;
+}
+
 export function useAgent() {
   const [itemAgent, setItemAgent] = useState([]);
   useEffect(() => {
@@ -95,6 +113,26 @@ export function useAgent() {
 }
 
 
+export function useAgentCust(id) {
+  const [itemAgent, setItemAgent] = useState([]);
+  useEffect(() => {
+    const showAgentCust = async () => {
+      try {
+        const response = await fetch(api + 'agent/cust/'+id);
+        const jsonData = await response.json();
+        setItemAgent(jsonData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    showAgentCust();
+  }, [id]);
+  const data = itemAgent.map(item => ({ label: item.agent_name, value: item.agent_Id }));
+  return data;
+}
+
+
+
 export function useType() {
   const [itemType, setItemType] = useState([]);
   useEffect(() => {
@@ -109,6 +147,25 @@ export function useType() {
     };
     showType();
   }, []);
+  const data = itemType.map(item => ({ label: item.type_in_name, value: item.type_insid }));
+  return data;
+}
+
+
+export function useTypeCust(id) {
+  const [itemType, setItemType] = useState([]);
+  useEffect(() => {
+    const showTypeCust = async () => {
+      try {
+        const response = await fetch(api + 'type-ins/cust/'+id);
+        const jsonData = await response.json();
+        setItemType(jsonData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    showTypeCust();
+  }, [id]);
   const data = itemType.map(item => ({ label: item.type_in_name, value: item.type_insid }));
   return data;
 }

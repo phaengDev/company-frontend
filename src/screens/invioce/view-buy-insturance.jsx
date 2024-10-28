@@ -51,8 +51,8 @@ export const ViewInsturance = ({ data }) => {
     }
 
     return (
-        <div class="container">
-            <table class="policy-table ">
+        <div class="container ">
+            <table class="policy-table">
                 <thead>
                     <tr>
                         <th colspan="4" class="header ">
@@ -145,12 +145,6 @@ export const ViewInsturance = ({ data }) => {
                         </>
                     )}
                    
-                    <tr>
-                        <th>ເປິເຊັນຂາຍ (%):</th>
-                        <td>{item.percent_eps} %</td>
-                        <th className='text-end'>ຄ່າຄອມມິດຊັ່ນ :</th>
-                        <td>{numeral(item.expences_pays_taxes).format('0,00')}</td>
-                    </tr>
                     <tr class="section">
                         <th colspan="4" className='fs-17px'>ຂໍ້ມູນຄ່າທຳນຽມປະກັນໄພ</th>
                     </tr>
@@ -174,16 +168,7 @@ export const ViewInsturance = ({ data }) => {
                         <th>ສະຖານະຈ່າຍບໍລິສັດ:</th>
                         <td>{item.status_company === 1 ? 'ຄ້າງຈ່າຍບໍ່ລິສັດ (' + item.day_company + ' )' : 'ຈ່າຍແລ້ວ'}</td>
                         <th className='text-end'>ວັນທີ:</th>
-                        <td>{moment(item.company_date).format('DD/MM/YYYY')}
-                            {
-                                item.file_comits && (
-                                    item.file_comits.filter(pay => pay.status_doc === 1)
-                                        .map((pay, key) => (
-                                            <span className='float-end text-red' onClick={() => downloadFilePay(`${url}docPay/${pay.docom_file}`)} role='button'><i class="fa-solid fa-download" /> {pay.docom_file}</span>
-                                        ))
-                                )
-                            }
-                        </td>
+                        <td>{moment(item.company_date).format('DD/MM/YYYY')} </td>
                     </tr>
                     
                 </tbody>

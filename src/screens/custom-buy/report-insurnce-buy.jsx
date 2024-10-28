@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { DatePicker, Input, InputGroup, SelectPicker, Placeholder, Loader, Dropdown, IconButton } from 'rsuite'
-import { useCompany, useType, useTypeBuyer } from '../../config/select-option';
+import { useCompanyCust, useTypeCust, useTypeBuyer } from '../../config/select-option';
 import { Config,imageUrl } from '../../config/connenct';
 import axios from 'axios';
 import moment from 'moment';
 import numeral from 'numeral';
 import { ViewInsturance } from '../invioce/view-buy-insturance';
-import FileDownloadIcon from '@rsuite/icons/FileDownload';
+// import FileDownloadIcon from '@rsuite/icons/FileDownload';
 function ReportInsurnceBuy() {
     const api = Config.urlApi;
     const url = imageUrl.url;
-    const itemcm = useCompany();
-    const itemType = useType();
     const typebuyer = useTypeBuyer();
     const customId = localStorage.getItem('company_agent_id')
 
+    const itemType = useTypeCust(customId);
+    const itemcm = useCompanyCust(customId);
     const [itemOption, setItemOption] = useState([]);
     const handleOption = async (name, value) => {
         try {
@@ -223,11 +223,11 @@ function ReportInsurnceBuy() {
                         <label htmlFor="" className='form-label'>ຫາວັນທີ</label>
                         <DatePicker oneTap defaultValue={data.end_date} onChange={(e) => handleChange('end_date', e)} format="dd/MM/yyyy" block />
                     </div>
-                    <div className="col-sm-4 col-md-2">
+                    <div className="col-sm-4 col-md-3">
                         <label htmlFor="" className='form-label'>ບໍລິສັດປະກັນໄພ</label>
                         <SelectPicker block data={itemcm} onChange={(e) => handleChange('company_id_fk', e)} />
                     </div>
-                    <div className="col-sm-4 col-md-2  col-6">
+                    <div className="col-sm-4 col-md-3  col-6">
                         <label htmlFor="" className='form-label'>ປະເພດປະກັນ</label>
                         <SelectPicker block data={itemType} onChange={(e) => handleOption('insurance_type_fk', e)} />
                     </div>
@@ -235,10 +235,7 @@ function ReportInsurnceBuy() {
                         <label htmlFor="" className='form-label'>ທາງເລືອກ</label>
                         <SelectPicker block data={dataOption} onChange={(e) => handleChange('option_id_fk', e)} />
                     </div>
-                    <div className="col-sm-4 col-md-2">
-                        <label htmlFor="" className='form-label'>ປະເພດຜູ້ຊື້ປະກັນ</label>
-                        <SelectPicker block data={typebuyer} onChange={(e) => handleChange('type_buyer_fk', e)} />
-                    </div>
+                  
                 </div>
                 <div class="d-lg-flex align-items-center mb-3">
                     <div class="d-lg-flex d-none align-items-center text-nowrap">

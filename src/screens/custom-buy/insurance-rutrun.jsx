@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { DatePicker, SelectPicker, Input, InputGroup, Placeholder, Loader } from 'rsuite'
-import { useCompany, useType, useAgent } from '../../config/select-option';
+import { useCompanyCust, useTypeCust, useAgentCust } from '../../config/select-option';
 import { Config,imageUrl } from '../../config/connenct';
 import axios from 'axios';
 import numeral from 'numeral';
@@ -8,13 +8,13 @@ import moment from 'moment';
 function InsuranceRetrun() {
     const api = Config.urlApi;
     const url=imageUrl.url;
-    const itemcm = useCompany();
-    const itemType = useType();
-    const itemAg = useAgent();
 
     const user_type = localStorage.getItem('user_type');
     const companyId = parseInt(localStorage.getItem('company_agent_id'), 10);
 
+    const itemAg = useAgentCust(companyId);
+    const itemcm = useCompanyCust(companyId);
+    const itemType = useTypeCust(companyId);
     const [data, setData] = useState({
         start_date: new Date(),
         end_date: new Date(),
