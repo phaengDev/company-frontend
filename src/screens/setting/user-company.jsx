@@ -7,6 +7,7 @@ import axios from 'axios';
 import Swal from "sweetalert2";
 import { Config } from '../../config/connenct';
 import Alert from '../../utils/config';
+import { useCompany } from '../../config/select-option';
 export default function UserCompany() {
 
   const api = Config.urlApi;
@@ -19,17 +20,17 @@ export default function UserCompany() {
   const handleClose = () => setOpen(false);
 
 
-  const [itemCompany, setItemCompany] = useState([]);
-  const fetchCompany = async () => {
-    try {
-      const response = await fetch(api + 'company/fetch');
-      const jsonData = await response.json();
-      setItemCompany(jsonData);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  }
-  const data = itemCompany.map(item => ({ label: item.com_name_lao, value: item.company_Id }));
+  const itemCompany=useCompany();
+  // const fetchCompany = async () => {
+  //   try {
+  //     const response = await fetch(api + 'company/fetch');
+  //     const jsonData = await response.json();
+  //     setItemCompany(jsonData);
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error);
+  //   }
+  // }
+  // const data = itemCompany.map(item => ({ label: item.com_name_lao, value: item.company_Id }));
   //=================
   const [inputs, setInputs] = useState({
     userId:'',
@@ -43,10 +44,21 @@ export default function UserCompany() {
     statusOff:'1'
   })
   const handleChange = (name, value) => {
+    if(name==='company_agent_fk'){
+      const data = itemCompany.find(item => item.value === value);
+      setInputs({
+        ...inputs,
+        userName:data.name_eng,
+        company_agent_fk:value
+      })
+    }else{
     setInputs({
       ...inputs, [name]: value
     });
   }
+  }
+
+
   //==========================
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -121,8 +133,51 @@ const  handleEdit=(item)=>{
     }
   }
   const Filter = (event) => {
-    setItemUser(filter.filter(n => n.customer_name.toLowerCase().includes(event)))
+    setItemUser(filter.filter(n => n.com_name_lao.toLowerCase().includes(event)))
   }
+
+//================ editpass
+const [edit,setEdit]=useState({
+  userId:'',
+    userEmail: '',
+    userPassword: '',
+})
+  const [openEd,setOpenEd]=useState(false)
+  const handleEditPass=(data)=>{
+      setEdit({
+      userId:data.user_Id,
+    userEmail: data.userEmail,
+    userPassword:'',
+      })
+      setOpenEd(true)
+  }
+
+  const handleChangeEd=(name,value)=>{
+    setEdit({
+        ...edit,[name]:value
+    })
+};
+
+const handleSubmitEdit=(e)=>{
+    e.preventDefault();
+    try {
+        axios.post(api + 'user/editpass', edit)
+            .then(function (respones) {
+                if (respones.status === 200) {
+                    setOpenEd(false)
+                    fetchUsers();
+                    Alert.successData(respones.data.message)
+                } else {
+                    Alert.errorData(respones.data.message)
+                }
+            });
+    } catch (error) {
+        console.error('Error inserting data:', error);
+    }
+}
+
+//================================
+
 
 
   const [currentPage, setcurrentPage] = useState(1);
@@ -185,7 +240,7 @@ const  handleEdit=(item)=>{
 
   useEffect(() => {
     fetchUsers();
-    fetchCompany();
+    // fetchCompany();
   }, []);
 
   return (
@@ -264,7 +319,6 @@ const  handleEdit=(item)=>{
                       <th width="1%" className='text-center'>ລ/ດ</th>
                       <th>ຊື່ຜູ້ໃຊ້ຕົວແທນ</th>
                       <th>ອິເມວ</th>
-                      <th>ລະຫັດຜ່ານ</th>
                       <th>ສະຖານະ</th>
                       <th className='text-center'>ການຕັ້ງຄ່າ</th>
                     </tr>
@@ -275,9 +329,9 @@ const  handleEdit=(item)=>{
                         <td className='text-center'>{key + 1}</td>
                         <td>{item.com_name_lao}</td>
                         <td>{item.userEmail}</td>
-                        <td>{item.userPassword}</td>
                         <td><span class={`badge ${item.statusOff === 1 ? 'bg-primary' : 'bg-danger'} `}>{item.offName}</span></td>
                         <td className='text-center'>
+                        <button className='button' onClick={()=>handleEditPass(item)} class="btn btn-green btn-xs me-2"><i class="fa-solid fa-key"></i></button>
                           <button type='button' onClick={()=>handleEdit(item)} class="btn btn-blue btn-xs me-2"><i class="fa-solid fa-pen-to-square"></i></button>
                           <button type='button' onClick={() => headleDelete(item.user_Id)} class="btn btn-red btn-xs"><i class="fa-solid fa-trash"></i></button>
                         </td>
@@ -316,7 +370,7 @@ const  handleEdit=(item)=>{
                 <Row>
                   <Col lg={24} sm={24} md={12} className='mb-2'>
                     <label htmlFor="" className='form-label'>ບໍລິສັດປະກັນໄພ</label>
-                    <SelectPicker data={data} value={inputs.company_agent_fk}  onChange={(e) => handleChange('company_agent_fk', e)} block placeholder='-  ບໍລິສັດປະກັນໄພ  -' />
+                    <SelectPicker data={itemCompany} value={inputs.company_agent_fk}  onChange={(e) => handleChange('company_agent_fk', e)} block placeholder='-  ບໍລິສັດປະກັນໄພ  -' />
                   </Col>
 
                   <Col lg={12} sm={6} md={12} className='mb-2'>
@@ -348,6 +402,38 @@ const  handleEdit=(item)=>{
             </Modal.Footer>
           </form>
         </Modal>
+
+
+        <Modal open={openEd} onClose={()=>setOpenEd(false)}>
+                <Modal.Header>
+                    <Modal.Title className='pt-1'>ແກ້ໄຂລະຫັດຜ່ານ</Modal.Title>
+                </Modal.Header>
+                <form onSubmit={handleSubmitEdit}>
+                    <Modal.Body>
+                        <Grid fluid>
+                            <Row>
+                                <Col lg={24}  className='mb-2'>
+                                    <label htmlFor="" className='form-label'>Email</label>
+                                    <Input value={edit.userEmail}  placeholder="Email" onChange={(e) => handleChangeEd('userEmail', e)} required />
+                                </Col>
+                                <Col lg={24} className='mb-2'>
+                                    <label htmlFor="" className='form-label'>Password</label>
+                                    <InputGroup inside>
+                                        <Input type={visible ? 'text' : 'password'} value={edit.userPassword}  onChange={(e) => handleChangeEd('userPassword', e)} required />
+                                        <InputGroup.Button onClick={handleShow}>
+                                            {visible ? <EyeIcon /> : <EyeSlashIcon />}
+                                        </InputGroup.Button>
+                                    </InputGroup>
+                                </Col>
+                            </Row>
+                        </Grid>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button type='submit' appearance="primary">ບັນທຶກ </Button>
+                        <Button color='red' onClick={()=>setOpenEd(false)} appearance="primary"> ຍົກເລີກ </Button>
+                    </Modal.Footer>
+                </form>
+            </Modal>
       </div>
     </>
   )

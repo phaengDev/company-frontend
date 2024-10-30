@@ -5,8 +5,9 @@ import EyeIcon from '@rsuite/icons/legacy/Eye';
 import EyeSlashIcon from '@rsuite/icons/legacy/EyeSlash';
 import axios from 'axios';
 import Swal from "sweetalert2";
-import {Config} from '../../config/connenct';
+import { Config } from '../../config/connenct';
 import Alert from '../../utils/config';
+// import { useCustomBuy } from '../../config/select-option';
 export default function UserInurance() {
   const api = Config.urlApi;
   const [visible, setVisible] = React.useState(false);
@@ -19,23 +20,23 @@ export default function UserInurance() {
     fetchBuyer();
     setCheckEdit(false)
     setInputs({
-    userId:'',
-    userName: '',
-    userEmail: '',
-    userPassword: '',
-    user_type_fk: '3',
-    company_agent_fk: '',
-    depart_id_fk: '',
-    statusUse: '1',
-    statusOff:'1'
-  })
+      userId: '',
+      userName: '',
+      userEmail: '',
+      userPassword: '',
+      user_type_fk: '3',
+      company_agent_fk: '',
+      depart_id_fk: '',
+      statusUse: '1',
+      statusOff: '1'
+    })
   }
   const handleClose = () => setOpen(false);
 
-  const [checkEdit,setCheckEdit]=useState(false)
+  const [checkEdit, setCheckEdit] = useState(false)
 
   const [itembuyer, setItemBuyer] = useState([]);
-  const [loading,setLoading]=useState(true);
+  const [loading, setLoading] = useState(true);
   const fetchBuyer = async () => {
     try {
       const response = await fetch(api + 'custom/option/2202');
@@ -43,14 +44,14 @@ export default function UserInurance() {
       setItemBuyer(jsonData);
     } catch (error) {
       console.error('Error fetching data:', error);
-    } finally{
+    } finally {
       setLoading(false)
     }
   }
   const data = itembuyer.map(item => ({ label: item.customer_name, value: item.custom_uuid }));
   //=================
   const [inputs, setInputs] = useState({
-    userId:'',
+    userId: '',
     userName: '',
     userEmail: '',
     userPassword: '',
@@ -58,12 +59,21 @@ export default function UserInurance() {
     company_agent_fk: '',
     depart_id_fk: '',
     statusUse: '1',
-    statusOff:'1'
+    statusOff: '1'
   })
   const handleChange = (name, value) => {
-    setInputs({
-      ...inputs, [name]: value
-    });
+    if (name === 'company_agent_fk') {
+      const item = data.find(item => item.value === value);
+      setInputs({
+        ...inputs,
+        company_agent_fk: value,
+        userName: item.customer_name
+      });
+    } else {
+      setInputs({
+        ...inputs, [name]: value
+      });
+    }
   }
   //==========================
   const handleSubmit = async (e) => {
@@ -85,16 +95,16 @@ export default function UserInurance() {
   };
 
 
-  const handleEdit=(item)=>{
+  const handleEdit = (item) => {
     setInputs({
-      userId:item.user_Id,
+      userId: item.user_Id,
       userName: item.userName,
       userEmail: item.userEmail,
       userPassword: item.userPassword,
       company_agent_fk: item.company_agent_fk,
       user_type_fk: '3',
       statusUse: '1',
-      statusOff:item.statusOff
+      statusOff: item.statusOff
     })
     setOpen(true);
     fetchBuyer();
@@ -102,45 +112,45 @@ export default function UserInurance() {
   }
 
 
-//================ editpass
-const [edit,setEdit]=useState({
-  userId:'',
+  //================ editpass
+  const [edit, setEdit] = useState({
+    userId: '',
     userEmail: '',
     userPassword: '',
-})
-const [openEd,setOpenEd]=useState(false)
-  const handleEditPass=(data)=>{
-      setEdit({
-      userId:data.user_Id,
-    userEmail: data.userEmail,
-    userPassword:'',
-      })
-      setOpenEd(true)
+  })
+  const [openEd, setOpenEd] = useState(false)
+  const handleEditPass = (data) => {
+    setEdit({
+      userId: data.user_Id,
+      userEmail: data.userEmail,
+      userPassword: '',
+    })
+    setOpenEd(true)
   }
-  const handleChangeEd=(name,value)=>{
-      setEdit({
-          ...edit,[name]:value
-      })
+  const handleChangeEd = (name, value) => {
+    setEdit({
+      ...edit, [name]: value
+    })
   };
 
-  const handleSubmitEdit=(e)=>{
-      e.preventDefault();
-      try {
-          axios.post(api + 'user/editpass', edit)
-              .then(function (respones) {
-                  if (respones.status === 200) {
-                      setOpenEd(false)
-                      fetchUsers();
-                      Alert.successData(respones.data.message)
-                  } else {
-                      Alert.errorData(respones.data.message)
-                  }
-              });
-      } catch (error) {
-          console.error('Error inserting data:', error);
-      }
+  const handleSubmitEdit = (e) => {
+    e.preventDefault();
+    try {
+      axios.post(api + 'user/editpass', edit)
+        .then(function (respones) {
+          if (respones.status === 200) {
+            setOpenEd(false)
+            fetchUsers();
+            Alert.successData(respones.data.message)
+          } else {
+            Alert.errorData(respones.data.message)
+          }
+        });
+    } catch (error) {
+      console.error('Error inserting data:', error);
+    }
   }
-//=========================== 
+  //=========================== 
 
 
   const headleDelete = (id) => {
@@ -254,7 +264,7 @@ const [openEd,setOpenEd]=useState(false)
     <>
       <div id="content" className="app-content">
         <ol class="breadcrumb float-end">
-          <li class="breadcrumb-item"><span role='button'  onClick={handleOpen} className='btn  btn-sm btn-danger'><i className="fa-solid fa-user-plus"></i> ເພີ່ມຂໍ້ມູນໃໝ່</span></li>
+          <li class="breadcrumb-item"><span role='button' onClick={handleOpen} className='btn  btn-sm btn-danger'><i className="fa-solid fa-user-plus"></i> ເພີ່ມຂໍ້ມູນໃໝ່</span></li>
         </ol>
         <h2 class="page-header">ການຕັ້ງຄ່າຊື້ຜູ້ໃຊ້ງານລະບົບ </h2>
         <div className="panel panel-inverse panel-with-tabs">
@@ -338,8 +348,8 @@ const [openEd,setOpenEd]=useState(false)
                         <td>{item.userEmail}</td>
                         <td><span class={`badge ${item.statusOff === 1 ? 'bg-primary' : 'bg-danger'} `}>{item.offName}</span></td>
                         <td className='text-center'>
-                        <button className='button' onClick={()=>handleEditPass(item)} class="btn btn-green btn-xs me-2"><i class="fa-solid fa-key"></i></button>
-                          <button type='button'  onClick={()=>handleEdit(item)}  class="btn btn-blue btn-xs me-2"><i class="fa-solid fa-pen-to-square"></i></button>
+                          <button className='button' onClick={() => handleEditPass(item)} class="btn btn-green btn-xs me-2"><i class="fa-solid fa-key"></i></button>
+                          <button type='button' onClick={() => handleEdit(item)} class="btn btn-blue btn-xs me-2"><i class="fa-solid fa-pen-to-square"></i></button>
                           <button type='button' onClick={() => headleDelete(item.user_Id)} class="btn btn-red btn-xs"><i class="fa-solid fa-trash"></i></button>
                         </td>
                       </tr>
@@ -377,30 +387,30 @@ const [openEd,setOpenEd]=useState(false)
                 <Row>
                   <Col lg={24} sm={24} md={12} className='mb-2'>
                     <label htmlFor="" className='form-label'>ບໍລິສັດຊື້ປະກັນໄພ </label>
-                    <SelectPicker  data={data} value={inputs.company_agent_fk} onChange={(e) => handleChange('company_agent_fk', e)} block placeholder='- ບໍລິສັດຊື້ປະກັນໄພ -' loading={loading &&(loading)} />
+                    <SelectPicker data={data} value={inputs.company_agent_fk} onChange={(e) => handleChange('company_agent_fk', e)} block placeholder='- ບໍລິສັດຊື້ປະກັນໄພ -' loading={loading && (loading)} />
                   </Col>
 
-                  <Col lg={checkEdit===false ?'12':'24'} className='mb-2'>
+                  <Col lg={checkEdit === false ? '12' : '24'} className='mb-2'>
                     <label htmlFor="" className='form-label'>Email</label>
-                    <Input  placeholder="Email" value={inputs.userEmail} onChange={(e) => handleChange('userEmail', e)} required />
+                    <Input placeholder="Email" value={inputs.userEmail} onChange={(e) => handleChange('userEmail', e)} required />
                   </Col>
-                  {!checkEdit &&(
-                  <Col lg={12} sm={6} md={12} className='mb-2'>
-                    <label htmlFor="" className='form-label'>Password</label>
-                    <InputGroup inside>
-                      <Input type={visible ? 'text' : 'password'} value={inputs.userPassword} onChange={(e) => handleChange('userPassword', e)} required />
-                      <InputGroup.Button onClick={handleShow}>
-                        {visible ? <EyeIcon /> : <EyeSlashIcon />}
-                      </InputGroup.Button>
-                    </InputGroup>
-                  </Col>
+                  {!checkEdit && (
+                    <Col lg={12} sm={6} md={12} className='mb-2'>
+                      <label htmlFor="" className='form-label'>Password</label>
+                      <InputGroup inside>
+                        <Input type={visible ? 'text' : 'password'} value={inputs.userPassword} onChange={(e) => handleChange('userPassword', e)} required />
+                        <InputGroup.Button onClick={handleShow}>
+                          {visible ? <EyeIcon /> : <EyeSlashIcon />}
+                        </InputGroup.Button>
+                      </InputGroup>
+                    </Col>
                   )}
-                  <Col lg={24}  className='mb-2'>
-                  <label htmlFor="" className='form-label'>ສະຖານະ</label>
-                  <select value={inputs.statusOff} onChange={(e) => handleChange('statusOff', e.target.value)} className='form-select'>
-                    <option value="1">ເປິດນຳໃຊ້</option>
-                    <option value="2">ປິດນຳໃຊ້</option>
-                  </select>
+                  <Col lg={24} className='mb-2'>
+                    <label htmlFor="" className='form-label'>ສະຖານະ</label>
+                    <select value={inputs.statusOff} onChange={(e) => handleChange('statusOff', e.target.value)} className='form-select'>
+                      <option value="1">ເປິດນຳໃຊ້</option>
+                      <option value="2">ປິດນຳໃຊ້</option>
+                    </select>
                   </Col>
                 </Row>
               </Grid>
@@ -413,36 +423,36 @@ const [openEd,setOpenEd]=useState(false)
         </Modal>
 
 
-        <Modal open={openEd} onClose={()=>setOpenEd(false)}>
-                <Modal.Header>
-                    <Modal.Title className='pt-1'>ແກ້ໄຂລະຫັດຜ່ານ</Modal.Title>
-                </Modal.Header>
-                <form onSubmit={handleSubmitEdit}>
-                    <Modal.Body>
-                        <Grid fluid>
-                            <Row>
-                                <Col lg={24}  className='mb-2'>
-                                    <label htmlFor="" className='form-label'>Email</label>
-                                    <Input value={edit.userEmail}  placeholder="Email" onChange={(e) => handleChangeEd('userEmail', e)} required />
-                                </Col>
-                                <Col lg={24} className='mb-2'>
-                                    <label htmlFor="" className='form-label'>Password</label>
-                                    <InputGroup inside>
-                                        <Input type={visible ? 'text' : 'password'} value={edit.userPassword}  onChange={(e) => handleChangeEd('userPassword', e)} required />
-                                        <InputGroup.Button onClick={handleShow}>
-                                            {visible ? <EyeIcon /> : <EyeSlashIcon />}
-                                        </InputGroup.Button>
-                                    </InputGroup>
-                                </Col>
-                            </Row>
-                        </Grid>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button type='submit' appearance="primary">ບັນທຶກ </Button>
-                        <Button color='red' onClick={()=>setOpenEd(false)} appearance="primary"> ຍົກເລີກ </Button>
-                    </Modal.Footer>
-                </form>
-            </Modal>
+        <Modal open={openEd} onClose={() => setOpenEd(false)}>
+          <Modal.Header>
+            <Modal.Title className='pt-1'>ແກ້ໄຂລະຫັດຜ່ານ</Modal.Title>
+          </Modal.Header>
+          <form onSubmit={handleSubmitEdit}>
+            <Modal.Body>
+              <Grid fluid>
+                <Row>
+                  <Col lg={24} className='mb-2'>
+                    <label htmlFor="" className='form-label'>Email</label>
+                    <Input value={edit.userEmail} placeholder="Email" onChange={(e) => handleChangeEd('userEmail', e)} required />
+                  </Col>
+                  <Col lg={24} className='mb-2'>
+                    <label htmlFor="" className='form-label'>Password</label>
+                    <InputGroup inside>
+                      <Input type={visible ? 'text' : 'password'} value={edit.userPassword} onChange={(e) => handleChangeEd('userPassword', e)} required />
+                      <InputGroup.Button onClick={handleShow}>
+                        {visible ? <EyeIcon /> : <EyeSlashIcon />}
+                      </InputGroup.Button>
+                    </InputGroup>
+                  </Col>
+                </Row>
+              </Grid>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button type='submit' appearance="primary">ບັນທຶກ </Button>
+              <Button color='red' onClick={() => setOpenEd(false)} appearance="primary"> ຍົກເລີກ </Button>
+            </Modal.Footer>
+          </form>
+        </Modal>
       </div>
     </>
   )

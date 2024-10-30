@@ -7,6 +7,7 @@ import axios from 'axios';
 import Swal from "sweetalert2";
 import {Config} from '../../config/connenct';
 import Alert from '../../utils/config';
+import { useAgent } from '../../config/select-option';
 export default function UserAgent() {
   const api = Config.urlApi;
   const [visible, setVisible] = React.useState(false);
@@ -32,17 +33,7 @@ export default function UserAgent() {
   const handleClose = () => setOpen(false);
   const [checkEdit,setCheckEdit]=useState(false)
 
-  const [itemAgent, setItemAgent] = useState([]);
-  const fetchAgent = async () => {
-    try {
-      const response = await fetch(api + 'agent/option');
-      const jsonData = await response.json();
-      setItemAgent(jsonData);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  }
-  const data = itemAgent.map(item => ({ label: item.agent_name, value: item.agent_Id }));
+  const itemAgent=useAgent();
   //=================
   const [inputs, setInputs] = useState({
     userId:'',
@@ -56,9 +47,17 @@ export default function UserAgent() {
     statusOff:'1'
   })
   const handleChange = (name, value) => {
+    if(name==='company_agent_fk'){
+      const data = itemAgent.find(item => item.value === value);
+      setInputs({
+        ...inputs, company_agent_fk: value,
+        userName:data.label
+      });
+    }else{
     setInputs({
       ...inputs, [name]: value
     });
+  }
   }
   //==========================
   const handleSubmit = async (e) => {
@@ -241,7 +240,7 @@ const [openEd,setOpenEd]=useState(false)
 
   useEffect(() => {
     fetchUsers();
-    fetchAgent();
+    // fetchAgent();
   }, []);
 
   return (
@@ -372,7 +371,7 @@ const [openEd,setOpenEd]=useState(false)
                 <Row>
                   <Col lg={24} sm={24} md={12} className='mb-2'>
                     <label htmlFor="" className='form-label'>ເລືອກຕົວແທນຂາຍ</label>
-                    <SelectPicker  data={data} value={inputs.company_agent_fk}  onChange={(e) => handleChange('company_agent_fk', e)} block placeholder='-  ຕົວແທນຂາຍ  -' />
+                    <SelectPicker  data={itemAgent} value={inputs.company_agent_fk}  onChange={(e) => handleChange('company_agent_fk', e)} block placeholder='-  ຕົວແທນຂາຍ  -' />
                   </Col>
                  
                   <Col lg={checkEdit===false?'12':'24'} className='mb-2'>

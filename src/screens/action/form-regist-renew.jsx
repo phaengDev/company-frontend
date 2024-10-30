@@ -232,6 +232,7 @@ export default function FormRegistRenew() {
     if (name === 'contract_start_date') {
       setInputs({
         ...inputs,
+        contract_start_date:new Date(value),
         company_date: new Date(value),
         agent_date: new Date(value),
         oac_date: new Date(value)

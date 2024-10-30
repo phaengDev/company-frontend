@@ -71,7 +71,7 @@ export function useCompany() {
     };
     showCompany();
   }, []);
-  const data = itemCompany.map(item => ({ label: item.com_name_lao, value: item.company_Id }));
+  const data = itemCompany.map(item => ({ label: item.com_name_lao, value: item.company_Id ,name_eng:item.com_name_eng}));
   return data;
 }
 
@@ -261,5 +261,25 @@ export function useCurrency() {
     showCurrency();
   }, []);
   const data = itemCurrency.map(item => ({ label: item.currency_name + '/' + item.genus, value: item.currency_id }));
+  return data;
+}
+
+
+
+export function useCustomBuy() {
+  const [itemCustomBuy, setItemCustomBuy] = useState([]);
+  useEffect(() => {
+    const showCustomBuy = async () => {
+      try {
+        const response = await fetch(api + 'custom/option/2202');
+        const jsonData = await response.json();
+        setItemCustomBuy(jsonData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    showCustomBuy();
+  }, []);
+  const data = itemCustomBuy.map(item => ({ label: item.customer_name, value: item.custom_uuid }));
   return data;
 }
