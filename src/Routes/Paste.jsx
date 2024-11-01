@@ -27,6 +27,7 @@ import DebtOac from '../screens/debt/debtOac-page';
 import ReportCommisIncom from '../screens/reports/report-commis-incom';
 import ReportCommisPay from '../screens/reports/report-commis-pay';
 import ReportEndsCoverage from '../screens/reports/report-ends-coverage';
+import ReportEndsCoverageCust from '../screens/custom-buy/report-ends-coverage-cust';
 import ReportInsuranceHistory from '../screens/reports/report-insurance-history';
 import FormEditInsurance from '../screens/action/form-edit-insurance';
 import ReportPayDebtagen from '../screens/debt/report-pay-debtagen';
@@ -91,6 +92,7 @@ export default function AppContent() {
             <Route path='/comsIn' element={<ReportCommisIncom />}/>
             <Route path='/comsPay' element={<ReportCommisPay />}/>
             <Route path='/report-ends' element={<ReportEndsCoverage />}/>
+            <Route path='/ins-ends-cust' element={<ReportEndsCoverageCust />}/>
             <Route path='/history' element={<ReportInsuranceHistory />}/>
             <Route path='/editIn' element={<FormEditInsurance />}/>
             <Route path='/r-debcom' element={<ReportPayDebtcom />}/>

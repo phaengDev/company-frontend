@@ -338,7 +338,7 @@
     ,{
       "id": 19,
       "mainName": "ສັນຍາໝົດຄວາມຄຸ້ມຄອງ",
-      "link": "report-ends",
+      "link": "ins-ends-cust",
       "typeUser":"3",
       "icon": "fa-solid fa-file-circle-xmark bg-indigo-400",
       "subMenu": []
