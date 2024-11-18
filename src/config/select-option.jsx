@@ -170,6 +170,50 @@ export function useTypeCust(id) {
   return data;
 }
 
+
+// ================ company =============
+
+
+export function useTypeCm(id) {
+  const [itemType, setItemType] = useState([]);
+  useEffect(() => {
+    const showTypeCm = async () => {
+      try {
+        const response = await fetch(api + 'type-ins/cm/'+id);
+        const jsonData = await response.json();
+        setItemType(jsonData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    showTypeCm();
+  }, [id]);
+  const data = itemType.map(item => ({ label: item.type_in_name, value: item.type_insid }));
+  return data;
+}
+
+
+
+
+export function useOption(id) {
+  const [itemOption, setItemOption] = useState([]);
+  useEffect(() => {
+    const showOptionCm = async () => {
+      try {
+        const response = await fetch(api + 'options/t/'+id);
+        const jsonData = await response.json();
+        setItemOption(jsonData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    showOptionCm();
+  }, [id]);
+  const data = itemOption.map(item => ({ label: item.options_name, value: item.options_Id }));
+  return data;
+}
+// ===================\\\
+
 export function useTypeCar() {
   const [itemTypecar, setItemTypecar] = useState([]);
   useEffect(() => {

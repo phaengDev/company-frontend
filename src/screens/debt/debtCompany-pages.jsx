@@ -39,7 +39,6 @@ export default function DebtCompany() {
         } finally {
             setIsLoading(false);
         }
-
     };
     const Filter = (value) => {
         setItemData(filter.filter(n => 
@@ -48,6 +47,7 @@ export default function DebtCompany() {
             n.customer_name.toLowerCase().includes(value) 
         ));
     };
+
     const [sum, steSum] = useState({});
     const [loading, setLoading] = useState(true)
     const showTotalDebt = async () => {

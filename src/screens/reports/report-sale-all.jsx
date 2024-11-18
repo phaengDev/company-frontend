@@ -10,6 +10,8 @@ import { ViewInsturance } from '../invioce/view-data-insturance';
 import Alert from '../../utils/config';
 import Swal from 'sweetalert2';
 import FormBeneficiaries from '../Modal/Form-Beneficiaries';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 export default function ReportSaleAll() {
     const api = Config.urlApi;
     const itemcm = useCompany();
@@ -136,9 +138,22 @@ export default function ReportSaleAll() {
     };
 
 
-    const handleEportEcel = () => {
-
+  
+const handleExportExcel = () => {
+    const table = document.getElementById('table-export');
+    if (table) {
+      const worksheet = XLSX.utils.table_to_sheet(table);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Data Export');
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array',
+      });
+      const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
+      saveAs(data, 'ລາຍງານສັນຍາປະກັນໄພທັງໝົດ.xlsx');
     }
+  };
+
     const handleEportPdf = () => {
 
     }
@@ -240,7 +255,7 @@ export default function ReportSaleAll() {
                         <button onClick={handleEportPdf} class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
                             <i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
                         </button>
-                        <button onClick={handleEportEcel} class="btn btn-success btn-sm d-flex me-2 pe-3 rounded-3">
+                        <button onClick={handleExportExcel} class="btn btn-success btn-sm d-flex me-2 pe-3 rounded-3">
                             <i class="fa-solid fa-cloud-arrow-down fs-18px me-2 ms-n1"></i>
                             Export Excel
                         </button>
@@ -294,7 +309,7 @@ export default function ReportSaleAll() {
                         </InputGroup>
                     </ul>
                 </div>
-                <div class="table-responsive">
+                <div id='table-export' class="table-responsive">
                     <table class="table table-striped  table-bordered align-middle w-100 text-nowrap">
                         <thead className="fs-14px bg-header">
                             <tr>

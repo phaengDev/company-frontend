@@ -165,7 +165,7 @@ function HistoryInsurnceBay() {
 
     const renderIconButton = (props, ref) => {
         return (
-            <IconButton {...props} ref={ref} icon={<i class="fa-regular fa-folder-open" />} size='xs' color="blue" appearance="primary" />
+            <IconButton {...props} ref={ref} icon={<i className="fa-regular fa-folder-open" />} size='xs' color="blue" appearance="primary" />
         );
     };
 
@@ -223,15 +223,15 @@ function HistoryInsurnceBay() {
     return (
         <div id="content" className="app-content p-0 bg-component">
 
-            <div class="app-content-padding px-4 py-3">
-                <div class="d-lg-flex mb-lg-3 mb-2">
-                    <h3 class="page-header mb-0 flex-1 fs-20px">ປະຫວັດການຕໍ່ສັນຍາປະກັນໄຟ</h3>
-                    <span class="d-none d-lg-flex align-items-center">
-                        <button onClick={handleEportPdf} class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
-                            <i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
+            <div className="app-content-padding px-4 py-3">
+                <div className="d-lg-flex mb-lg-3 mb-2">
+                    <h3 className="page-header mb-0 flex-1 fs-20px">ປະຫວັດການຕໍ່ສັນຍາປະກັນໄຟ</h3>
+                    <span className="d-none d-lg-flex align-items-center">
+                        <button onClick={handleEportPdf} className="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
+                            <i className="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
                         </button>
-                        <button onClick={handleEportEcel} class="btn btn-success btn-sm d-flex me-2 pe-3 rounded-3">
-                            <i class="fa-solid fa-cloud-arrow-down fs-18px me-2 ms-n1"></i>
+                        <button onClick={handleEportEcel} className="btn btn-success btn-sm d-flex me-2 pe-3 rounded-3">
+                            <i className="fa-solid fa-cloud-arrow-down fs-18px me-2 ms-n1"></i>
                             Export Excel
                         </button>
                     </span>
@@ -258,10 +258,10 @@ function HistoryInsurnceBay() {
                         <SelectPicker block data={dataOption} onChange={(e) => handleChange('option_id_fk', e)} />
                     </div>
                 </div>
-                <div class="d-lg-flex align-items-center mb-3">
-                    <div class="d-lg-flex d-none align-items-center text-nowrap">
+                <div className="d-lg-flex align-items-center mb-3">
+                    <div className="d-lg-flex d-none align-items-center text-nowrap">
                         ສະແດງ:
-                        <select onChange={(e) => handleShowLimit(e.target.value)} class="form-select form-select-sm ms-2 ps-2 pe-30px">
+                        <select onChange={(e) => handleShowLimit(e.target.value)} className="form-select form-select-sm ms-2 ps-2 pe-30px">
                             <option value={100}>100</option>
                             <option value={205}>250</option>
                             <option value={500}>500</option>
@@ -269,18 +269,18 @@ function HistoryInsurnceBay() {
                             <option value={qtyItem}>-All-</option>
                         </select>
                     </div>
-                    <div class="d-lg-block d-none ms-2 text-body text-opacity-50">
+                    <div className="d-lg-block d-none ms-2 text-body text-opacity-50">
                         ລາຍການ
                     </div>
-                    <ul class="pagination pagination-sm mb-0 ms-auto justify-content-center">
+                    <ul className="pagination pagination-sm mb-0 ms-auto justify-content-center">
                         <InputGroup inside>
                             <InputGroup.Addon> <i className="fas fa-search" /> </InputGroup.Addon>
                             <Input block onChange={(e) => Filter(e)} className='w-250px' placeholder='ຄົ້ນຫາ...' />
                         </InputGroup>
                     </ul>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-striped  table-bordered align-middle w-100 text-nowrap">
+                <div className="table-responsive">
+                    <table className="table table-striped  table-bordered align-middle w-100 text-nowrap">
                         <thead className="fs-14px bg-header">
                             <tr>
                                 <th width='1%' className="text-center">ລ/ດ</th>
@@ -331,7 +331,7 @@ function HistoryInsurnceBay() {
                                                             <Dropdown.Item icon={<FileDownloadIcon />} onClick={() => handleDownload(`${url}docfile/${val.file_insurance}`)}> {val.file_insurance}</Dropdown.Item>
                                                         )}
                                                     </Dropdown>
-                                                    <button type='button' onClick={() => handleView(true, item)} className='btn btn-xs btn-orange ms-2'> <i class="fa-solid fa-eye"></i> </button>
+                                                    <button type='button' onClick={() => handleView(true, item)} className='btn btn-xs btn-orange ms-2'> <i className="fa-solid fa-eye"></i> </button>
                                                 </td>
                                             </tr>
                                         ))}
@@ -353,8 +353,8 @@ function HistoryInsurnceBay() {
                     </table>
 
                 </div>
-                <div class="d-md-flex align-items-center">
-                    <div class="me-md-auto text-md-left text-center mb-2 mb-md-0">
+                <div className="d-md-flex align-items-center">
+                    <div className="me-md-auto text-md-left text-center mb-2 mb-md-0">
                         ສະແດງ 1 ຫາ {itemsPerPage} ຂອງ {qtyItem} ລາຍການ
                     </div>
                     <ul className="pagination  mb-0 ms-auto justify-content-center">
@@ -370,14 +370,14 @@ function HistoryInsurnceBay() {
                     </ul>
                 </div>
                 {view && (
-                    <div class="panel panel-inverse panel-expand">
-                        <div class="panel-heading bg-red-700 text-white ui-sortable-handle">
-                            <h4 class="panel-title fs-16px"><span role='button' onClick={() => handleView(false, '')} className='fs-16px me-2'><i class="fa-solid fa-circle-arrow-left"></i></span>  ລາຍລະອຽດສັນຍາ</h4>
-                            <div class="panel-heading-btn">
-                                <button type='button' onClick={() => handleView(false, '')} class="btn btn-xs btn-icon btn-danger" ><i class="fa fa-times"></i></button>
+                    <div className="panel panel-inverse panel-expand">
+                        <div className="panel-heading bg-red-700 text-white ui-sortable-handle">
+                            <h4 className="panel-title fs-16px"><span role='button' onClick={() => handleView(false, '')} className='fs-16px me-2'><i className="fa-solid fa-circle-arrow-left"></i></span>  ລາຍລະອຽດສັນຍາ</h4>
+                            <div className="panel-heading-btn">
+                                <button type='button' onClick={() => handleView(false, '')} className="btn btn-xs btn-icon btn-danger" ><i className="fa fa-times"></i></button>
                             </div>
                         </div>
-                        <div class="panel-body">
+                        <div className="panel-body">
                             <ViewInsturance data={view} />
                         </div>
                     </div>

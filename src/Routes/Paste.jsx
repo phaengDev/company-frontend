@@ -6,9 +6,11 @@ import UserAgent from '../screens/setting/user-agent';
 import UserInurance from '../screens/setting/user-insurance-buy';
 import UserCompany from '../screens/setting/user-company';
 import TypeInsuance from '../screens/setting/type-insurance';
-import ContractItems from '../reports/Contract-items';
-import ContractArrears from '../reports/Contract-arrears';
-import ReportsPay from '../reports/Report-pay-insurnce';
+
+import ContractItems from '../screens/company/Contract-items';
+import ContractArrears from '../screens/company/Contract-arrears';
+import ReportsPay from '../screens/company/Report-pay-insurnce';
+
 import OptionInsurance from '../screens/setting/option-insurance';
 import TypecarPage from '../screens/cars/type-car-page';
 import BrancecarPage from '../screens/cars/brance-car-page';
@@ -53,12 +55,14 @@ import ReportCommition from '../screens/agents/Report-commition';
 import ReportPaycommition from '../screens/agents/Report-Paycommition';
 import ReportInsuranteAgent from '../screens/agents/Report-insurante-agent';
 import ReportDebtPayAgent from '../screens/reports/report-debt-pays-agent';
+import ContractArrearsEx from '../screens/company/Contract-arrears-ex';
 
 import ReportInsurnceBuy from '../screens/custom-buy/report-insurnce-buy';
-import HistoryInsurnceBay from '../screens/custom-buy/history-insurnce-bay';
+import HistoryInsurnceBay from '../screens/custom-buy/history-insurnce-buy';
 import InsuranceRetrun from '../screens/custom-buy/insurance-rutrun';
 import ReportDebtCustomer from '../screens/reports/report-debt-customer'
-
+import ReportEndContract from '../screens/company/Report-End-Contract';
+import ReportHistoryConntract from '../screens/company/Report-History-Conntract';
 import { Routes, Route, Navigate } from 'react-router-dom';
 export default function AppContent() {
   return (
@@ -71,7 +75,8 @@ export default function AppContent() {
             <Route path="/user-buy" element={<UserInurance />} />
             <Route path="/user-cn" element={<UserCompany />} />
             <Route path="/item" element={<ContractItems />} />
-            <Route path="/arrears" element={<ContractArrears />} />
+            <Route path="/arrearsIn" element={<ContractArrears />} />
+            <Route path="/arrearsEx" element={<ContractArrearsEx />} />
             <Route path="/type-in" element={<TypeInsuance />} />
             <Route path="/report-pay" element={<ReportsPay />} />
             <Route path="/option" element={<OptionInsurance />} />
@@ -121,6 +126,10 @@ export default function AppContent() {
             <Route path='/history-c' element={<HistoryInsurnceBay/> } />
             <Route path='/retrun-c' element={<InsuranceRetrun />} />
             <Route path='/rc-debt' element={<ReportDebtCustomer />} />
+            <Route path='/arrearscm' element={<ReportEndContract />} />
+            <Route path='/history-cm' element={<ReportHistoryConntract />} />
+
+            
         </Routes>
   )
 }

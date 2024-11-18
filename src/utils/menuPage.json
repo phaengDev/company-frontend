@@ -372,25 +372,25 @@
           "subId": 6,
           "mainFk": 3,
           "subName": "ລາຍງານສັນຍາທັງໝົດ",
-          "sublink": "report"
+          "sublink": "item"
         },
         {
           "subId": 8,
           "mainFk": 3,
           "subName": "ລາຍງານຄອມຈ່າຍ",
-          "sublink": "comsPay"
+          "sublink": "report-pay"
         },
         {
           "subId": 9,
           "mainFk": 3,
           "subName": "ສັນຍາໝົດຄວາມຄຸ້ມຄອງ",
-          "sublink": "report-ends"
+          "sublink": "arrearscm"
         },
         {
           "subId": 10,
           "mainFk": 3,
           "subName": "ປະຫວັນການຕໍ່ສັນຍາ",
-          "sublink": "history"
+          "sublink": "history-cm"
         }
       ]
     },
@@ -437,20 +437,14 @@
         {
           "subId": 15,
           "mainFk": 5,
-          "subName": "ຂໍ້ມູນໜີ້ທັງໝົດ",
-          "sublink": "debt"
+          "subName": "ລາຍງານໜີ້ຄ້າງຮັບ",
+          "sublink": "arrearsIn"
         },
         {
           "subId": 16,
           "mainFk": 5,
-          "subName": "ການຈ່າຍບໍລິສັດ",
-          "sublink": "r-debcom"
-        },
-        {
-          "subId": 18,
-          "mainFk": 5,
-          "subName": "ການຮັບຄອມ",
-          "sublink": "r-deboac"
+          "subName": "ລາຍງານ ໜີ້ຄ້າງຈ່າຍຄ່າຄອມ",
+          "sublink": "arrearsEx"
         }
       ]
     }

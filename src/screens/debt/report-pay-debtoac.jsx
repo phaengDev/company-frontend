@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {Input, DatePicker,SelectPicker, Placeholder, Loader } from 'rsuite'
+import { Input, DatePicker, SelectPicker, Placeholder, Loader } from 'rsuite'
 import { useCompany, useType, useAgent } from '../../config/select-option';
 import { Config } from '../../config/connenct';
 import axios from 'axios';
@@ -35,7 +35,7 @@ export default function ReportPayDebtoac() {
         insurance_type_fk: '',
         agent_id_fk: '',
         option_id_fk: '',
-        status_doc: 3
+        status_doc: 2
     })
     const handleChange = (name, value) => {
         setData({
@@ -58,13 +58,13 @@ export default function ReportPayDebtoac() {
             setIsLoading(false);
         }
     };
-  
-    
+
+
     const handleFilter = (event) => {
         const searchTerm = event.toLowerCase(); // Convert input to lowercase for case-insensitive filtering
-        setItemData(dataFilter.filter(item => 
-            item.contract_number.toLowerCase().includes(searchTerm) || 
-            item.customer_name.toLowerCase().includes(searchTerm) || 
+        setItemData(dataFilter.filter(item =>
+            item.contract_number.toLowerCase().includes(searchTerm) ||
+            item.customer_name.toLowerCase().includes(searchTerm) ||
             item.currency_name.toLowerCase().includes(searchTerm)
         ));
     };
@@ -85,7 +85,7 @@ export default function ReportPayDebtoac() {
         acc[currency].incom_finally += parseFloat(item.incom_finally);
         return acc;
     }, {});
-    
+
     const formatNumber = (num) => numeral(num).format('0,00');
 
     useEffect(() => {
@@ -125,15 +125,15 @@ export default function ReportPayDebtoac() {
                         <label htmlFor="" className='form-label'>ປະເພດປະກັນ</label>
                         <SelectPicker block data={itemType} onChange={(e) => handleOption('insurance_type_fk', e)} />
                     </div>
-                  
+
                     <div className="col-sm-4 col-md-2">
                         <label htmlFor="" className='form-label'>ຕົວແທນຂາຍ</label>
                         <SelectPicker block data={itemAgent} onChange={(e) => handleChange('agent_id_fk', e)} />
                     </div>
                     <div className="col-sm-4 col-md-2  col-6">
-            <label htmlFor="" className='form-label'>ຄົ້ນຫາ</label>
-            <Input block  onChange={(e) => handleFilter(e)} placeholder='ຊື່ລູກຄ້າ/ສະກຸນເງິນ/ເລກທີສັນຍາ' />
-          </div>
+                        <label htmlFor="" className='form-label'>ຄົ້ນຫາ</label>
+                        <Input block onChange={(e) => handleFilter(e)} placeholder='ຊື່ລູກຄ້າ/ສະກຸນເງິນ/ເລກທີສັນຍາ' />
+                    </div>
                 </div>
 
                 <div className="table-responsive ">
@@ -195,19 +195,19 @@ export default function ReportPayDebtoac() {
                                                 <td>{item.docom_file && (<span role='button' className='text-danger fs-16px'><i class="fa-solid fa-download"></i></span>)}</td>
                                             </tr>
                                         ))}
-                                       
+
                                         {Object.keys(sumData).map((currency, key) => (
-                                        <tr key={key}>
-                                            <td colSpan={11} className='text-end'>ລວມຍອດຄ້າງຮັບທັງໝົດ ({currency})</td>
-                                            <td className='text-end'>{formatNumber(sumData[currency].initial_fee)}</td>
-                                            <td></td>
-                                            <td className='text-end'>{formatNumber(sumData[currency].pre_tax_profit)}</td>
-                                            <td></td>
-                                            <td className='text-end'>{formatNumber(sumData[currency].incom_money)}</td>
-                                            <td className='text-end'>{formatNumber(sumData[currency].incom_finally)}</td>
-                                            <td colSpan={3}></td>
-                                        </tr>
-                                         ))}
+                                            <tr key={key}>
+                                                <td colSpan={11} className='text-end'>ລວມຍອດຄ້າງຮັບທັງໝົດ ({currency})</td>
+                                                <td className='text-end'>{formatNumber(sumData[currency].initial_fee)}</td>
+                                                <td></td>
+                                                <td className='text-end'>{formatNumber(sumData[currency].pre_tax_profit)}</td>
+                                                <td></td>
+                                                <td className='text-end'>{formatNumber(sumData[currency].incom_money)}</td>
+                                                <td className='text-end'>{formatNumber(sumData[currency].incom_finally)}</td>
+                                                <td colSpan={3}></td>
+                                            </tr>
+                                        ))}
                                     </>
                                 ) : (<tr><td colSpan={19} className='text-center text-red'>ບໍ່ພົບຂໍ້ມູນທີ່ມີການຄົ້ນຫາ.......</td></tr>)
                             )}
