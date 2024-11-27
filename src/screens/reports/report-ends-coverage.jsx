@@ -168,8 +168,8 @@ export default function ReportEndsCoverage() {
     <div id="content" className="app-content p-0 bg-component">
       <div class="app-content-padding px-4 py-3">
         <div class="d-lg-flex mb-lg-3 mb-2">
-          <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍງານສັນຍາສິນສຸດຄວາມຄຸ້ມຄອງ </h3>
-          <span class="d-none d-lg-flex align-items-center">
+          <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍງານສັນຍາສິນສຸດຄວາມຄຸ້ມຄອງ</h3>
+          {/* <span class="d-none d-lg-flex align-items-center">
             <button class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
               <i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
             </button>
@@ -177,7 +177,7 @@ export default function ReportEndsCoverage() {
               <i class="fa-solid fa-cloud-arrow-down fs-18px me-2 ms-n1"></i>
               Export Excel
             </button>
-          </span>
+          </span> */}
         </div>
         <div className="row mb-3">
           <div className="col-sm-4 col-md-2 col-6">

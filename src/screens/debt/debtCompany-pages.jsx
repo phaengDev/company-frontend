@@ -153,7 +153,7 @@ const sumData = itemData.reduce((acc, item) => {
     return acc;
 }, {});
 
-const formatNumber = (num) => numeral(num).format('0,00');
+const formatNumber = (num) => numeral(num).format('0,00.00');
 
 
 
@@ -170,6 +170,7 @@ const formatNumber = (num) => numeral(num).format('0,00');
          }
      });
  };
+ 
  const dataDebt = checkedItems.map(item => ({
      incuranec_code: item.incuranec_code,
      contract_number: item.contract_number,
@@ -212,7 +213,7 @@ const formatNumber = (num) => numeral(num).format('0,00');
                             {loading === true ? (
                                 <Loader size="md" content="ກຳລັງໂຫລດ..." />
                             ) : (
-                                <p>{numeral(sum.insuranc_included).format('0,00')} kip</p>
+                                <p>{numeral(sum.insuranc_included).format('0,00.00')} kip</p>
                             )}
                         </div>
                         <div class="stats-link">
@@ -229,7 +230,7 @@ const formatNumber = (num) => numeral(num).format('0,00');
                             {loading === true ? (
                                 <Loader size="md" content="ກຳລັງໂຫລດ..." />
                             ) : (
-                                <p>{numeral(sum.expences_pays_taxes).format('0,00')} kip</p>
+                                <p>{numeral(sum.expences_pays_taxes).format('0,00.00')} kip</p>
                             )}
                         </div>
                         <div class="stats-link">
@@ -247,7 +248,7 @@ const formatNumber = (num) => numeral(num).format('0,00');
                             {loading === true ? (
                                 <Loader size="md" content="ກຳລັງໂຫລດ..." />
                             ) : (
-                                <p>{numeral(sum.incom_finally).format('0,00')} kip</p>
+                                <p>{numeral(sum.incom_finally).format('0,00.00')} kip</p>
                             )}
                         </div>
                         <div class="stats-link">
@@ -348,11 +349,11 @@ const formatNumber = (num) => numeral(num).format('0,00');
                                                     <td>{item.type_buyer_name}</td>
                                                     <td>{item.type_in_name}</td>
                                                     <td>{item.options_name}</td>
-                                                    <td className='text-end'>{numeral(item.initial_fee).format('0,00')} {item.genus}</td>
+                                                    <td className='text-end'>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                                                     <td className='text-center'>{item.percent_taxes}%</td>
-                                                    <td className='text-end'>{numeral(item.money_taxes).format('0,00')} {item.genus}</td>
-                                                    <td className='text-end'>{numeral(item.registration_fee).format('0,00')} {item.genus}</td>
-                                                    <td className='text-end'>{numeral(item.insuranc_included).format('0,00')} {item.genus}</td>
+                                                    <td className='text-end'>{numeral(item.money_taxes).format('0,00.00')} {item.genus}</td>
+                                                    <td className='text-end'>{numeral(item.registration_fee).format('0,00.00')} {item.genus}</td>
+                                                    <td className='text-end'>{numeral(item.insuranc_included).format('0,00.00')} {item.genus}</td>
                                                     <td className='text-center'>{moment(item.company_date).format('DD/MM/YYYY')}</td>
                                                     <td className='text-center'>{item.day_company} ວັນ</td>
                                                     <td className='text-center bg-white sticky-col first-col-end'>
@@ -391,7 +392,7 @@ const formatNumber = (num) => numeral(num).format('0,00');
                                 <td>ເລກທີສັນຍາ: <span className='fs-18px'>{debt.contract_number}</span> </td>
                                 <td rowSpan={3}>
                                     <span className='fs-16px'>ຍອດເງິນ</span>
-                                    <h3 className='text-red'>{numeral(debt.insuranc_included).format('0,00')} ₭</h3>
+                                    <h3 className='text-red'>{numeral(debt.insuranc_included).format('0,00.00')} ₭</h3>
                                 </td>
                             </tr>
                             <tr>

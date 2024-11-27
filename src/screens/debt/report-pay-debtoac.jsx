@@ -86,7 +86,7 @@ export default function ReportPayDebtoac() {
         return acc;
     }, {});
 
-    const formatNumber = (num) => numeral(num).format('0,00');
+    const formatNumber = (num) => numeral(num).format('0,00.00');
 
     useEffect(() => {
         fetchReport()
@@ -98,7 +98,7 @@ export default function ReportPayDebtoac() {
             <div class="app-content-padding px-4 py-3">
                 <div class="d-lg-flex mb-lg-3 mb-2">
                     <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍງານຈ່າຍໜີ້ຄອມຮັບ OAC</h3>
-                    <span class="d-none d-lg-flex align-items-center">
+                    {/* <span class="d-none d-lg-flex align-items-center">
                         <button class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
                             <i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
                         </button>
@@ -106,7 +106,7 @@ export default function ReportPayDebtoac() {
                             <i class="fa-solid fa-cloud-arrow-down fs-18px me-2 ms-n1"></i>
                             Export Excel
                         </button>
-                    </span>
+                    </span> */}
                 </div>
                 <div className="row mb-3">
                     <div className="col-sm-4 col-md-2 col-6">
@@ -185,12 +185,12 @@ export default function ReportPayDebtoac() {
                                                 <td>{item.com_name_lao}</td>
                                                 <td>{item.type_in_name}</td>
                                                 <td>{item.options_name}</td>
-                                                <td className='text-end'>{numeral(item.initial_fee).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-center'>{item.precent_incom}%</td>
-                                                <td className='text-end'>{numeral(item.pre_tax_profit).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.pre_tax_profit).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-center'>{item.percent_akorn}%</td>
-                                                <td className='text-end'>{numeral(item.incom_money).format('0,00')} {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.incom_finally).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.incom_money).format('0,00.00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.incom_finally).format('0,00.00')} {item.genus}</td>
                                                 <td>{item.debt_remark}</td>
                                                 <td>{item.docom_file && (<span role='button' className='text-danger fs-16px'><i class="fa-solid fa-download"></i></span>)}</td>
                                             </tr>

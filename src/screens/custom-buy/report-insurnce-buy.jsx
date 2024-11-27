@@ -5,7 +5,8 @@ import { Config,imageUrl } from '../../config/connenct';
 import axios from 'axios';
 import moment from 'moment';
 import numeral from 'numeral';
-import { ViewInsturance } from '../invioce/view-buy-insturance';
+import { ViewInsturanceBy } from '../invioce/view-buy-insturance';
+import { set } from 'lodash';
 // import FileDownloadIcon from '@rsuite/icons/FileDownload';
 function ReportInsurnceBuy() {
     const api = Config.urlApi;
@@ -138,10 +139,11 @@ function ReportInsurnceBuy() {
 
     }
 
-
+    const [show, setShow] = useState(false);
     const [view, setView] = useState(false);
     const handleView = (index, value) => {
         setView(value)
+        setShow(true);
     }
 
     const sumData = currentItems.reduce((acc, item) => {
@@ -163,35 +165,35 @@ function ReportInsurnceBuy() {
 
         return acc;
     }, {});
-    const formatNumber = (num) => numeral(num).format('0,00');
+    const formatNumber = (num) => numeral(num).format('0,00.00');
 
     // ============
 
-    const renderIconButton = (props, ref) => {
-        return (
-            <IconButton {...props} ref={ref} icon={<i class="fa-regular fa-folder-open" />} size='xs' color="blue" appearance="primary" />
-        );
-    };
+    // const renderIconButton = (props, ref) => {
+    //     return (
+    //         <IconButton {...props} ref={ref} icon={<i class="fa-regular fa-folder-open" />} size='xs' color="blue" appearance="primary" />
+    //     );
+    // };
 
-    const handleDownload = async (fileName) => {
-        try {
-          const response = await fetch(fileName); // Replace with your server URL
-          if (!response.ok) {
-            throw new Error('File download failed');
-          }
+    // const handleDownload = async (fileName) => {
+    //     try {
+    //       const response = await fetch(fileName); // Replace with your server URL
+    //       if (!response.ok) {
+    //         throw new Error('File download failed');
+    //       }
       
-          const blob = await response.blob();
-          const url = window.URL.createObjectURL(new Blob([blob]));
-          const link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', fileName);
-          document.body.appendChild(link);
-          link.click();
-          link.parentNode.removeChild(link);
-        } catch (error) {
-          alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
-        }
-      };
+    //       const blob = await response.blob();
+    //       const url = window.URL.createObjectURL(new Blob([blob]));
+    //       const link = document.createElement('a');
+    //       link.href = url;
+    //       link.setAttribute('download', fileName);
+    //       document.body.appendChild(link);
+    //       link.click();
+    //       link.parentNode.removeChild(link);
+    //     } catch (error) {
+    //       alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
+    //     }
+    //   };
 
     useEffect(() => {
         fetchReport();
@@ -203,7 +205,7 @@ function ReportInsurnceBuy() {
             <div class="app-content-padding px-4 py-3">
                 <div class="d-lg-flex mb-lg-3 mb-2">
                     <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍການສັນຍາປະກັນໄພທັງໝົດ </h3>
-                    <span class="d-none d-lg-flex align-items-center">
+                    {/* <span class="d-none d-lg-flex align-items-center">
                         <button onClick={handleEportPdf} class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
                             <i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
                         </button>
@@ -211,17 +213,16 @@ function ReportInsurnceBuy() {
                             <i class="fa-solid fa-cloud-arrow-down fs-18px me-2 ms-n1"></i>
                             Export Excel
                         </button>
-
-                    </span>
+                    </span> */}
                 </div>
                 <div className="row mb-3">
                     <div className="col-sm-4 col-md-2 col-6">
                         <label htmlFor="" className='form-label'>ວັນທີ</label>
-                        <DatePicker oneTap defaultValue={data.start_date} onChange={(e) => handleChange('start_date', e)} format="dd/MM/yyyy" block />
+                        <DatePicker oneTap value={data.start_date} onChange={(e) => handleChange('start_date', e)} format="dd/MM/yyyy" block />
                     </div>
                     <div className="col-sm-4 col-md-2  col-6">
                         <label htmlFor="" className='form-label'>ຫາວັນທີ</label>
-                        <DatePicker oneTap defaultValue={data.end_date} onChange={(e) => handleChange('end_date', e)} format="dd/MM/yyyy" block />
+                        <DatePicker oneTap value={data.end_date} onChange={(e) => handleChange('end_date', e)} format="dd/MM/yyyy" block />
                     </div>
                     <div className="col-sm-4 col-md-3">
                         <label htmlFor="" className='form-label'>ບໍລິສັດປະກັນໄພ</label>
@@ -299,11 +300,11 @@ function ReportInsurnceBuy() {
                                                 <td>{item.type_in_name}</td>
                                                 <td>{item.options_name}</td>
                                                 <td>{item.car_registration}</td>
-                                                <td className='text-end'>{numeral(item.initial_fee).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-center'>{item.percent_taxes}%</td>
-                                                <td className='text-end'>{numeral(item.money_taxes).format('0,00')} {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.registration_fee).format('0,00')} {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.insuranc_included).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.money_taxes).format('0,00.00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.registration_fee).format('0,00.00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.insuranc_included).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-center'>
                                                     {/* <Dropdown renderToggle={renderIconButton} placement="bottomEnd">
                                                         {item.file_doc.map((val,index)=>
@@ -348,7 +349,7 @@ function ReportInsurnceBuy() {
                         <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage === pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}>ໜ້າຕໍ່ໄປ</span></li>
                     </ul>
                 </div>
-                {view && (
+                {/* {view && (
                     <div class="panel panel-inverse panel-expand">
                         <div class="panel-heading bg-red-700 text-white ui-sortable-handle">
                             <h4 class="panel-title fs-16px"><span role='button' onClick={() => handleView(false, '')} className='fs-16px me-2'><i class="fa-solid fa-circle-arrow-left"></i></span>  ລາຍລະອຽດສັນຍາ</h4>
@@ -356,11 +357,11 @@ function ReportInsurnceBuy() {
                                 <button type='button' onClick={() => handleView(false, '')} class="btn btn-xs btn-icon btn-danger" ><i class="fa fa-times"></i></button>
                             </div>
                         </div>
-                        <div class="panel-body">
-                            <ViewInsturance data={view} />
-                        </div>
+                        <div class="panel-body"> */}
+                            <ViewInsturanceBy show={show} handleClose={()=>setShow(false)} data={view} />
+                        {/* </div>
                     </div>
-                )}
+                )} */}
 
             </div>
         </div >

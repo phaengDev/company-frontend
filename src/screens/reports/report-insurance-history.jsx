@@ -26,16 +26,13 @@ export default function ReportInsuranceHistory() {
     };
     const dataOption = itemOption.map(item => ({ label: item.options_name, value: item.options_Id }));
     const [data, setData] = useState({
-        start_date: new Date(),
-        end_date: new Date(),
+        years_start: new Date().getFullYear(),
+        years_end: new Date().getFullYear(),
         company_id_fk: '',
         insurance_type_fk: '',
         agent_id_fk: '',
-        type_buyer_fk: '',
         option_id_fk: '',
         day_contract: '1',
-        status: '2', //=========  ສະຖານະ 1 ສັນຍາປະຈຸບັນ  2 ປະຫວັດຕໍ່ສັນຍາ
-        statusDay:'2', //=========  ສະຖານະ 1 ໃກ້ຈະຫມົດ  2 ສັນຍາຫມົດຄວາມຄຸ້ມຄອງ
     })
     const handleChange = (name, value) => {
         setData({
@@ -48,7 +45,7 @@ export default function ReportInsuranceHistory() {
     const fetchReport = async () => {
         setIsLoading(true);
         try {
-            const response = await axios.post(api + 'report/data', data);
+            const response = await axios.post(api + 'history/roport', data);
             setItemData(response.data); // Axios already parses the response
             setFilter(response.data)
         } catch (error) {
@@ -125,7 +122,29 @@ export default function ReportInsuranceHistory() {
 
 
     // =======================\\
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let i = 0; i <= 10; i++) {
+        years.push({ label: (currentYear - i).toString(), value: currentYear - i });
+    }
 
+    const [selectedStartYear, setSelectedStartYear] = useState(currentYear); // Default to current year
+    const [selectedEndYear, setSelectedEndYear] = useState(currentYear + 1); // Default to next year
+
+    const handleStartYearChange = (value) => {
+        setData({
+            ...data, years_start: value
+        })
+        setSelectedStartYear(value);
+        if (value > selectedEndYear) {
+            setSelectedEndYear(value);
+        }
+    };
+
+    const endYears = [];
+    for (let i = selectedStartYear; i <= currentYear + 0; i++) {
+        endYears.push({ label: i.toString(), value: i });
+    }
     useEffect(() => {
         fetchReport();
     }, [data])
@@ -133,8 +152,8 @@ export default function ReportInsuranceHistory() {
         <div id="content" className="app-content p-0 bg-component">
             <div class="app-content-padding px-4 py-3">
                 <div class="d-lg-flex mb-lg-3 mb-2">
-                    <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍງານປະຫວັດການຕໍ່ສັນຍາ</h3>
-                    <span class="d-none d-lg-flex align-items-center">
+                    <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍງານປະຫວັດການຕໍ່ສັນຍາ </h3>
+                    {/* <span class="d-none d-lg-flex align-items-center">
                         <button class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
                             <i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
                         </button>
@@ -142,18 +161,31 @@ export default function ReportInsuranceHistory() {
                             <i class="fa-solid fa-cloud-arrow-down fs-18px me-2 ms-n1"></i>
                             Export Excel
                         </button>
-                    </span>
+                    </span> */}
                 </div>
                 <div className="row mb-3">
-                    <div className="col-sm-4 col-md-2 col-6">
+                    {/* <div className="col-sm-4 col-md-2 col-6">
                         <label htmlFor="" className='form-label'>ວັນທີ</label>
                         <DatePicker oneTap defaultValue={data.start_date} onChange={(e) => handleChange('start_date', e)} format="dd/MM/yyyy" block />
                     </div>
                     <div className="col-sm-4 col-md-2  col-6">
                         <label htmlFor="" className='form-label'>ຫາວັນທີ</label>
                         <DatePicker oneTap defaultValue={data.end_date} onChange={(e) => handleChange('end_date', e)} format="dd/MM/yyyy" block />
+                    </div> */}
+                    <div className="col-sm-3">
+                        <div className="row">
+                            <div className="col-sm-6 col-6">
+                                <label htmlFor="" className='form-label'>ປີສິນສຸດ</label>
+                                <SelectPicker data={years} value={data.years_start} onChange={(e) => handleStartYearChange(e)} block />
+                            </div>
+                            <div className="col-sm-6 col-6">
+                                <label htmlFor="" className='form-label'>ຫາປີສິນສຸດ</label>
+                                <SelectPicker data={endYears} value={data.years_end} onChange={(e) => handleChange('years_end', e)} block />
+                            </div>
+
+                        </div>
                     </div>
-                    <div className="col-sm-4 col-md-2">
+                    <div className="col-sm-4 col-md-3">
                         <label htmlFor="" className='form-label'>ບໍລິສັດປະກັນໄພ</label>
                         <SelectPicker block data={itemcm} onChange={(e) => handleChange('company_id_fk', e)} />
                     </div>
@@ -222,9 +254,9 @@ export default function ReportInsuranceHistory() {
                                     </td>
                                 </tr>
                             ) : (
-                                itemData.length > 0 ? (
+                                currentItems.length > 0 ? (
                                     <>
-                                        {itemData.map((item, key) => (
+                                        {currentItems.map((item, key) => (
                                             <tr key={key}>
                                                 <td className='text-center'>{item.idAuto}</td>
                                                 <td>{item.customer_name}</td>
@@ -241,7 +273,7 @@ export default function ReportInsuranceHistory() {
                                                 <td>{item.tank_number}</td>
                                                 <td>{item.agent_name}</td>
                                                 <td>{item.agent_tel}</td>
-                                                <td></td>
+                                                <td>{item.contract_numbers}</td>
                                             </tr>
                                         ))}
                                     </>

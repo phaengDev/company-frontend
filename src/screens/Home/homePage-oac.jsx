@@ -7,8 +7,8 @@ import axios from 'axios';
 import numeral from 'numeral';
 export default function HomePageOac() {
     const api = Config.urlApi;
-    const user_type=localStorage.getItem('user_type');
-    const companyId=localStorage.getItem('company_agent_id');
+    const user_type = parseInt(localStorage.getItem('user_type'), 10);
+    const companyId = parseInt(localStorage.getItem('company_agent_id'), 10);
     const [balance, setBalance] = useState({
         insuranc_included: 0,
         incom_finally: 0,

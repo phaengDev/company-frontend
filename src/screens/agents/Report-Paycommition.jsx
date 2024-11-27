@@ -81,7 +81,7 @@ function ReportPaycommition() {
 
     return acc;
   }, {});
-  const formatNumber = (num) => numeral(num).format('0,00');
+  const formatNumber = (num) => numeral(num).format('0,00.00');
 
   const downloadExcel = () => {
    
@@ -182,12 +182,12 @@ function ReportPaycommition() {
                       <td>{item.com_name_lao}</td>
                       <td>{item.type_in_name}</td>
                       <td>{item.options_name}</td>
-                      <td className='text-end'>{numeral(item.initial_fee).format('0,00')} {item.genus}</td>
+                      <td className='text-end'>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                       <td className='text-center'>{item.percent_eps}%</td>
-                      <td className='text-end'>{numeral(item.pays_advance_fee).format('0,00')} {item.genus}</td>
+                      <td className='text-end'>{numeral(item.pays_advance_fee).format('0,00.00')} {item.genus}</td>
                       <td className='text-center'>{item.percent_fee_eps}%</td>
-                      <td className='text-end'>{numeral(item.money_percent_fee).format('0,00')} {item.genus}</td>
-                      <td className='text-end'>{numeral(item.expences_pays_taxes).format('0,00')} {item.genus}</td>
+                      <td className='text-end'>{numeral(item.money_percent_fee).format('0,00.00')} {item.genus}</td>
+                      <td className='text-end'>{numeral(item.expences_pays_taxes).format('0,00.00')} {item.genus}</td>
                       <td>{item.debt_remark}</td>
                       <td>{item.doccm_file && (<span role='button' className='text-danger fs-16px'><i class="fa-solid fa-download"></i></span>)}</td>
                     </tr>

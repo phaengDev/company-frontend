@@ -46,7 +46,6 @@ export default function ContractArrears() {
     try {
       const response = await axios.post(api + 'debt/company', inputs);
       setItemData(response.data);
-      console.log(response.data)
       setFilter(response.data)
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -72,7 +71,6 @@ export default function ContractArrears() {
   );
 
   const totalPages = Math.ceil(itemData.length / itemsPerPage);
-
   const goToNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(prevPage => prevPage + 1);
@@ -108,18 +106,54 @@ export default function ContractArrears() {
     acc[currency].insuranc_included += parseFloat(item.insuranc_included);
     return acc;
   }, {});
-  const formatNumber = (num) => numeral(num).format('0,00');
+  const formatNumber = (num) => numeral(num).format('0,00.00');
+// =========================================
 
+
+const [checkedItems, setCheckedItems] = useState([]); // State to manage checked items
+const [filterChecked, setFilterChecked] = useState(false); // Toggle filter based on checkboxes
+
+// Handle individual item checkbox
+const handleCheckUse = (item) => {
+  setCheckedItems(prevState => {
+    if (prevState.includes(item)) {
+      return prevState.filter(i => i !== item); // Uncheck item
+    } else {
+      return [...prevState, item]; // Check item
+    }
+  });
+};
+const handleReset = () => {
+  setCheckedItems([]); // Reset checked items
+  setFilterChecked(false); // Reset filter
+};
+
+const handleFetchReport=()=>{
+  fetchReport();
+  setCheckedItems([]);
+  setFilterChecked(false);
+}
+
+const handleFilterToggle = () => {
+  setFilterChecked(!filterChecked);
+};
+const filteredData = filterChecked
+? paginatedData.filter(item => checkedItems.includes(item))
+: paginatedData;
 
   useEffect(() => {
     fetchReport();
+    setInputs({
+      ...inputs,
+      company_id_fk: companyId
+    })
   }, [companyId]);
 
 
   return (
     <>
       <div id="content" className="app-content p-0 bg-white">
-        <h1 className="page-header px-3 pt-4"> ລາຍງານຕິດຕາມໜີ້ຄ້າງຮັບ</h1>
+        <h1 className="page-header px-3 pt-4"> ລາຍງານຕິດຕາມໜີ້ຄ້າງຮັບ </h1>
         <div className="panel panel-inverse">
 
           <div className="panel-body">
@@ -146,7 +180,12 @@ export default function ContractArrears() {
               </div>
 
               <div className="col-sm-4 col-lg-2">
-                <Button color="red" appearance="primary" className="mt-4" onClick={fetchReport}>ດຶງລາຍງານ</Button>
+                {checkedItems.length > 0 && (
+                   <Button onClick={handleFilterToggle} color="blue" appearance="primary" className="mt-4 me-2">
+                   {filterChecked ? 'ທັງໝົດ' : 'ສະເພາະເລືອກ'}
+                 </Button>
+                )}
+                <Button color="red" appearance="primary" className="mt-4" onClick={handleFetchReport}>ດຶງລາຍງານ</Button>
               </div>
             </div>
             <div className="d-lg-flex align-items-center mb-3">
@@ -177,7 +216,13 @@ export default function ContractArrears() {
               <table className="table table-striped table-bordered align-middle w-100 text-nowrap">
                 <thead className="fs-14px bg-header">
                   <tr>
-                    <th width='1%' className="text-center sticky-col first-col">ລ/ດ</th>
+                    <th width='1%' className="text-center sticky-col first-col">
+                    {checkedItems.length > 0 ?(
+                       <span role="button" onClick={handleReset}><i class="fa-solid fa-rotate fs-4"/></span>
+                    ):'#'}
+                    
+                    </th>
+                    <th width='1%' className="text-center">ລ/ດ</th>
                     <th className="">ຊື່ລູກຄ້າ</th>
                     <th className="">ເລກທີສັນຍາ</th>
                     <th className="text-center">ວັນທີເລີມ</th>
@@ -196,28 +241,33 @@ export default function ContractArrears() {
                 <tbody>
                   {isLoading ? (
                     <tr>
-                      <td colSpan={19} className='text-center'>
+                      <td colSpan={15} className='text-center'>
                         <Placeholder.Grid rows={6} columns={10} active />
                         {/* <Loader size="lg" center content="ກຳລັງໂຫດ......" /> */}
                       </td>
                     </tr>
                   ) : (
-                    paginatedData.length > 0 ? (
+                    filteredData.length > 0 ? (
                       <>
-                        {paginatedData.map((item, key) => (
+                        {filteredData.map((item, key) => (
                           <tr key={key}>
-                            <td className='text-center bg-white sticky-col first-col'>{key + 1}</td>
+                            <td className='text-center bg-white sticky-col first-col'>
+                              <input type="checkbox" className="form-check-input" 
+                              checked={checkedItems.includes(item)}
+                              onChange={() => handleCheckUse(item)} />
+                            </td>
+                            <td className='text-center'>{key + 1}</td>
                             <td>{item.customer_name}</td>
                             <td className=''>{item.contract_number}</td>
                             <td className='text-center'>{moment(item.contract_start_date).format('DD/MM/YYYY')}</td>
                             <td className='text-center'>{moment(item.contract_end_date).format('DD/MM/YYYY')}</td>
                             <td>{item.type_in_name}</td>
                             <td>{item.options_name}</td>
-                            <td className='text-end'>{numeral(item.initial_fee).format('0,00')} {item.genus}</td>
+                            <td className='text-end'>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                             <td className='text-center'>{item.percent_taxes}%</td>
-                            <td className='text-end'>{numeral(item.money_taxes).format('0,00')} {item.genus}</td>
-                            <td className='text-end'>{numeral(item.registration_fee).format('0,00')} {item.genus}</td>
-                            <td className='text-end'>{numeral(item.insuranc_included).format('0,00')} {item.genus}</td>
+                            <td className='text-end'>{numeral(item.money_taxes).format('0,00.00')} {item.genus}</td>
+                            <td className='text-end'>{numeral(item.registration_fee).format('0,00.00')} {item.genus}</td>
+                            <td className='text-end'>{numeral(item.insuranc_included).format('0,00.00')} {item.genus}</td>
                             <td className='text-center'>{moment(item.company_date).format('DD/MM/YYYY')}</td>
                             <td className='text-center'>{item.day_company} ວັນ</td>
 
@@ -226,7 +276,7 @@ export default function ContractArrears() {
 
                         {Object.keys(sumData).map((currency, key) => (
                           <tr key={key}>
-                            <td colSpan={7} className='text-end'>ລວມຍອດຮັບທັງໝົດ ({currency})</td>
+                            <td colSpan={8} className='text-end'>ລວມຍອດຮັບທັງໝົດ ({currency})</td>
                             <td className='text-end'>{formatNumber(sumData[currency].initial_fee)}</td>
                             <td></td>
                             <td className='text-end'>{formatNumber(sumData[currency].money_taxes)}</td>

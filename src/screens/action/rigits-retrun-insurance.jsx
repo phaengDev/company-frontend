@@ -185,7 +185,7 @@ export default function RetrunInsurance() {
                 </div>
                 <div className="col-sm-3  mb-2">
                   <label htmlFor="" className='form-label'>ຍອດເງິນ</label>
-                  <Input value={numeral(inputs.retrun_balance).format('0,00')} onChange={(e) => handelChange('retrun_balance', e)} placeholder='0,00' block required />
+                  <Input value={numeral(inputs.retrun_balance).format('0,00.00')} onChange={(e) => handelChange('retrun_balance', e)} placeholder='0,00' block required />
                 </div>
                 <div className="col-sm-3  mb-2">
                   <label htmlFor="" className='form-label'>ສະກຸນເງິນ</label>

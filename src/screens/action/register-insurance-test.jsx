@@ -452,7 +452,7 @@ if(name==='contract_start_date'){
             <div className="row fs-15px">
               <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄ່າທຳນຽມເບື້ອງຕົ້ນ</label>
-                <Input value={numeral(inputs.initial_fee).format('0,00')} onChange={(e) => onkeyup_premiums('initial_fee', e)} placeholder='xxx xxxx' block required />
+                <Input value={numeral(inputs.initial_fee).format('0,00.00')} onChange={(e) => onkeyup_premiums('initial_fee', e)} placeholder='xxx xxxx' block required />
               </div>
               <div className="col-sm-1 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ອາກອນ</label>
@@ -460,11 +460,11 @@ if(name==='contract_start_date'){
               </div>
               <div className="col-sm-2 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄ່າອາກອນ {inputs.percent_taxes}%</label>
-                <Input value={inputs.money_taxes = numeral(moneyTaxes).format('0,00')} placeholder='00.000' className='bg-teal-100' block readOnly />
+                <Input value={inputs.money_taxes = numeral(moneyTaxes).format('0,00.00')} placeholder='00.000' className='bg-teal-100' block readOnly />
               </div>
               <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄ່າລົງທະບຽນ </label>
-                <Input value={numeral(inputs.registration_fee).format('0,00')} onChange={(e) => onkeyup_premiums('registration_fee', e)} placeholder='00.000' block required />
+                <Input value={numeral(inputs.registration_fee).format('0,00.00')} onChange={(e) => onkeyup_premiums('registration_fee', e)} placeholder='00.000' block required />
               </div>
               <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄ່າທຳນຽມປະກັນໄພລວມ </label>
@@ -481,7 +481,7 @@ if(name==='contract_start_date'){
               </div>
               <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄອມກ່ອນອາກອນ</label>
-                <Input value={numeral(inputs.pre_tax_profit).format('0,00')} placeholder='00.000' className='bg-lime-100' block readOnly />
+                <Input value={numeral(inputs.pre_tax_profit).format('0,00.00')} placeholder='00.000' className='bg-lime-100' block readOnly />
               </div>
               <div className="col-sm-2 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ອ/ກ.ຮ  </label>
@@ -489,11 +489,11 @@ if(name==='contract_start_date'){
               </div>
               <div className="col-sm-2 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ອ.ກ ລາຍໄດ້ {inputs.percent_akorn}% (ຄອມຮັບ)</label>
-                <Input value={numeral(inputs.incom_money).format('0,00')} placeholder='00.000' className='bg-lime-100' block readOnly />
+                <Input value={numeral(inputs.incom_money).format('0,00.00')} placeholder='00.000' className='bg-lime-100' block readOnly />
               </div>
               <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄອມຫຼັງຫັກອາກອນ </label>
-                <Input value={numeral(inputs.incom_finally).format('0,00')} placeholder='00.000' className='bg-lime-100' block readOnly />
+                <Input value={numeral(inputs.incom_finally).format('0,00.00')} placeholder='00.000' className='bg-lime-100' block readOnly />
               </div>
             </div>
 
@@ -515,16 +515,16 @@ if(name==='contract_start_date'){
               </div>
               <div className="col-sm-2 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ອ.ກ ລາຍໄດ້ {inputs.percent_fee_eps}% (ຄອມຈ່າຍ)</label>
-                <Input value={numeral(inputs.money_percent_fee).format('0,00')} placeholder='00.000' className='bg-orange-100' block readOnly />
+                <Input value={numeral(inputs.money_percent_fee).format('0,00.00')} placeholder='00.000' className='bg-orange-100' block readOnly />
               </div>
               <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ຄອມຈ່າຍຫຼັງຫັກອາກອນ </label>
-                <Input value={numeral(inputs.expences_pays_taxes).format('0,00')} placeholder='00.000' className='bg-orange-100' block readOnly />
+                <Input value={numeral(inputs.expences_pays_taxes).format('0,00.00')} placeholder='00.000' className='bg-orange-100' block readOnly />
               </div>
 
               <div className="col-sm-4 col-6 mt-4 text-center">
                 <label htmlFor="" className='form-label'>ລາຍຮັບສຸທິ </label>
-                <Input value={numeral(inputs.net_income).format('0,00')} placeholder='00.000' size="lg" className='bg-green-100 text-center' block readOnly />
+                <Input value={numeral(inputs.net_income).format('0,00.00')} placeholder='00.000' size="lg" className='bg-green-100 text-center' block readOnly />
               </div>
               <div className="col-sm-3 col-6 mt-4">
                 <label htmlFor="" className='form-label'>ສະກຸນ </label>

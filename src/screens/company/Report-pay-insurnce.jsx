@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Input, InputGroup, DatePicker, SelectPicker, Loader, Placeholder, Button, InputPicker } from 'rsuite';
 import SearchIcon from '@rsuite/icons/Search';
-import { Config } from "../../config/connenct";
+import { Config,imageUrl } from "../../config/connenct";
 import axios from 'axios';
 import { useTypeCm, useOption } from "../../config/select-option";
 import moment from "moment";
 import numeral from "numeral";
 export default function ReportsPay() {
   const api = Config.urlApi;
+  const url=imageUrl.url;
   const companyId = localStorage.getItem('company_agent_id');
 
   const dataType = useTypeCm(companyId)
@@ -46,6 +47,7 @@ export default function ReportsPay() {
       const response = await axios.post(api + 'pays/report', inputs);
       setItemData(response.data);
       setDataFilter(response.data)
+      console.log(response.data)
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -105,7 +107,57 @@ export default function ReportsPay() {
     return acc;
 }, {});
 
-const formatNumber = (num) => numeral(num).format('0,00');
+const formatNumber = (num) => numeral(num).format('0,00.00');
+
+// ==================
+const [selectedItems, setSelectedItems] = useState([]);
+const [isCheckAll, setIsCheckAll] = useState(false);
+const handleCheckboxChange = (index) => {
+  setSelectedItems(prevState => {
+    if (prevState.includes(index)) {
+        return prevState.filter(i => i !== index);
+    } else {
+        return [...prevState, index];
+    }
+});
+}
+
+const handleCheckAll = () => {
+  if (isCheckAll) {
+    setSelectedItems([]);
+  } else {
+    setSelectedItems([...paginatedData]);
+  }
+  setIsCheckAll(!isCheckAll);
+}
+
+const handleExportPDF = () => {
+  
+}
+
+
+const handleDownload = async (fileUrl,constact) => {
+  try {
+      const response = await fetch(fileUrl); // Replace with your server URL
+      if (!response.ok) {
+          throw new Error('File download failed');
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(new Blob([blob]));
+      const fileExtension = fileUrl.split('.').pop(); // Get the extension from the URL
+      const fileName = `${constact}.${fileExtension}`; 
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+  } catch (error) {
+      alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
+  }
+};
+
 
 
   useEffect(() => {
@@ -115,7 +167,12 @@ const formatNumber = (num) => numeral(num).format('0,00');
     <>
       <div id="content" class="app-content p-0 bg-component">
         <div class="app-content-padding px-4 py-3">
-          <h1 class="page-header"> ລາຍການຈ່າຍຄ່ປະກັນໄພ</h1>
+        <div className="breadcrumb float-end">
+            {selectedItems.length > 0 &&
+            <Button appearance="primary" color="red" size="sm" onClick={handleExportPDF}><i class="fa-solid fa-cloud-arrow-down me-2"/> PDF</Button>
+          }
+          </div>
+          <h1 class="page-header"> ລາຍການຈ່າຍຄ່າຄອມ</h1>
           <div class="panel">
             <div class="panel-body p-0">
               <div className="row fs-14px mb-3">
@@ -141,7 +198,7 @@ const formatNumber = (num) => numeral(num).format('0,00');
                 </div>
 
                 <div className="col-sm-4 col-lg-2  mt-4">
-                  <Button color="red" appearance="primary" onClick={() => fetchReport()}>ສະແດງລາຍ</Button>
+                  <Button color="red" appearance="primary" onClick={() => fetchReport()}>ດືງລາຍງານ</Button>
                 </div>
               </div>
 
@@ -171,7 +228,10 @@ const formatNumber = (num) => numeral(num).format('0,00');
                     <table className="table table-striped table-bordered align-middle w-100 text-nowrap">
                         <thead className="fs-14px bg-header">
                             <tr>
-                                <th width='1%' className="text-center bg-header sticky-col first-col">ລ/ດ</th>
+                                <th width='1%' className="text-center bg-header sticky-col first-col">
+                                  <input type="checkbox" checked={isCheckAll} onChange={handleCheckAll} className="form-check-input" />
+                                </th>
+                                <th width='1%' className="text-center">ລ/ດ</th>
                                 <th className="text-center">ວັນທີຈ່າຍ</th>
                                 <th className="">ເລກທີສັນຍາ</th>
                                 <th className="text-center">ວັນທີເລີມ</th>
@@ -188,12 +248,13 @@ const formatNumber = (num) => numeral(num).format('0,00');
                                 <th className="text-center">ອາກອນ</th>
                                 <th className="text-end">ຄອມຈ່າຍຫຼັງອາກອນ</th>
                                 <th className="">ລາຍລະອຽດ</th>
+                                <th className="text-center">ເອກະສານຈ່າຍ</th>
                             </tr>
                         </thead>
                         <tbody>
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan={19}>
+                                    <td colSpan={120}>
                                         <Placeholder.Grid rows={6} columns={10} active />
                                         <Loader size="lg" center content="ກຳລັງໂຫດ......" />
                                     </td>
@@ -203,6 +264,9 @@ const formatNumber = (num) => numeral(num).format('0,00');
                                     <>
                                         {paginatedData.map((item, key) => (
                                             <tr key={key}>
+                                              <td className="text-center bg-white sticky-col first-col">
+                                                <input type="checkbox" checked={selectedItems.includes(item)} onChange={() => handleCheckboxChange(item)} className="form-check-input" />
+                                              </td>
                                                 <td className='text-center'>{key + 1}</td>
                                                 <td>{moment(item.doccm_date).format('DD/MM/YYYY')}</td>
                                                 <td>{item.contract_number}</td>
@@ -212,20 +276,25 @@ const formatNumber = (num) => numeral(num).format('0,00');
                                                 <td>{item.type_buyer_name}</td>
                                                 <td>{item.type_in_name}</td>
                                                 <td>{item.options_name}</td>
-                                                <td className='text-end'>{numeral(item.initial_fee).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-center'>{item.percent_taxes}%</td>
-                                                <td className='text-end'>{numeral(item.registration_fee).format('0,00')} {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.insuranc_included).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.registration_fee).format('0,00.00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.insuranc_included).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-center'>{item.precent_incom}%</td>
                                                 <td className='text-center'>{item.percent_akorn}%</td>
-                                                <td className='text-end'>{numeral(item.incom_finally).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.incom_finally).format('0,00.00')} {item.genus}</td>
                                                 <td>{item.debt_remark}</td>
+                                                <td className="text-center">
+                                                  {item.docom_file ?(
+                                                  <button type="button" onClick={()=>handleDownload(`${url}docPay/${item.docom_file}`,item.contract_number)} className="btn btn-green btn-xs"><i class="fa-solid fa-cloud-arrow-down"/></button>
+                                                ):(<i class="fa-solid fa-file-circle-xmark text-red"></i>)}
+                                                  </td>
                                                 </tr>
                                         ))}
                                        
                                         {Object.keys(sumData).map((currency, key) => (
                                         <tr key={key}>
-                                            <td colSpan={9} className='text-end'>ລວມຍອດຄ້າງຮັບທັງໝົດ ({currency})</td>
+                                            <td colSpan={10} className='text-end'>ລວມຍອດຄ້າງຮັບທັງໝົດ ({currency})</td>
                                             <td className='text-end'>{formatNumber(sumData[currency].initial_fee)}</td>
                                             <td></td>
                                             <td className='text-end'>{formatNumber(sumData[currency].registration_fee)}</td>

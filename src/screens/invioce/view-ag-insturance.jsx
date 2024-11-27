@@ -1,15 +1,21 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import '../../View-insurance.css'
 import { calculateAge } from '../../utils/utils';
 import moment from 'moment';
 import numeral from 'numeral';
 import { imageUrl } from '../../config/connenct';
-export const ViewInsturance = ({ data }) => {
+import { Modal } from 'react-bootstrap';
+export const ViewInsturanceAg = ({show, handleClose, data }) => {
     const url = imageUrl.url
-    const item = data;
-    const age = calculateAge(item.agent_dob);
+    const [item, setItem] = React.useState({ file_doc: [] });
+  
 
-
+useEffect(() => {
+    if(data){
+        setItem(data);
+    }
+},[data]);
+const age = calculateAge(item.agent_dob);
     const handleDownload = async (fileName) => {
         try {
             const response = await fetch(fileName); // Replace with your server URL
@@ -51,12 +57,17 @@ export const ViewInsturance = ({ data }) => {
     }
 
     return (
-        <div class="container">
+        <Modal show={show} size={'fullscreen'} onHide={handleClose}>
+        <Modal.Header className='bg-red-700 text-white py-2' closeButton>
+          <Modal.Title ><span className='text-orange' onClick={handleClose} role='button'><i class="fa-solid fa-circle-arrow-left fs-3"></i></span> ລາຍລະອຽດສັນຍາປະກັນໄພ</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className='p-0'>
+        <div class="container pt-0">
             <table class="policy-table ">
                 <thead>
                     <tr>
                         <th colspan="4" class="header ">
-                            <img src={item.com_logo ? (url + 'logo/' + item.com_logo) : ('./assets/img/logo/oac.png')} alt="Logo" class="logo" />
+                            <img src={item.com_logo ? (url + 'logo/' + item.com_logo) : ('./assets/img/logo/oac.png')} alt="Logo" className="logo pt-3" />
                             <div class="company-details">
                                 <h3> {item.com_name_lao}</h3>
                                 <h3 className=''> {item.com_name_eng}</h3>
@@ -149,33 +160,33 @@ export const ViewInsturance = ({ data }) => {
                         <th>ເປິເຊັນຂາຍ (%):</th>
                         <td>{item.percent_eps} %</td>
                         <th className='text-end'>ຄ່າຄອມມິດຊັ່ນ :</th>
-                        <td>{numeral(item.expences_pays_taxes).format('0,00')}</td>
+                        <td>{numeral(item.expences_pays_taxes).format('0,00.00')} {item.genus}</td>
                     </tr>
                     <tr class="section">
                         <th colspan="4" className='fs-17px'>ຂໍ້ມູນຄ່າທຳນຽມປະກັນໄພ</th>
                     </tr>
                     <tr>
                         <th>ຄ່າທຳນຽມເບື້ອງຕົ້ນ:</th>
-                        <td>{numeral(item.initial_fee).format('0,00')}</td>
+                        <td>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                         <th className='text-end'>ຄ່າອາກອນ {item.percent_taxes}%:</th>
-                        <td>{numeral(item.money_taxes).format('0,00')}</td>
+                        <td>{numeral(item.money_taxes).format('0,00.00')} {item.genus}</td>
                     </tr>
                     <tr>
                         <th>ຄ່າລົງທະບຽນ:</th>
-                        <td>{numeral(item.registration_fee).format('0,00')}</td>
+                        <td>{numeral(item.registration_fee).format('0,00.00')} {item.genus}</td>
                         <th className='text-end'>ຄ່າປະກັນໄພລວມ:</th>
-                        <td>{numeral(item.insuranc_included).format('0,00')}</td>
+                        <td>{numeral(item.insuranc_included).format('0,00.00')} {item.genus}</td>
                     </tr>
                    
                     <tr>
                         <th>ຄອມຈ່າຍ ({item.percent_eps}%):</th>
-                        <td>{numeral(item.pays_advance_fee).format('0,00')}</td>
+                        <td>{numeral(item.pays_advance_fee).format('0,00.00')} {item.genus}</td>
                         <th className='text-end'>ຫັກອາກອນ: ({item.percent_fee_eps}%)</th>
-                        <td >{numeral(item.money_percent_fee).format('0,00')}</td>
+                        <td >{numeral(item.money_percent_fee).format('0,00.00')} {item.genus}</td>
                     </tr>
                     <tr>
                         <th>ຄອມຈ່າຍຫຼັງຫັກອາກອນ:</th>
-                        <td colSpan={3}>{numeral(item.expences_pays_taxes).format('0,00')}</td>
+                        <td colSpan={3}>{numeral(item.expences_pays_taxes).format('0,00.00')} {item.genus}</td>
                        
                     </tr>
                     <tr>
@@ -183,7 +194,7 @@ export const ViewInsturance = ({ data }) => {
                     </tr>
                     <tr>
                         <th>ສະຖານະຈ່າຍບໍລິສັດ:</th>
-                        <td>{item.status_company === 1 ? 'ຄ້າງຈ່າຍບໍ່ລິສັດ (' + item.day_company + ' )' : 'ຈ່າຍແລ້ວ'}</td>
+                        <td>{item.status_company === 1 ? 'ຄ້າງຈ່າຍບໍລິສັດ (' + item.day_company + ' )' : 'ຈ່າຍແລ້ວ'}</td>
                         <th className='text-end'>ວັນທີ:</th>
                         <td>{moment(item.company_date).format('DD/MM/YYYY')}
                             {
@@ -218,5 +229,7 @@ export const ViewInsturance = ({ data }) => {
             ))}
 
         </div>
+        </Modal.Body>
+        </Modal>
     )
 }

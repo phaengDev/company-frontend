@@ -69,7 +69,7 @@ function ReportDebtCustomer() {
         return acc;
     }, {});
 
-    const formatNumber = (num) => numeral(num).format('0,00');
+    const formatNumber = (num) => numeral(num).format('0,00.00');
 
 
     useEffect(() => {
@@ -158,11 +158,11 @@ function ReportDebtCustomer() {
                                                     <td className='text-center'>{moment(item.contract_end_date).format('DD/MM/YYYY')}</td>
                                                     <td>{item.type_in_name}</td>
                                                     <td>{item.options_name}</td>
-                                                    <td className='text-end'>{numeral(item.initial_fee).format('0,00')} {item.genus}</td>
+                                                    <td className='text-end'>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                                                     <td className='text-center'>{item.percent_taxes}%</td>
-                                                    <td className='text-end'>{numeral(item.money_taxes).format('0,00')} {item.genus}</td>
-                                                    <td className='text-end'>{numeral(item.registration_fee).format('0,00')} {item.genus}</td>
-                                                    <td className='text-end'>{numeral(item.insuranc_included).format('0,00')} {item.genus}</td>
+                                                    <td className='text-end'>{numeral(item.money_taxes).format('0,00.00')} {item.genus}</td>
+                                                    <td className='text-end'>{numeral(item.registration_fee).format('0,00.00')} {item.genus}</td>
+                                                    <td className='text-end'>{numeral(item.insuranc_included).format('0,00.00')} {item.genus}</td>
                                                     <td className='text-center'>{moment(item.company_date).format('DD/MM/YYYY')}</td>
                                                     <td className='text-center'>{item.day_company} ວັນ</td>
                                                 </tr>

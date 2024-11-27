@@ -1,15 +1,19 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import '../../View-insurance.css'
 import { calculateAge } from '../../utils/utils';
 import moment from 'moment';
 import numeral from 'numeral';
 import { imageUrl } from '../../config/connenct';
-export const ViewInsturance = ({ data }) => {
+import { Modal } from 'react-bootstrap';
+export const ViewInsturanceBy = ({ show, handleClose, data }) => {
     const url = imageUrl.url
-    const item = data;
-    const age = calculateAge(item.agent_dob);
+    const [item, setItem] = React.useState({ file_doc: [] });
 
-
+useEffect(() => {
+    if(data){
+        setItem(data);
+    }
+})
     const handleDownload = async (fileName) => {
         try {
             const response = await fetch(fileName); // Replace with your server URL
@@ -30,33 +34,38 @@ export const ViewInsturance = ({ data }) => {
         }
     };
 
-    const downloadFilePay = async (fileName) => {
-        try {
-            const response = await fetch(fileName); // Replace with your server URL
-            if (!response.ok) {
-                throw new Error('File download failed');
-            }
+    // const downloadFilePay = async (fileName) => {
+    //     try {
+    //         const response = await fetch(fileName); // Replace with your server URL
+    //         if (!response.ok) {
+    //             throw new Error('File download failed');
+    //         }
 
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(new Blob([blob]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', fileName);
-            document.body.appendChild(link);
-            link.click();
-            link.parentNode.removeChild(link);
-        } catch (error) {
-            alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
-        }
-    }
+    //         const blob = await response.blob();
+    //         const url = window.URL.createObjectURL(new Blob([blob]));
+    //         const link = document.createElement('a');
+    //         link.href = url;
+    //         link.setAttribute('download', fileName);
+    //         document.body.appendChild(link);
+    //         link.click();
+    //         link.parentNode.removeChild(link);
+    //     } catch (error) {
+    //         alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
+    //     }
+    // }
 
     return (
-        <div class="container ">
+        <Modal show={show} size={'fullscreen'} onHide={handleClose}>
+        <Modal.Header className='bg-red-700 text-white py-2' closeButton>
+          <Modal.Title ><span className='text-orange' onClick={handleClose} role='button'><i class="fa-solid fa-circle-arrow-left fs-3"></i></span> ລາຍລະອຽດສັນຍາປະກັນໄພ</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className='p-0'>
+        <div class="container pt-0">
             <table class="policy-table">
                 <thead>
                     <tr>
                         <th colspan="4" class="header ">
-                            <img src={item.com_logo ? (url + 'logo/' + item.com_logo) : ('./assets/img/logo/oac.png')} alt="Logo" class="logo" />
+                            <img src={item.com_logo ? (url + 'logo/' + item.com_logo) : ('./assets/img/logo/oac.png')} alt="Logo" class="logo pt-3" />
                             <div class="company-details">
                                 <h3> {item.com_name_lao}</h3>
                                 <h3 className=''> {item.com_name_eng}</h3>
@@ -113,10 +122,8 @@ export const ViewInsturance = ({ data }) => {
                             </tr>
                         </>
                     )}
-
                     {item.beneficiaries && item.beneficiaries.length > 0 && (
                         <>
-
                             {item.beneficiaries.map((rows, key) => (
                                 <React.Fragment key={key}>
                                     <tr class="section">
@@ -144,39 +151,37 @@ export const ViewInsturance = ({ data }) => {
                             ))}
                         </>
                     )}
-                   
                     <tr class="section">
                         <th colspan="4" className='fs-17px'>ຂໍ້ມູນຄ່າທຳນຽມປະກັນໄພ</th>
                     </tr>
                     <tr>
                         <th>ຄ່າທຳນຽມເບື້ອງຕົ້ນ:</th>
-                        <td>{numeral(item.initial_fee).format('0,00')}</td>
+                        <td>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                         <th className='text-end'>ຄ່າອາກອນ {item.percent_taxes}%:</th>
-                        <td>{numeral(item.money_taxes).format('0,00')}</td>
+                        <td>{numeral(item.money_taxes).format('0,00.00')} {item.genus}</td>
                     </tr>
                     <tr>
                         <th>ຄ່າລົງທະບຽນ:</th>
-                        <td>{numeral(item.registration_fee).format('0,00')}</td>
+                        <td>{numeral(item.registration_fee).format('0,00.00')} {item.genus}</td>
                         <th className='text-end'>ຄ່າປະກັນໄພລວມ:</th>
-                        <td>{numeral(item.insuranc_included).format('0,00')}</td>
+                        <td>{numeral(item.insuranc_included).format('0,00.00')} {item.genus}</td>
                     </tr>
-                    
                     <tr>
                         <th colspan='4' className='fs-17px'>ຕິດຕາມໜີ້</th>
                     </tr>
                     <tr>
                         <th>ສະຖານະຈ່າຍບໍລິສັດ:</th>
-                        <td>{item.status_company === 1 ? 'ຄ້າງຈ່າຍບໍ່ລິສັດ (' + item.day_company + ' )' : 'ຈ່າຍແລ້ວ'}</td>
+                        <td>{item.status_company === 1 ? 'ຄ້າງຈ່າຍບໍລິສັດ (' + item.day_company + ' )' : 'ຈ່າຍແລ້ວ'}</td>
                         <th className='text-end'>ວັນທີ:</th>
                         <td>{moment(item.company_date).format('DD/MM/YYYY')} </td>
                     </tr>
-                    
                 </tbody>
             </table>
             {item.file_doc.map((doc, key) => (
                 <div className='link ' onClick={() => handleDownload(`${url}docfile/${doc.file_insurance}`)} role='button'><i class="fa-solid fa-cloud-arrow-down text-red" /> {doc.file_insurance}</div>
             ))}
-
         </div>
+        </Modal.Body>
+        </Modal>
     )
 }

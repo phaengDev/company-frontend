@@ -53,15 +53,15 @@ const GetReportData = ({ item }) => {
             <td>{item.status_ins===1? item.type_buyer_name:item.car_registration}</td>
             <td>{item.type_in_name}</td>
             <td>{item.options_name}</td>
-            <td className="right">{numeral(item.initial_fee).format('0,00')}  {item.genus}</td>
-            <td className="right">{numeral(item.registration_fee).format('0,00')}  {item.genus}</td>
-            <td className="right">{numeral(item.money_taxes).format('0,00')}  {item.genus}</td>
-            <td className="right">{numeral(item.insuranc_included).format('0,00')}  {item.genus}</td>
+            <td className="right">{numeral(item.initial_fee).format('0,00.00')}  {item.genus}</td>
+            <td className="right">{numeral(item.registration_fee).format('0,00.00')}  {item.genus}</td>
+            <td className="right">{numeral(item.money_taxes).format('0,00.00')}  {item.genus}</td>
+            <td className="right">{numeral(item.insuranc_included).format('0,00.00')}  {item.genus}</td>
             <td className="center">{item.percent_eps}%</td>
-            <td className="right">{numeral(item.pays_advance_fee).format('0,00')}  {item.genus}</td>
-            <td className="center">{item.percent_fee_eps}% = {numeral(item.money_percent_fee).format('0,00')}  {item.genus}</td>
-            <td className="right">{numeral(item.expences_pays_taxes).format('0,00')} {item.genus}</td>
-            <td className="right">{numeral(item.insuranc_included - item.expences_pays_taxes).format('0,00')} {item.genus}</td>
+            <td className="right">{numeral(item.pays_advance_fee).format('0,00.00')}  {item.genus}</td>
+            <td className="center">{item.percent_fee_eps}% = {numeral(item.money_percent_fee).format('0,00.00')}  {item.genus}</td>
+            <td className="right">{numeral(item.expences_pays_taxes).format('0,00.00')} {item.genus}</td>
+            <td className="right">{numeral(item.insuranc_included - item.expences_pays_taxes).format('0,00.00')} {item.genus}</td>
           </tr>
         </tbody>
       </table>

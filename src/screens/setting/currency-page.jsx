@@ -134,7 +134,7 @@ export default function CurrencyPage() {
                                         <td className="text-center">{key + 1}</td>
                                         <td>{item.currency_name}</td>
                                         <td className="text-center">{item.genus} /{item.genus_laos}</td>
-                                        <td className="text-end">{numeral(item.reate_price).format('0,00')} ₭</td>
+                                        <td className="text-end">{numeral(item.reate_price).format('0,00.00')} ₭</td>
                                         <td className='text-center'>
                                             <button type='button' onClick={() => handleEdit(item)} class="btn btn-blue btn-xs me-2"><i class="fa-solid fa-pen-to-square"></i></button>
                                             <button type='button' onClick={() => headleDelete(item.currency_id)} class="btn btn-red btn-xs"><i class="fa-solid fa-trash"></i></button>
@@ -170,7 +170,7 @@ export default function CurrencyPage() {
                         </div>
                         <div className="form-group mb-2">
                             <label htmlFor="" className="form-label">ເລດເງິນ</label>
-                            <Input value={numeral(inputs.reate_price).format('0,00')} onChange={(e)=>handleChange('reate_price',e)} placeholder="0,00"/>
+                            <Input value={numeral(inputs.reate_price).format('0,00.00')} onChange={(e)=>handleChange('reate_price',e)} placeholder="0,00"/>
                         </div>
                     </Modal.Body>
                     <Modal.Footer>

@@ -163,10 +163,11 @@ const handleExportExcel = () => {
     }
 
 
-    const [view, setView] = useState(false);
-    const handleView = (index, value) => {
-        setView(value)
-        console.log(value)
+    const [showView, setShowView] = useState(false);
+    const [dataView, setDataView] = useState(null);
+    const handleView = (value) => {
+        setDataView(value)
+        setShowView(true)
     }
 
     const handleDelete = (id) => {
@@ -383,7 +384,7 @@ const handleExportExcel = () => {
                                                 <td className='text-end'>{numeral(item.expences_pays_taxes).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-end'>{numeral(item.net_income).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-center'>
-                                                    <button type='button' onClick={() => handleView(true, item)} className='btn btn-xs btn-orange me-2'> <i class="fa-solid fa-eye"></i> </button>
+                                                    <button type='button' onClick={() => handleView(item)} className='btn btn-xs btn-orange me-2'> <i class="fa-solid fa-eye"></i> </button>
                                                     <button type='button' onClick={() => addBeneficiaRies(item.incuranec_code)} className='btn btn-xs btn-blue'> <i class="fa-solid fa-user-shield"/> </button>
                                                 </td>
                                                 <td>
@@ -441,19 +442,9 @@ const handleExportExcel = () => {
                         <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage === pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}>ໜ້າຕໍ່ໄປ</span></li>
                     </ul>
                 </div>
-                {view && (
-                    <div class="panel panel-inverse panel-expand">
-                        <div class="panel-heading bg-red-700 text-white ui-sortable-handle">
-                            <h4 class="panel-title fs-16px"><span role='button' onClick={() => handleView(false, '')} className='fs-16px me-2'><i class="fa-solid fa-circle-arrow-left"></i></span>  ລາຍລະອຽດສັນຍາ</h4>
-                            <div class="panel-heading-btn">
-                                <button type='button' onClick={() => handleView(false, '')} class="btn btn-xs btn-icon btn-danger" ><i class="fa fa-times"></i></button>
-                            </div>
-                        </div>
-                        <div class="panel-body">
-                            <ViewInsturance data={view} />
-                        </div>
-                    </div>
-                )}
+                
+                 <ViewInsturance show={showView} handleClose={() => setShowView(false)} data={dataView} />
+                  
             </div>
 
             <FormBeneficiaries

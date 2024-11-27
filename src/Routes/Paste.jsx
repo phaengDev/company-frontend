@@ -43,11 +43,11 @@ import ReportAlmostExpire from '../screens/reports/report-almost-expire';
 import DocCommitoin from '../screens/document/doc-commitoin';
 import CurrencyPage from '../screens/setting/currency-page';
 import RetrunInsurance from '../screens/action/rigits-retrun-insurance';
-import ReportRetrunAll from '../screens/lefun/Report-retrun-all';
+import ReportRetrunAll from '../screens/refund/Report-retrun-all';
 import EditRetrun from '../screens/action/edit-retrun-insurance';
-import RetrunCompany from '../screens/lefun/Retrun-company';
-import RetrunAgent from '../screens/lefun/Retrun-agent';
-import RetrunOacborker from '../screens/lefun/Retrun-oacborker';
+import RetrunCompany from '../screens/refund/Retrun-company';
+import RetrunAgent from '../screens/refund/Retrun-agent';
+import RetrunOacborker from '../screens/refund/Retrun-oacborker';
 import ComissionSale from '../screens/setting/Comission-Sale';
 import CommissionPay from '../screens/setting/Commission-Pay';
 
@@ -63,6 +63,10 @@ import InsuranceRetrun from '../screens/custom-buy/insurance-rutrun';
 import ReportDebtCustomer from '../screens/reports/report-debt-customer'
 import ReportEndContract from '../screens/company/Report-End-Contract';
 import ReportHistoryConntract from '../screens/company/Report-History-Conntract';
+import ReportRefundCompany from '../screens/refund/Report-refund-all-cn';
+import ReportRefundArrearsCm from '../screens/refund/Report-refund-customer';
+import ReportRefundAgent from '../screens/refund/Report-refund-oac';
+
 import { Routes, Route, Navigate } from 'react-router-dom';
 export default function AppContent() {
   return (
@@ -128,6 +132,9 @@ export default function AppContent() {
             <Route path='/rc-debt' element={<ReportDebtCustomer />} />
             <Route path='/arrearscm' element={<ReportEndContract />} />
             <Route path='/history-cm' element={<ReportHistoryConntract />} />
+            <Route path='/refund-all' element={<ReportRefundCompany />} />
+            <Route path='/refund-cm' element={<ReportRefundArrearsCm />} />
+            <Route path='/refund-agent' element={<ReportRefundAgent />} />
 
             
         </Routes>

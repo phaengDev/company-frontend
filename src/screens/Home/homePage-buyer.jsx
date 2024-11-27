@@ -8,10 +8,10 @@ export default function HomePageBuyer() {
   const suerName = localStorage.getItem('username');
 
   const api = Config.urlApi;
-  const user_type=localStorage.getItem('user_type');
+//   const user_type=localStorage.getItem('user_type');
   const custom_id_fk=localStorage.getItem('company_agent_id');
   
-  const [isLoading, setIsLoading] = useState(true);
+//   const [isLoading, setIsLoading] = useState(true);
 
   //================================
   const [chartData, setChartData] = useState({

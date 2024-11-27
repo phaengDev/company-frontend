@@ -151,7 +151,7 @@ export default function ReportCommisIncom() {
         return acc;
     }, {});
     
-    const formatNumber = (num) => numeral(num).format('0,00');
+    const formatNumber = (num) => numeral(num).format('0,00.00');
 
     useEffect(() => {
         fetchReport();
@@ -163,7 +163,7 @@ export default function ReportCommisIncom() {
             <div class="app-content-padding px-4 py-3">
                 <div class="d-lg-flex mb-lg-3 mb-2">
                     <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍງານຄອມຮັບ</h3>
-                    <span class="d-none d-lg-flex align-items-center">
+                    {/* <span class="d-none d-lg-flex align-items-center">
                         <button class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
                             <i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
                         </button>
@@ -171,7 +171,7 @@ export default function ReportCommisIncom() {
                             <i class="fa-solid fa-cloud-arrow-down fs-18px me-2 ms-n1"></i>
                             Export Excel
                         </button>
-                    </span>
+                    </span> */}
                 </div>
                 <div className="row mb-3">
                     <div className="col-sm-4 col-md-2 col-6">
@@ -270,16 +270,16 @@ export default function ReportCommisIncom() {
                                                 <td>{item.agent_name}</td>
                                                 <td>{item.type_in_name}</td>
                                                 <td>{item.options_name}</td>
-                                                <td className='text-end'>{numeral(item.initial_fee).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-center'>{item.percent_taxes}%</td>
-                                                <td className='text-end'>{numeral(item.money_taxes).format('0,00')}  {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.registration_fee).format('0,00')}  {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.insuranc_included).format('0,00')}  {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.money_taxes).format('0,00.00')}  {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.registration_fee).format('0,00.00')}  {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.insuranc_included).format('0,00.00')}  {item.genus}</td>
                                                 <td className='text-center'>{item.precent_incom}%</td>
-                                                <td className='text-end'>{numeral(item.pre_tax_profit).format('0,00')}  {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.pre_tax_profit).format('0,00.00')}  {item.genus}</td>
                                                 <td className='text-center'>{item.percent_akorn}%</td>
-                                                <td className='text-end'>{numeral(item.incom_money).format('0,00')}  {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.incom_finally).format('0,00')}  {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.incom_money).format('0,00.00')}  {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.incom_finally).format('0,00.00')}  {item.genus}</td>
                                                 <td>
                                                     {/* <button type='button' onClick={() => handleDownloadPDF(item.contract_number, item.incuranec_code)} className='btn btn-xs btn-red'> PDF </button>
                                                     <button onClick={handleDownloadExcel} className='btn btn-xs btn-green ms-2'> Excel </button> */}
@@ -288,16 +288,16 @@ export default function ReportCommisIncom() {
                                         ))}
                                         {/* <tr>
                                             <td colSpan={10} className='text-end'>ລວມຍອດຮັບທັງໝົດ</td>
-                                            <td className='text-end'> {numeral(itemData.reduce((acc, item) => acc + parseInt(item.initial_fee), 0)).format('0,00')} </td>
+                                            <td className='text-end'> {numeral(itemData.reduce((acc, item) => acc + parseInt(item.initial_fee), 0)).format('0,00.00')} </td>
                                             <td></td>
-                                            <td className='text-end'> {numeral(itemData.reduce((acc, item) => acc + parseInt(item.money_taxes), 0)).format('0,00')} </td>
-                                            <td className='text-end'> {numeral(itemData.reduce((acc, item) => acc + parseInt(item.registration_fee), 0)).format('0,00')} </td>
-                                            <td className='text-end'> {numeral(itemData.reduce((acc, item) => acc + parseInt(item.insuranc_included), 0)).format('0,00')} </td>
+                                            <td className='text-end'> {numeral(itemData.reduce((acc, item) => acc + parseInt(item.money_taxes), 0)).format('0,00.00')} </td>
+                                            <td className='text-end'> {numeral(itemData.reduce((acc, item) => acc + parseInt(item.registration_fee), 0)).format('0,00.00')} </td>
+                                            <td className='text-end'> {numeral(itemData.reduce((acc, item) => acc + parseInt(item.insuranc_included), 0)).format('0,00.00')} </td>
                                             <td></td>
-                                            <td className='text-end'> {numeral(itemData.reduce((acc, item) => acc + parseInt(item.pre_tax_profit), 0)).format('0,00')} </td>
+                                            <td className='text-end'> {numeral(itemData.reduce((acc, item) => acc + parseInt(item.pre_tax_profit), 0)).format('0,00.00')} </td>
                                             <td></td>
-                                            <td className='text-end'> {numeral(itemData.reduce((acc, item) => acc + parseInt(item.incom_money), 0)).format('0,00')} </td>
-                                            <td className='text-end'> {numeral(itemData.reduce((acc, item) => acc + parseInt(item.incom_finally), 0)).format('0,00')} </td>
+                                            <td className='text-end'> {numeral(itemData.reduce((acc, item) => acc + parseInt(item.incom_money), 0)).format('0,00.00')} </td>
+                                            <td className='text-end'> {numeral(itemData.reduce((acc, item) => acc + parseInt(item.incom_finally), 0)).format('0,00.00')} </td>
                                             <td></td>
                                         </tr> */}
                                         {Object.keys(groupedData).map((currency, key) => (

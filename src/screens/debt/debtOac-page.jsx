@@ -154,7 +154,7 @@ export default function DebtOac() {
         return acc;
     }, {});
     
-    const formatNumber = (num) => numeral(num).format('0,00');
+    const formatNumber = (num) => numeral(num).format('0,00.00');
 
  //==========================
  const [checkedItems, setCheckedItems] = useState([]);
@@ -212,7 +212,7 @@ export default function DebtOac() {
                             {loading === true ? (
                                 <Loader size="md" content="ກຳລັງໂຫລດ..." />
                             ) : (
-                                <p>{numeral(sum.insuranc_included).format('0,00')} kip</p>
+                                <p>{numeral(sum.insuranc_included).format('0,00.00')} kip</p>
                             )}
                         </div>
                         <div class="stats-link">
@@ -229,7 +229,7 @@ export default function DebtOac() {
                             {loading === true ? (
                                 <Loader size="md" content="ກຳລັງໂຫລດ..." />
                             ) : (
-                                <p>{numeral(sum.expences_pays_taxes).format('0,00')} kip</p>
+                                <p>{numeral(sum.expences_pays_taxes).format('0,00.00')} kip</p>
                             )}
                         </div>
                         <div class="stats-link">
@@ -247,7 +247,7 @@ export default function DebtOac() {
                             {loading === true ? (
                                 <Loader size="md" content="ກຳລັງໂຫລດ..." />
                             ) : (
-                                <p>{numeral(sum.incom_finally).format('0,00')} kip</p>
+                                <p>{numeral(sum.incom_finally).format('0,00.00')} kip</p>
                             )}
                         </div>
                         <div class="stats-link">
@@ -351,12 +351,12 @@ export default function DebtOac() {
                                                     <td>{item.type_in_name}</td>
                                                     <td>{item.options_name}</td>
                                                     <td>{item.customer_name}</td>
-                                                    <td className='text-end'>{numeral(item.initial_fee).format('0,00')} {item.genus}</td>
+                                                    <td className='text-end'>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                                                     <td className='text-center'>{item.precent_incom}%</td>
-                                                    <td className='text-end'>{numeral(item.pre_tax_profit).format('0,00')} {item.genus}</td>
+                                                    <td className='text-end'>{numeral(item.pre_tax_profit).format('0,00.00')} {item.genus}</td>
                                                     <td className='text-center'>{item.percent_akorn}%</td>
-                                                    <td className='text-end'>{numeral(item.incom_money).format('0,00')} {item.genus}</td>
-                                                    <td className='text-end'>{numeral(item.incom_finally).format('0,00')} {item.genus}</td>
+                                                    <td className='text-end'>{numeral(item.incom_money).format('0,00.00')} {item.genus}</td>
+                                                    <td className='text-end'>{numeral(item.incom_finally).format('0,00.00')} {item.genus}</td>
                                                     <td className='text-center'>{moment(item.oac_date).format('DD/MM/YYYY')}</td>
                                                     <td className='text-center'>{item.day_oac} ວັນ</td>
                                                     <td className='text-center bg-white sticky-col first-col-end'>
@@ -396,7 +396,7 @@ export default function DebtOac() {
                                     <td>ເລກທີສັນຍາ: <span className='fs-18px'>{debt.contract_number}</span> </td>
                                     <td rowSpan={3}>
                                         <span className='fs-16px'>ຍອດເງິນ</span>
-                                        <h3 className='text-red'>{numeral(debt.incom_finally).format('0,00')} ₭</h3>
+                                        <h3 className='text-red'>{numeral(debt.incom_finally).format('0,00.00')} ₭</h3>
                                     </td>
                                 </tr>
                                 <tr>

@@ -8,8 +8,8 @@ import numeral from 'numeral';
 export default function HomePageAgent() {
   const api = Config.urlApi;
 
-  const user_type = localStorage.getItem('user_type');
-  const companyId = localStorage.getItem('company_agent_id');
+  const user_type = parseInt(localStorage.getItem('user_type'), 10);
+  const companyId = parseInt(localStorage.getItem('company_agent_id'), 10);
 
   const [isLoading, setIsLoading] = useState(true);
   const datack = {

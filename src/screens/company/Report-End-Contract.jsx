@@ -10,9 +10,7 @@ import { saveAs } from 'file-saver';
 function ReportEndContract() {
     const api = Config.urlApi;
     const url = imageUrl.url;
-    const itemcm = useCompany();
     const itemType = useType();
-    const itemagent = useAgent();
   
     const user_type = parseInt(localStorage.getItem('user_type'), 10);
     const companyId = parseInt(localStorage.getItem('company_agent_id'), 10);
@@ -37,10 +35,10 @@ function ReportEndContract() {
     const [data, setData] = useState({
       start_date: '',
       end_date: '',
-      company_id_fk: '',
+      company_id_fk: companyId,
       insurance_type_fk: '',
       agent_id_fk: '',
-      custom_id_fk:companyId,
+      custom_id_fk:'',
       type_buyer_fk: '',
       option_id_fk: '',
       day_contract: 1,
@@ -183,13 +181,16 @@ const handleExportExcel = () => {
   
     useEffect(() => {
       fetchReport();
-    }, [])
+      setData({
+        ...data, company_id_fk: companyId
+      })
+    }, [companyId])
   return (
     <div id="content" className="app-content p-0 bg-component">
     <div className="app-content-padding px-4 py-3">
       <div className="d-lg-flex mb-lg-3 mb-2">
         <h3 className="page-header mb-0 flex-1 fs-20px">ລາຍງານສັນຍາສິນສຸດຄວາມຄຸ້ມຄອງ </h3>
-        <span className="d-none d-lg-flex align-items-center">
+        {/* <span className="d-none d-lg-flex align-items-center">
           <button className="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
             <i className="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
           </button>
@@ -197,16 +198,16 @@ const handleExportExcel = () => {
             <i className="fa-solid fa-cloud-arrow-down fs-18px me-2 ms-n1"></i>
             Export Excel
           </button>
-        </span>
+        </span> */}
       </div>
       <div className="row mb-3">
         <div className="col-sm-4 col-md-2 col-6">
           <label htmlFor="" className='form-label'>ວັນທີ</label>
-          <DatePicker oneTap defaultValue={data.start_date} onChange={(e) => handleChange('start_date', e)} format="dd/MM/yyyy" block />
+          <DatePicker oneTap value={data.start_date} onChange={(e) => handleChange('start_date', e)} format="dd/MM/yyyy" block />
         </div>
         <div className="col-sm-4 col-md-2  col-6">
           <label htmlFor="" className='form-label'>ຫາວັນທີ</label>
-          <DatePicker oneTap defaultValue={data.end_date} onChange={(e) => handleChange('end_date', e)} format="dd/MM/yyyy" block />
+          <DatePicker oneTap value={data.end_date} onChange={(e) => handleChange('end_date', e)} format="dd/MM/yyyy" block />
         </div>
         <div className="col-sm-4 col-md-3  col-6">
           <label htmlFor="" className='form-label'>ປະເພດປະກັນ</label>
@@ -299,8 +300,8 @@ const handleExportExcel = () => {
                               )}
                             </div>
                           </>
-                        )}</td>
-                     
+                        )}
+                        </td>
                     </tr>
                   ))}
                 </>

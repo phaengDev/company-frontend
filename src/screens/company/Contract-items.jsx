@@ -6,10 +6,11 @@ import { Config } from "../../config/connenct";
 import moment from "moment";
 import numeral from "numeral";
 import { useTypeCm, useOption } from "../../config/select-option";
+import ViewInsurance from "./view-insurance";
 export default function ContractItems() {
   const api = Config.urlApi;
   const companyId = localStorage.getItem('company_agent_id');
-
+ 
   const dataType = useTypeCm(companyId)
   const [typeId, setTypeId] = useState(null)
   const handleShowType = (e) => {
@@ -22,7 +23,7 @@ export default function ContractItems() {
   const dataOption = useOption(typeId)
 
   const [inputs, setInputs] = useState({
-    companyId_fk: companyId,
+    company_id_fk: companyId,
     start_date: new Date(),
     end_date: new Date(),
     insurance_type_fk: '',
@@ -60,7 +61,7 @@ export default function ContractItems() {
   const renderPageNumbers = pages.map((number) => {
     if (number < maxPageNumberLimit + 1 && number > minPageNumberLimit) {
       return (
-        <li key={number} className={`page-item ${currentPage == number ? "active" : ''}`} >
+        <li key={number} className={`page-item ${currentPage === number ? "active" : ''}`} >
           <span role="button" id={number} onClick={handleClick} className="page-link border-blue">{number}</span>
         </li>
       );
@@ -73,11 +74,15 @@ export default function ContractItems() {
 
   //================================
 
-  const handleSearch = (name, value) => {
+  const handleChange = (name, value) => {
     setInputs({
       ...inputs, [name]: value
     })
   };
+
+  const handleSearch=()=>{
+    fetchInsurance();
+  }
 
   const [loading, setLoading] = useState(false);
   const [dataFilter, setDataFilter] = useState([]);
@@ -107,10 +112,20 @@ export default function ContractItems() {
 
   useEffect(() => {
     fetchInsurance();
-  }, [inputs]);
+    setInputs({
+      ...inputs,
+      company_id_fk: companyId
+    })
+  }, [companyId]);
   // ===================== //=====================
 
-
+  const [open, setOpen] = useState(false);
+const [item, setItem] = useState('');
+  const handleView=(item)=>{
+    setItem(item)
+    setOpen(true);
+  }
+  //===============================
 
   const groupedData = currentItems.reduce((acc, item) => {
     const currency = item.currency_name;
@@ -150,11 +165,51 @@ export default function ContractItems() {
       setminPageNumberLimit(minPageNumberLimit - pageNumberLimit);
     }
   };
+
+  // =====================================
+
+  const [checkedItems, setCheckedItems] = useState([]);
+  const [allChecked, setAllChecked] = useState(false); 
+  const handleCheckUse = (item) => {
+      setCheckedItems(prevState => {
+          if (prevState.includes(item)) {
+              return prevState.filter(i => i !== item);
+          } else {
+              return [...prevState, item];
+          }
+      });
+  };
+  const handleCheckAll = () => {
+    if (allChecked) {
+      setCheckedItems([]);
+    } else {
+      setCheckedItems([...currentItems]);
+    }
+    setAllChecked(!allChecked);
+  };
+
+useEffect(() => {
+  if (checkedItems.length === currentItems.length && currentItems.length > 0) {
+    setAllChecked(true);
+  } else {
+    setAllChecked(false);
+  }
+}, [checkedItems, currentItems]);
+
+const handleExportPDF = () => {
+
+  }
+
   return (
     <>
       <div id="content" class="app-content p-0 bg-component">
         <div class="app-content-padding px-4 py-3">
-          <h1 className="page-header"> ຂໍ້ມູນສັນຍາປະກັນໄພ</h1>
+          <div className="breadcrumb float-end">
+            {checkedItems.length > 0 &&
+            <Button appearance="primary" color="red" size="sm" onClick={handleExportPDF}><i class="fa-solid fa-cloud-arrow-down me-2"/> PDF</Button>
+          }
+          </div>
+          <h1 className="page-header"> ຂໍ້ມູນສັນຍາປະກັນໄພ </h1>
           <div className="panel panel-inverse">
             <div className="panel-body p-0">
               <div className="row fs-14px mb-3">
@@ -162,11 +217,11 @@ export default function ContractItems() {
                   <div className="row ">
                     <div className="col-6">
                       <label htmlFor="" className="form-label">ວັນທີ</label><br />
-                      <DatePicker oneTap value={inputs.start_date} format="dd/MM/yyyy" onChange={value => handleSearch('start_date', value)} block placeholder='ວັນທີ' />
+                      <DatePicker oneTap value={inputs.start_date} format="dd/MM/yyyy" onChange={value => handleChange('start_date', value)} block placeholder='ວັນທີ' />
                     </div>
                     <div className="col-6">
                       <label htmlFor="" className="form-label">ຫາວັນທີ</label>
-                      <DatePicker oneTap value={inputs.end_date} format="dd/MM/yyyy" onChange={value => handleSearch('end_date', value)} block placeholder='ວັນທີ' />
+                      <DatePicker oneTap value={inputs.end_date} format="dd/MM/yyyy" onChange={value => handleChange('end_date', value)} block placeholder='ວັນທີ' />
                     </div>
                   </div>
                 </div>
@@ -176,7 +231,7 @@ export default function ContractItems() {
                 </div>
                 <div className="col-sm-4 col-lg-2 col-6">
                   <label htmlFor="" className="form-label">ທາງເລືອກ</label>
-                  <SelectPicker name="" data={dataOption} placeholder={'ທາງເລືອກ'} onChange={value => handleSearch('option_id_fk', value)} block />
+                  <SelectPicker name="" data={dataOption} placeholder={'ທາງເລືອກ'} onChange={value => handleChange('option_id_fk', value)} block />
                 </div>
                 <div className="col-sm-4 col-lg-2  mt-4">
                   <Button color='red' appearance="primary" onClick={handleSearch} ><i className="fas fa-search fs-16px me-2"></i>  ຄົ້ນຫາ</Button>
@@ -214,6 +269,10 @@ export default function ContractItems() {
                 <table className="table table-striped table-bordered align-middle w-100 text-nowrap">
                   <thead className="fs-14px bg-header">
                     <tr>
+                      <th className="text-center sticky-col first-col ">
+                        <input type="checkbox" className="form-check-input" checked={allChecked}
+              onChange={handleCheckAll} />
+                        </th>
                       <th className="text-center">ລ/ດ</th>
                       <th className="">ຊື່ລູກຄ້າ</th>
                       <th className="">ເລກທີສັນຍາ</th>
@@ -226,6 +285,7 @@ export default function ContractItems() {
                       <th className="text-end">ເປັນເງິນ</th>
                       <th className="text-end">ຄ່າລົງທະບຽນ</th>
                       <th className="text-end">ຄ່າປະກັນໄພລວມ</th>
+                      <th className="text-center">#</th>
                     </tr>
                   </thead>
                   {loading === false ? (
@@ -234,6 +294,9 @@ export default function ContractItems() {
                         <>
                           {currentItems.map((item, key) => (
                             <tr key={key}>
+                              <td className="text-center sticky-col first-col bg-white">
+                                <input type="checkbox" className="form-check-input"  checked={checkedItems.includes(item)} onChange={() => handleCheckUse(item)} />
+                                </td>
                               <td className="text-center">{item.idAuto}</td>
                               <td>{item.customer_name}</td>
                               <td>{item.contract_number}</td>
@@ -241,22 +304,23 @@ export default function ContractItems() {
                               <td>{moment(item.contract_end_date).format('DD/MM/YYYY')}</td>
                               <td>{item.type_in_name}</td>
                               <td>{item.options_name}</td>
-                              <td className="text-end">{numeral(item.initial_fee).format('0,00')}</td>
+                              <td className="text-end">{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                               <td className="text-center">{item.percent_taxes} %</td>
-                              <td className="text-end">{numeral(item.money_taxes).format('0,00')}</td>
-                              <td className="text-end">{numeral(item.registration_fee).format('0,00')}</td>
-                              <td className="text-end">{numeral(item.insuranc_included).format('0,00')}</td>
+                              <td className="text-end">{numeral(item.money_taxes).format('0,00.00')} {item.genus}</td>
+                              <td className="text-end">{numeral(item.registration_fee).format('0,00.00')} {item.genus}</td>
+                              <td className="text-end">{numeral(item.insuranc_included).format('0,00.00')} {item.genus}</td>
+                              <td className="text-center"><button className='btn btn-xs btn-orange' onClick={() => handleView(item)}><i class="fa-solid fa-eye"/></button> </td>
                             </tr>
                           ))}
                           {Object.keys(groupedData).map((currency, key) => (
                             <tr key={`${key}`}>
-                              <td colSpan={7} className='text-end'>ລວມຍອດຄ້າງຮັບທັງໝົດ ({currency})</td>
+                              <td colSpan={8} className='text-end'>ລວມຍອດຄ້າງຮັບທັງໝົດ ({currency})</td>
                               <td className='text-end'>{formatNumber(groupedData[currency].initial_fee)}</td>
                               <td></td>
                               <td className='text-end'>{formatNumber(groupedData[currency].money_taxes)}</td>
                               <td className='text-end'>{formatNumber(groupedData[currency].registration_fee)}</td>
                               <td className='text-end'>{formatNumber(groupedData[currency].insuranc_included)}</td>
-
+                              <td></td>
                             </tr>
                           ))}
                         </>
@@ -300,6 +364,8 @@ export default function ContractItems() {
           </div>
         </div>
       </div>
+
+      <ViewInsurance open={open} handleClose={()=>setOpen(false)} data={item} />
     </>
 
   );

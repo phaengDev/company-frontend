@@ -6,7 +6,7 @@ import { Config,imageUrl } from '../../config/connenct';
 import axios from 'axios';
 import moment from 'moment';
 import numeral from 'numeral';
-import { ViewInsturance } from '../invioce/view-ag-insturance';
+import { ViewInsturanceAg } from '../invioce/view-ag-insturance';
 // import FileDownloadIcon from '@rsuite/icons/FileDownload';
 function ReportInsuranteAgent() {
     const api = Config.urlApi;
@@ -140,10 +140,11 @@ function ReportInsuranteAgent() {
 
     }
 
-
-    const [view, setView] = useState(false);
+const [show, setShow] = useState(false);
+    const [view, setView] = useState('');
     const handleView = (index, value) => {
         setView(value)
+        setShow(true);
     }
 
     const sumData = currentItems.reduce((acc, item) => {
@@ -165,35 +166,35 @@ function ReportInsuranteAgent() {
 
         return acc;
     }, {});
-    const formatNumber = (num) => numeral(num).format('0,00');
+    const formatNumber = (num) => numeral(num).format('0,00.00');
 
     // ============
 
-    const renderIconButton = (props, ref) => {
-        return (
-            <IconButton {...props} ref={ref} icon={<i class="fa-regular fa-folder-open" />} size='xs' color="blue" appearance="primary" />
-        );
-    };
+    // const renderIconButton = (props, ref) => {
+    //     return (
+    //         <IconButton {...props} ref={ref} icon={<i class="fa-regular fa-folder-open" />} size='xs' color="blue" appearance="primary" />
+    //     );
+    // };
 
-    const handleDownload = async (fileName) => {
-        try {
-          const response = await fetch(fileName); // Replace with your server URL
-          if (!response.ok) {
-            throw new Error('File download failed');
-          }
+    // const handleDownload = async (fileName) => {
+    //     try {
+    //       const response = await fetch(fileName); // Replace with your server URL
+    //       if (!response.ok) {
+    //         throw new Error('File download failed');
+    //       }
       
-          const blob = await response.blob();
-          const url = window.URL.createObjectURL(new Blob([blob]));
-          const link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', fileName);
-          document.body.appendChild(link);
-          link.click();
-          link.parentNode.removeChild(link);
-        } catch (error) {
-          alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
-        }
-      };
+    //       const blob = await response.blob();
+    //       const url = window.URL.createObjectURL(new Blob([blob]));
+    //       const link = document.createElement('a');
+    //       link.href = url;
+    //       link.setAttribute('download', fileName);
+    //       document.body.appendChild(link);
+    //       link.click();
+    //       link.parentNode.removeChild(link);
+    //     } catch (error) {
+    //       alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
+    //     }
+    //   };
 
     useEffect(() => {
         fetchReport();
@@ -213,7 +214,6 @@ function ReportInsuranteAgent() {
                             <i class="fa-solid fa-cloud-arrow-down fs-18px me-2 ms-n1"></i>
                             Export Excel
                         </button>
-
                     </span>
                 </div>
                 <div className="row mb-3">
@@ -308,11 +308,11 @@ function ReportInsuranteAgent() {
                                                 <td>{item.type_in_name}</td>
                                                 <td>{item.options_name}</td>
                                                 <td>{item.car_registration}</td>
-                                                <td className='text-end'>{numeral(item.initial_fee).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-center'>{item.percent_taxes}%</td>
-                                                <td className='text-end'>{numeral(item.money_taxes).format('0,00')} {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.registration_fee).format('0,00')} {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.insuranc_included).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.money_taxes).format('0,00.00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.registration_fee).format('0,00.00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.insuranc_included).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-center'>
                                                     <button type='button' onClick={() => handleView(true, item)} className='btn btn-xs btn-orange ms-2'> <i class="fa-solid fa-eye"></i> </button>
                                                 </td>
@@ -352,7 +352,7 @@ function ReportInsuranteAgent() {
                         <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage === pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}>ໜ້າຕໍ່ໄປ</span></li>
                     </ul>
                 </div>
-                {view && (
+                {/* {view && (
                     <div class="panel panel-inverse panel-expand">
                         <div class="panel-heading bg-red-700 text-white ui-sortable-handle">
                             <h4 class="panel-title fs-16px"><span role='button' onClick={() => handleView(false, '')} className='fs-16px me-2'><i class="fa-solid fa-circle-arrow-left"></i></span>  ລາຍລະອຽດສັນຍາ</h4>
@@ -360,11 +360,11 @@ function ReportInsuranteAgent() {
                                 <button type='button' onClick={() => handleView(false, '')} class="btn btn-xs btn-icon btn-danger" ><i class="fa fa-times"></i></button>
                             </div>
                         </div>
-                        <div class="panel-body">
-                            <ViewInsturance data={view} />
-                        </div>
+                        <div class="panel-body"> */}
+                            <ViewInsturanceAg show={show} handleClose={()=>setShow(false)} data={view} />
+                        {/* </div>
                     </div>
-                )}
+                )} */}
 
             </div>
         </div >

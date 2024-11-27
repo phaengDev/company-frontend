@@ -269,7 +269,7 @@ const downloadAagentPdf= async ()=>{
         acc[currency].expences_pays_taxes += parseFloat(item.expences_pays_taxes);
         return acc;
     }, {});
-    const formatNumber = (num) => numeral(num).format('0,00');
+    const formatNumber = (num) => numeral(num).format('0,00.00');
     
     useEffect(() => {
         fetchReport();
@@ -387,16 +387,16 @@ const downloadAagentPdf= async ()=>{
                                         <td>{item.com_name_lao}</td>
                                         <td>{item.type_in_name}</td>
                                         <td>{item.options_name}</td>
-                                        <td className='text-end'>{numeral(item.initial_fee).format('0,00')}  {item.genus}</td>
+                                        <td className='text-end'>{numeral(item.initial_fee).format('0,00.00')}  {item.genus}</td>
                                         <td className='text-center'>{item.percent_taxes}%</td>
-                                        <td className='text-end'>{numeral(item.money_taxes).format('0,00')}  {item.genus}</td>
-                                        <td className='text-end'>{numeral(item.registration_fee).format('0,00')}  {item.genus}</td>
-                                        <td className='text-end'>{numeral(item.insuranc_included).format('0,00')}  {item.genus}</td>
+                                        <td className='text-end'>{numeral(item.money_taxes).format('0,00.00')}  {item.genus}</td>
+                                        <td className='text-end'>{numeral(item.registration_fee).format('0,00.00')}  {item.genus}</td>
+                                        <td className='text-end'>{numeral(item.insuranc_included).format('0,00.00')}  {item.genus}</td>
                                         <td className='text-center'>{item.percent_eps}%</td>
-                                        <td className='text-end'>{numeral(item.pays_advance_fee).format('0,00')}  {item.genus}</td>
+                                        <td className='text-end'>{numeral(item.pays_advance_fee).format('0,00.00')}  {item.genus}</td>
                                         <td className='text-center'>{item.percent_fee_eps}%</td>
-                                        <td className='text-end'>{numeral(item.money_percent_fee).format('0,00')}  {item.genus}</td>
-                                        <td className='text-end'>{numeral(item.expences_pays_taxes).format('0,00')} {item.genus}</td>
+                                        <td className='text-end'>{numeral(item.money_percent_fee).format('0,00.00')}  {item.genus}</td>
+                                        <td className='text-end'>{numeral(item.expences_pays_taxes).format('0,00.00')} {item.genus}</td>
                                         {/* <td className='text-center'>
                                             <button type='button' onClick={() => downloadPDF(item)} className='btn btn-xs btn-red'> PDF </button>
                                         </td> */}

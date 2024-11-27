@@ -159,7 +159,7 @@ function HistoryInsurnceBay() {
 
         return acc;
     }, {});
-    const formatNumber = (num) => numeral(num).format('0,00');
+    const formatNumber = (num) => numeral(num).format('0,00.00');
 
     // ============
 
@@ -226,7 +226,7 @@ function HistoryInsurnceBay() {
             <div className="app-content-padding px-4 py-3">
                 <div className="d-lg-flex mb-lg-3 mb-2">
                     <h3 className="page-header mb-0 flex-1 fs-20px">ປະຫວັດການຕໍ່ສັນຍາປະກັນໄຟ</h3>
-                    <span className="d-none d-lg-flex align-items-center">
+                    {/* <span className="d-none d-lg-flex align-items-center">
                         <button onClick={handleEportPdf} className="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
                             <i className="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
                         </button>
@@ -234,7 +234,7 @@ function HistoryInsurnceBay() {
                             <i className="fa-solid fa-cloud-arrow-down fs-18px me-2 ms-n1"></i>
                             Export Excel
                         </button>
-                    </span>
+                    </span> */}
                 </div>
                 <div className="row mb-3">
                     <div className="col-sm-4 col-md-2 col-6">
@@ -320,11 +320,11 @@ function HistoryInsurnceBay() {
                                                 <td>{item.type_in_name}</td>
                                                 <td>{item.options_name}</td>
                                                 <td>{item.car_registration}</td>
-                                                <td className='text-end'>{numeral(item.initial_fee).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-center'>{item.percent_taxes}%</td>
-                                                <td className='text-end'>{numeral(item.money_taxes).format('0,00')} {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.registration_fee).format('0,00')} {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.insuranc_included).format('0,00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.money_taxes).format('0,00.00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.registration_fee).format('0,00.00')} {item.genus}</td>
+                                                <td className='text-end'>{numeral(item.insuranc_included).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-center'>
                                                     <Dropdown renderToggle={renderIconButton} placement="bottomEnd">
                                                         {item.file_doc.map((val, index) =>

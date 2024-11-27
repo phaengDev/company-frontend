@@ -377,7 +377,7 @@
         {
           "subId": 8,
           "mainFk": 3,
-          "subName": "ລາຍງານຄອມຈ່າຍ",
+          "subName": "ລາຍງານການຊຳລະ",
           "sublink": "report-pay"
         },
         {
@@ -413,6 +413,33 @@
           "mainFk": 5,
           "subName": "ລາຍງານ ໜີ້ຄ້າງຈ່າຍຄ່າຄອມ",
           "sublink": "arrearsEx"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "mainName": "ລາຍງານສັນຍາສົ່ງຄືນ",
+      "link": "",
+      "typeUser":"4",
+      "icon":"fa-solid fa-bars-staggered bg-green-900",
+      "subMenu": [
+        {
+          "subId": 17,
+          "mainFk": 5,
+          "subName": "ລາຍງານສັນຍາຄືນທັງໝົດ",
+          "sublink": "refund-all"
+        },
+        {
+          "subId": 18,
+          "mainFk": 5,
+          "subName": "ລາຍງານສັນຍາຄືນເງິນລູກຄ້າ",
+          "sublink": "refund-cm"
+        },
+        {
+          "subId": 19,
+          "mainFk": 5,
+          "subName": "ລາຍງານສັນຍາຮັບຄອມຄືນ",
+          "sublink": "refund-agent"
         }
       ]
     }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { DatePicker, Input, InputGroup, SelectPicker, Placeholder, Loader, Button } from 'rsuite'
-import { useCompany, useType, useAgent, useTypeBuyer } from '../../config/select-option';
+import {Input, InputGroup, SelectPicker, Placeholder, Loader, Button } from 'rsuite'
+import { useType, useTypeBuyer } from '../../config/select-option';
 import { Config } from '../../config/connenct';
 import axios from 'axios';
 import moment from 'moment';
@@ -128,7 +128,11 @@ export default function ReportHistoryConntract() {
 
     useEffect(() => {
         fetchReport();
-    }, [])
+        setData({
+            ...data,
+            company_id_fk:customId
+        })
+    }, [customId])
 
     const currentYear = new Date().getFullYear();
     const years = [];
@@ -159,7 +163,7 @@ export default function ReportHistoryConntract() {
             <div className="app-content-padding px-4 py-3">
                 <div className="d-lg-flex mb-lg-3 mb-2">
                     <h3 className="page-header mb-0 flex-1 fs-20px">ລາຍງານປະຫວັດການຕໍ່ສັນຍາ</h3>
-                    <span className="d-none d-lg-flex align-items-center">
+                    {/* <span className="d-none d-lg-flex align-items-center">
                         <button className="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
                             <i className="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
                         </button>
@@ -167,18 +171,18 @@ export default function ReportHistoryConntract() {
                             <i className="fa-solid fa-cloud-arrow-down fs-18px me-2 ms-n1"></i>
                             Export Excel
                         </button>
-                    </span>
+                    </span> */}
                 </div>
                 <div className="row mb-3">
                     <div className="col-sm-3">
                         <div className="row">
                             <div className="col-sm-6 col-6">
                                 <label htmlFor="" className='form-label'>ປີສິນສຸດ</label>
-                                <SelectPicker data={years} defaultValue={data.years_start} onChange={(e) => handleStartYearChange(e)} block />
+                                <SelectPicker data={years} value={data.years_start} onChange={(e) => handleStartYearChange(e)} block />
                             </div>
                             <div className="col-sm-6 col-6">
                                 <label htmlFor="" className='form-label'>ຫາປີສິນສຸດ</label>
-                                <SelectPicker data={endYears} defaultValue={data.years_end} onChange={(e) => handleChange('years_end', e)} block />
+                                <SelectPicker data={endYears} value={data.years_end} onChange={(e) => handleChange('years_end', e)} block />
                             </div>
 
                         </div>
@@ -251,9 +255,9 @@ export default function ReportHistoryConntract() {
                                     </td>
                                 </tr>
                             ) : (
-                                itemData.length > 0 ? (
+                                currentItems.length > 0 ? (
                                     <>
-                                        {itemData.map((item, key) => (
+                                        {currentItems.map((item, key) => (
                                             <tr key={key}>
                                                 <td className='text-center'>{item.idAuto}</td>
                                                 <td>{item.customer_name}</td>

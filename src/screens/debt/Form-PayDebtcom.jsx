@@ -25,7 +25,7 @@ const sumData = data.reduce((acc, item) => {
     return acc;
 }, {});
 
-const formatNumber = (num) => numeral(num).format('0,00');
+const formatNumber = (num) => numeral(num).format('0,00.00');
 
 
 const [values,setValues]=useState({
@@ -96,11 +96,11 @@ const [values,setValues]=useState({
                         <tr key={key}>
                             <td className='text-center bg-white sticky-col first-col'>{key + 1}</td>
                             <td className='text-center'>{item.contract_number}</td>
-                            <td className='text-end'>{numeral(item.initial_fee).format('0,00')} {item.genus}</td>
+                            <td className='text-end'>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                             <td className='text-center'>{item.percent_taxes}%</td>
-                            <td className='text-end'>{numeral(item.money_taxes).format('0,00')} {item.genus}</td>
-                            <td className='text-end'>{numeral(item.registration_fee).format('0,00')} {item.genus}</td>
-                            <td className='text-end'>{numeral(item.insuranc_included).format('0,00')} {item.genus}</td>
+                            <td className='text-end'>{numeral(item.money_taxes).format('0,00.00')} {item.genus}</td>
+                            <td className='text-end'>{numeral(item.registration_fee).format('0,00.00')} {item.genus}</td>
+                            <td className='text-end'>{numeral(item.insuranc_included).format('0,00.00')} {item.genus}</td>
                         </tr>
                     ))}
                     {Object.keys(sumData).map((currency, key) => (
