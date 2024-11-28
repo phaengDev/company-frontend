@@ -6,7 +6,6 @@ import axios from 'axios';
 import moment from 'moment';
 import numeral from 'numeral';
 import { ViewInsturanceBy } from '../invioce/view-buy-insturance';
-import { set } from 'lodash';
 // import FileDownloadIcon from '@rsuite/icons/FileDownload';
 function ReportInsurnceBuy() {
     const api = Config.urlApi;
@@ -349,20 +348,7 @@ function ReportInsurnceBuy() {
                         <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage === pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}>ໜ້າຕໍ່ໄປ</span></li>
                     </ul>
                 </div>
-                {/* {view && (
-                    <div class="panel panel-inverse panel-expand">
-                        <div class="panel-heading bg-red-700 text-white ui-sortable-handle">
-                            <h4 class="panel-title fs-16px"><span role='button' onClick={() => handleView(false, '')} className='fs-16px me-2'><i class="fa-solid fa-circle-arrow-left"></i></span>  ລາຍລະອຽດສັນຍາ</h4>
-                            <div class="panel-heading-btn">
-                                <button type='button' onClick={() => handleView(false, '')} class="btn btn-xs btn-icon btn-danger" ><i class="fa fa-times"></i></button>
-                            </div>
-                        </div>
-                        <div class="panel-body"> */}
-                            <ViewInsturanceBy show={show} handleClose={()=>setShow(false)} data={view} />
-                        {/* </div>
-                    </div>
-                )} */}
-
+            <ViewInsturanceBy show={show} handleClose={()=>setShow(false)} data={view} />
             </div>
         </div >
   )

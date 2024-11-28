@@ -8,7 +8,6 @@ import moment from 'moment';
 export default function ReportEndsCoverageCust() {
   const api = Config.urlApi;
   const url = imageUrl.url;
-  const itemagent = useAgent();
 
   const user_type = parseInt(localStorage.getItem('user_type'), 10);
   const companyId = parseInt(localStorage.getItem('company_agent_id'), 10);
@@ -37,7 +36,7 @@ export default function ReportEndsCoverageCust() {
     end_date: '',
     company_id_fk: '',
     insurance_type_fk: '',
-    agent_id_fk: companyId,
+    agent_id_fk: '',
     custom_id_fk:companyId,
     type_buyer_fk: '',
     option_id_fk: '',
@@ -163,7 +162,7 @@ export default function ReportEndsCoverageCust() {
 
   useEffect(() => {
     fetchReport();
-  }, [data])
+  }, [data,user_type,companyId]);
   return (
     <div id="content" className="app-content p-0 bg-component">
       <div class="app-content-padding px-4 py-3">
@@ -188,7 +187,7 @@ export default function ReportEndsCoverageCust() {
             <label htmlFor="" className='form-label'>ຫາວັນທີ</label>
             <DatePicker oneTap value={data.end_date} onChange={(e) => handleChange('end_date', e)} format="dd/MM/yyyy" block />
           </div>
-          <div className="col-sm-4 col-md-2">
+          <div className="col-sm-4 col-md-3">
             <label htmlFor="" className='form-label'>ບໍລິສັດປະກັນໄພ</label>
             <SelectPicker block data={itemcm} onChange={(e) => handleChange('company_id_fk', e)} />
           </div>
@@ -240,8 +239,6 @@ export default function ReportEndsCoverageCust() {
                 <th className="">ທະບຽນລົດ</th>
                 <th className="">ເລກຈັກ</th>
                 <th className="">ເລກຖັງ</th>
-                <th className="">ຕົວແທນຂາຍ</th>
-                <th className="">ເບີໂທລະສັບ</th>
                 <th className="text-center">ຈໍນວນວັນ</th>
                 <th className="text-center"><i class="fa-regular fa-folder-open"></i></th>
                 <th width='10%' className="text-center">ການຕັ້ງຄ່າ</th>
@@ -273,8 +270,6 @@ export default function ReportEndsCoverageCust() {
                         <td>{item.car_registration}</td>
                         <td>{item.vehicle_number}</td>
                         <td>{item.tank_number}</td>
-                        <td>{item.agent_name}</td>
-                        <td>{item.agent_tel}</td>
                         <td className='text-center'>{item.day_contract}</td>
                         <td className='text-center'>
                           {item.file_doc.length > 0 && (
@@ -289,11 +284,6 @@ export default function ReportEndsCoverageCust() {
                               </div>
                             </>
                           )}</td>
-                        <td className='text-center'>
-                          {user_type === 1 && (
-                            <button type="button" onClick={() => handleRenew(item.incuranec_code)} className='btn btn-xs btn-blue ms-2'><i class="fa-solid fa-pen-to-square"></i> ຕໍ່ສັນຍາ </button>
-                          )}
-                        </td>
                       </tr>
                     ))}
                   </>

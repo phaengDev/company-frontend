@@ -275,7 +275,7 @@
     }
     ,{
       "id": 11,
-      "mainName": "ລາຍງານຄອມຮັບແລ້ວ",
+      "mainName": "ລາຍງານຈ່າຍຄອມ",
       "link": "r-payAgent",
       "typeUser":"2",
       "icon": "fa-solid fa-file-invoice bg-blue-800",
@@ -319,6 +319,20 @@
       "typeUser":"3",
       "icon": "fa-solid fa-tags bg-orange-400",
       "subMenu": []
+    },{
+      "id": 18,
+      "mainName": "ລາຍງານຄືນເງິນ",
+      "link": "retrun-c",
+      "typeUser":"3",
+      "icon": "fa-solid fa-paste bg-orange-600",
+      "subMenu": []
+    },{
+      "id": 19,
+      "mainName": "ລາຍງານໜີ້",
+      "link": "rc-debt",
+      "typeUser":"3",
+      "icon": "fa-solid fa-book-bookmark bg-teal-600",
+      "subMenu": []
     }
     ,{
       "id": 17,
@@ -326,13 +340,6 @@
       "link": "history-c",
       "typeUser":"3",
       "icon": "fa-solid fa-file-invoice bg-blue-800",
-      "subMenu": []
-    },{
-      "id": 18,
-      "mainName": "ລາຍງານຄືນເງິນ",
-      "link": "retrun-c",
-      "typeUser":"3",
-      "icon": "fa-solid fa-paste bg-orange-600",
       "subMenu": []
     }
     ,{
@@ -342,16 +349,7 @@
       "typeUser":"3",
       "icon": "fa-solid fa-file-circle-xmark bg-indigo-400",
       "subMenu": []
-    }
-    ,{
-      "id": 19,
-      "mainName": "ລາຍງານໜີ້",
-      "link": "rc-debt",
-      "typeUser":"3",
-      "icon": "fa-solid fa-book-bookmark bg-teal-600",
-      "subMenu": []
     },
- 
     {
       "id": 20,
       "mainName": "ໜ້າຫຼັກ",

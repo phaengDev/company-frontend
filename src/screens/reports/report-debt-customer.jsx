@@ -14,8 +14,9 @@ function ReportDebtCustomer() {
     const [data, setData] = useState({
         start_date: '',
         end_date: '',
-        company_id_fk: idCustomer,
+        company_id_fk: '',
         agent_id_fk: '',
+        custom_id_fk: idCustomer,
         status_pay: '1'
     })
     const handleChange = (name, value) => {
@@ -29,7 +30,7 @@ function ReportDebtCustomer() {
     const fetchReport = async () => {
         setIsLoading(true);
         try {
-            const response = await axios.post(api + 'debt/company', data);
+            const response = await axios.post(api + 'debt/customer', data);
             setItemData(response.data);
             setFilter(response.data)
         } catch (error) {
@@ -37,8 +38,10 @@ function ReportDebtCustomer() {
         } finally {
             setIsLoading(false);
         }
-
     };
+
+
+
     const Filter = (value) => {
         setItemData(filter.filter(n =>
             n.contract_number.toLowerCase().includes(value) ||

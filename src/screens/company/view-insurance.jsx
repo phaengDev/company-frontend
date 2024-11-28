@@ -28,25 +28,25 @@ function ViewInsurance({ open, handleClose, data }) {
     }
   };
 
-  const downloadFilePay = async (fileName) => {
-    try {
-      const response = await fetch(fileName); // Replace with your server URL
-      if (!response.ok) {
-        throw new Error('File download failed');
-      }
+  // const downloadFilePay = async (fileName) => {
+  //   try {
+  //     const response = await fetch(fileName); // Replace with your server URL
+  //     if (!response.ok) {
+  //       throw new Error('File download failed');
+  //     }
 
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(new Blob([blob]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', fileName);
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode.removeChild(link);
-    } catch (error) {
-      alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
-    }
-  }
+  //     const blob = await response.blob();
+  //     const url = window.URL.createObjectURL(new Blob([blob]));
+  //     const link = document.createElement('a');
+  //     link.href = url;
+  //     link.setAttribute('download', fileName);
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     link.parentNode.removeChild(link);
+  //   } catch (error) {
+  //     alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
+  //   }
+  // }
 
   useEffect(() => {
     if (data) {

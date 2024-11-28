@@ -27,6 +27,7 @@ export default function ReportRetrunAll() {
         insurance_typeId: '',
         agentId_fk: companyId,
         custom_buyer_id_fk: '',
+        option_id_fk: ''
     })
     const handleChange = (name, value) => {
         setData({

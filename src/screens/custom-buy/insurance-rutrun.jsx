@@ -1,18 +1,27 @@
 import React, { useState, useEffect } from 'react'
 import { DatePicker, SelectPicker, Input, InputGroup, Placeholder, Loader } from 'rsuite'
-import { useCompanyCust, useTypeCust, useAgentCust } from '../../config/select-option';
-import { Config,imageUrl } from '../../config/connenct';
+import { useCompanyCust, useTypeCust, useAgentCust, useOption } from '../../config/select-option';
+import { Config, imageUrl } from '../../config/connenct';
 import axios from 'axios';
 import numeral from 'numeral';
 import moment from 'moment';
 function InsuranceRetrun() {
     const api = Config.urlApi;
-    const url=imageUrl.url;
+    const url = imageUrl.url;
 
-    const user_type = localStorage.getItem('user_type');
+    const user_type = parseInt(localStorage.getItem('user_type'), 10);
     const companyId = parseInt(localStorage.getItem('company_agent_id'), 10);
+    const sts = [
+        {
+            label: 'ຄ້າງຄືນ',
+            value: 1
+        },
+        {
+            label: 'ຄືນແລ້ວ',
+            value: 2
+        }]
 
-    const itemAg = useAgentCust(companyId);
+
     const itemcm = useCompanyCust(companyId);
     const itemType = useTypeCust(companyId);
     const [data, setData] = useState({
@@ -21,13 +30,23 @@ function InsuranceRetrun() {
         companyId_fk: '',
         insurance_typeId: '',
         agentId_fk: '',
+        option_id_fk: '',
         custom_buyerId_fk: companyId,
+        datecheck: 'company_date',
+        status: user_type,
+        statusRetrun: ''
     })
     const handleChange = (name, value) => {
+        if (name === 'insurance_typeId') {
+            setTypeId(value)
+        }
         setData({
             ...data, [name]: value
-        })
+        });
     }
+
+    const [typeId, setTypeId] = useState(null)
+    const itemOption = useOption(typeId);
 
     const [isLoading, setIsLoading] = useState(true)
     const [itemData, setItemData] = useState([]);
@@ -35,7 +54,7 @@ function InsuranceRetrun() {
     const fetchReport = async () => {
         setIsLoading(true);
         try {
-            const response = await axios.post(api + 'retrun/', data);
+            const response = await axios.post(api + 'retrun/report', data);
             setItemData(response.data);
             setDataFilter(response.data)
         } catch (error) {
@@ -48,7 +67,7 @@ function InsuranceRetrun() {
         const query = event.toLowerCase();
         setItemData(dataFilter.filter(n =>
             n.contract_number.toLowerCase().includes(query) ||
-            n.currency_name.toLowerCase().includes(query)||
+            n.currency_name.toLowerCase().includes(query) ||
             n.customer_name.toLowerCase().includes(query)
         ));
     };
@@ -80,32 +99,52 @@ function InsuranceRetrun() {
 
     const handleDownload = async (fileName) => {
         try {
-          const response = await fetch(fileName); // Replace with your server URL
-          if (!response.ok) {
-            throw new Error('File download failed');
-          }
-      
-          const blob = await response.blob();
-          const url = window.URL.createObjectURL(new Blob([blob]));
-          const link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', fileName);
-          document.body.appendChild(link);
-          link.click();
-          link.parentNode.removeChild(link);
-        } catch (error) {
-          alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
-          // Handle error as needed
-        }
-      };
+            const response = await fetch(fileName); // Replace with your server URL
+            if (!response.ok) {
+                throw new Error('File download failed');
+            }
 
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+        } catch (error) {
+            alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
+            // Handle error as needed
+        }
+    };
+
+
+    const downloadFilePay = async (fileName) => {
+        try {
+            const response = await fetch(fileName); // Replace with your server URL
+            if (!response.ok) {
+                throw new Error('File download failed');
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+        } catch (error) {
+            alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
+        }
+    }
 
 
     useEffect(() => {
         fetchReport();
-    }, [data, companyId])
-  return (
-    <div id="content" className="app-content p-0 bg-component">
+    }, [data, user_type, companyId])
+    return (
+        <div id="content" className="app-content p-0 bg-component">
             <div class="app-content-padding px-4 py-3">
                 <div class="d-lg-flex mb-lg-3 mb-2">
                     <h3 class="page-header mb-0 flex-1 fs-20px">ລາຍການສັນຍາຍົກເລີກຮັບເງິນຄືນ</h3>
@@ -129,17 +168,21 @@ function InsuranceRetrun() {
                         <label htmlFor="" className='form-label'>ຫາວັນທີ</label>
                         <DatePicker oneTap value={data.end_date} onChange={(e) => handleChange('end_date', e)} format="dd/MM/yyyy" block />
                     </div>
-                    <div className="col-sm-4 col-md-3">
+                    <div className="col-sm-4 col-md-2">
                         <label htmlFor="" className='form-label'>ບໍລິສັດປະກັນໄພ</label>
                         <SelectPicker block data={itemcm} onChange={(e) => handleChange('companyId_fk', e)} />
                     </div>
-                    <div className="col-sm-4 col-md-3  col-6">
+                    <div className="col-sm-4 col-md-2  col-6">
                         <label htmlFor="" className='form-label'>ປະເພດປະກັນ</label>
                         <SelectPicker block data={itemType} onChange={(e) => handleChange('insurance_typeId', e)} />
                     </div>
                     <div className="col-sm-4 col-md-2  col-6">
-                        <label htmlFor="" className='form-label'>ຕົວແທນຂາຍ </label>
-                        <SelectPicker block data={itemAg} value={data.agentId_fk} onChange={(e) => handleChange('agentId_fk', e)}  />
+                        <label htmlFor="" className='form-label'>ທາງເລືອກ </label>
+                        <SelectPicker block data={itemOption} value={data.option_id_fk} onChange={(e) => handleChange('option_id_fk', e)} />
+                    </div>
+                    <div className="col-sm-4 col-md-2  col-6">
+                        <label htmlFor="" className='form-label'>ສະຖານະ </label>
+                        <SelectPicker block data={sts} value={data.statusRetrun} onChange={(e) => handleChange('statusRetrun', e)} />
                     </div>
                 </div>
 
@@ -171,15 +214,14 @@ function InsuranceRetrun() {
                                 <th width='1%' className="text-center">ລ/ດ</th>
                                 <th className="">ວັນທີລົງຂໍ້ມູນ</th>
                                 <th className="">ເລກທີສັນຍາ</th>
-                                <th className="">ຊື່ລູກຄ້າ</th>
-                                <th className="">ເບີໂທລະສັບ</th>
                                 <th className="">ບໍລິສັດປະກັນໄພ</th>
                                 <th className="">ປະເພດປະກັນ</th>
                                 <th className="">ທາງເລືອກ</th>
-                                <th className="">ຕົວແທນຂາຍ	</th>
                                 <th className="text-end">ຍອດເງິນ</th>
                                 <th className="">ໝາຍເຫດ</th>
-                                <th className="text-center">#</th>
+                                <th className="text-center">ສະຖານະ	</th>
+                                <th className="">ວັນທີ	</th>
+                                <th className="text-center">ເອກະສານ</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -198,26 +240,32 @@ function InsuranceRetrun() {
                                                 <td className='text-center'>{item.idAuto}</td>
                                                 <td>{moment(item.register_date).format('DD/MM/YYYY')}</td>
                                                 <td>{item.contract_number}</td>
-                                                <td>{item.customer_name}</td>
-                                                <td>{item.registra_tel}</td>
                                                 <td>{item.com_name_lao}</td>
                                                 <td>{item.type_in_name}</td>
                                                 <td>{item.options_name}</td>
-                                                <td>{item.agent_name}</td>
                                                 <td className='text-end'>{numeral(item.retrun_balance).format('0,00.00')} {item.genus}</td>
                                                 <td className="">{item.remark_text}</td>
+                                                <td className="text-center">{item.status_company === 1 ? (<span className='text-danger'>ຄ້າງຄືນ ({item.day_cpn})</span>) : (<span className='text-success'><i class="fa-solid fa-circle-check"></i> ຄືນແລ້ວ</span>)}</td>
+                                                <td className="">{moment(item.company_date).format('DD/MM/YYYY')}</td>
                                                 <td className="text-center">
-                                                    {item.file_doc !=='' &&(
-                                                        <a href="javascript:;" onClick={() => handleDownload(`${url}docfile/${item.file_doc}`)} className='link'> <i class="fa-solid fa-cloud-arrow-down fs-4"/> {item.file_doc}</a>
+                                                {item.doc_pays && (
+                                                        item.doc_pays.filter(pay => pay.status_pay === 1)
+                                                            .map((pay, key) => (
+                                                                <span className='btn btn-xs btn-success me-2' onClick={() => downloadFilePay(`${url}docPay/${pay.file_doct}`)} role='button'><i class="fa-solid fa-download" /> </span>
+                                                            ))
+                                                            )}
+                                                    {item.file_doc !== '' && (
+                                                        <a href="javascript:;" onClick={() => handleDownload(`${url}docfile/${item.file_doc}`)} className='link'> <i class="fa-solid fa-cloud-arrow-down fs-4" />ສັນຍາ</a>
                                                     )}
                                                 </td>
+
                                             </tr>
                                         ))}
                                         {Object.keys(sumData).map((currency, key) => (
                                             <tr key={`${key}`}>
-                                                <td colSpan={9} className='text-end'>ລວມຍອດທັງໝົດ ({currency})</td>
+                                                <td colSpan={6} className='text-end'>ລວມຍອດທັງໝົດ ({currency})</td>
                                                 <td className='text-end'>{formatNumber(sumData[currency].retrun_balance)}</td>
-                                                
+
                                                 <td colSpan={5}></td>
 
                                             </tr>
@@ -231,7 +279,7 @@ function InsuranceRetrun() {
             </div>
 
         </div>
-  )
+    )
 }
 
 export default InsuranceRetrun

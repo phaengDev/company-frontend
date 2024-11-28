@@ -327,3 +327,27 @@ export function useCustomBuy() {
   const data = itemCustomBuy.map(item => ({ label: item.customer_name, value: item.custom_uuid }));
   return data;
 }
+
+export function suePage(item) {
+  const pages=[{
+    label: '100',
+    value: 100
+  },
+  {
+    label: '200',
+    value: 200
+  },
+  {
+    label: '500',
+    value: 500
+  },
+  {
+    label: '1000',
+    value: 1000
+  },
+  {
+    label: '--All--',
+    value: item
+  }];
+  return pages;
+}

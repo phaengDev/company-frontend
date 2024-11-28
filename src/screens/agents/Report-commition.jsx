@@ -34,12 +34,12 @@ function ReportCommition() {
     };
     const dataOption = itemOption.map(item => ({ label: item.options_name, value: item.options_Id }));
     const [data, setData] = useState({
-        start_date: new Date(),
-        end_date: new Date(),
+        start_date:null,
+        end_date:null,
         company_id_fk: '',
         insurance_type_fk: '',
         agent_id_fk: agentId,
-        type_buyer_fk: '',
+        status_pay: '1',
         option_id_fk: ''
     })
     const handleChange = (name, value) => {
@@ -54,7 +54,7 @@ function ReportCommition() {
     const fetchReport = async () => {
         setIsLoading(true);
         try {
-            const response = await axios.post(api + 'report/all', data);
+            const response = await axios.post(api + 'debt/agent', data);
             setItemData(response.data); // Axios already parses the response
             setDataFilter(response.data)
         } catch (error) {
@@ -137,38 +137,38 @@ function ReportCommition() {
 
     // =======================\\
    
-    const downloadPDF = async (item) => {
-        // Create a hidden container for the report
-        const hiddenContainer = document.createElement('div');
-        hiddenContainer.style.position = 'fixed';
-        hiddenContainer.style.top = '-9999px';
-        hiddenContainer.style.width = '100%'; // Ensure the container takes full width
-        hiddenContainer.style.height = '100%'; // Ensure the container takes full height
-        document.body.appendChild(hiddenContainer);
-        ReactDOM.render(<GetReportData item={item} />, hiddenContainer);
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second to ensure rendering is complete
-        const canvas = await html2canvas(hiddenContainer, { scale: 2 }); // Increase scale for better quality
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('landscape', 'mm', 'a4'); // Landscape mode
-        // Define padding and dimensions
-        const padding = 5; // Padding in mm
-        const pdfWidth = 297; // A4 landscape width in mm
-        const pdfHeight = 210; // A4 landscape height in mm
-        // Calculate the dimensions and positions for the image
-        const imgWidth = canvas.width / 2;
-        const imgHeight = canvas.height / 2;
-        const widthRatio = (pdfWidth - 2 * padding) / imgWidth;
-        const heightRatio = (pdfHeight - 2 * padding) / imgHeight;
-        const ratio = Math.min(widthRatio, heightRatio);
+    // const downloadPDF = async (item) => {
+    //     // Create a hidden container for the report
+    //     const hiddenContainer = document.createElement('div');
+    //     hiddenContainer.style.position = 'fixed';
+    //     hiddenContainer.style.top = '-9999px';
+    //     hiddenContainer.style.width = '100%'; // Ensure the container takes full width
+    //     hiddenContainer.style.height = '100%'; // Ensure the container takes full height
+    //     document.body.appendChild(hiddenContainer);
+    //     ReactDOM.render(<GetReportData item={item} />, hiddenContainer);
+    //     await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second to ensure rendering is complete
+    //     const canvas = await html2canvas(hiddenContainer, { scale: 2 }); // Increase scale for better quality
+    //     const imgData = canvas.toDataURL('image/png');
+    //     const pdf = new jsPDF('landscape', 'mm', 'a4'); // Landscape mode
+    //     // Define padding and dimensions
+    //     const padding = 5; // Padding in mm
+    //     const pdfWidth = 297; // A4 landscape width in mm
+    //     const pdfHeight = 210; // A4 landscape height in mm
+    //     // Calculate the dimensions and positions for the image
+    //     const imgWidth = canvas.width / 2;
+    //     const imgHeight = canvas.height / 2;
+    //     const widthRatio = (pdfWidth - 2 * padding) / imgWidth;
+    //     const heightRatio = (pdfHeight - 2 * padding) / imgHeight;
+    //     const ratio = Math.min(widthRatio, heightRatio);
 
-        const xOffset = padding;
-        const yOffset = padding;
-        const scaledWidth = imgWidth * ratio;
-        const scaledHeight = imgHeight * ratio;
-        pdf.addImage(imgData, 'PNG', xOffset, yOffset, scaledWidth, scaledHeight);
-        pdf.save(`${item.contract_number}.pdf`);
-        document.body.removeChild(hiddenContainer);
-    };
+    //     const xOffset = padding;
+    //     const yOffset = padding;
+    //     const scaledWidth = imgWidth * ratio;
+    //     const scaledHeight = imgHeight * ratio;
+    //     pdf.addImage(imgData, 'PNG', xOffset, yOffset, scaledWidth, scaledHeight);
+    //     pdf.save(`${item.contract_number}.pdf`);
+    //     document.body.removeChild(hiddenContainer);
+    // };
 
 
     const downloadExcel = () => {
@@ -180,31 +180,31 @@ function ReportCommition() {
 
 
     const [checkedItems, setCheckedItems] = useState({});
-    const handleItemChange = (item) => {
-        setCheckedItems(prevState => {
-            const newCheckedItems = {
-                ...prevState,
-                [item.idAuto]: !prevState[item.idAuto]
-            };
+    // const handleItemChange = (item) => {
+    //     setCheckedItems(prevState => {
+    //         const newCheckedItems = {
+    //             ...prevState,
+    //             [item.idAuto]: !prevState[item.idAuto]
+    //         };
 
-            const isAnyChecked = Object.values(newCheckedItems).some(value => value);
-            setDisableds(!isAnyChecked);
-            return newCheckedItems;
-        });
-    };
+    //         const isAnyChecked = Object.values(newCheckedItems).some(value => value);
+    //         setDisableds(!isAnyChecked);
+    //         return newCheckedItems;
+    //     });
+    // };
 
 
-    const handleAllChange = (e) => {
-        const isChecked = e.target.checked;
-        const newCheckedItems = {};
-        currentItems.forEach(item => {
-            newCheckedItems[item.idAuto] = isChecked;
-        });
-        setCheckedItems(newCheckedItems);
-        setDisableds(!isChecked);
-    };
+    // const handleAllChange = (e) => {
+    //     const isChecked = e.target.checked;
+    //     const newCheckedItems = {};
+    //     currentItems.forEach(item => {
+    //         newCheckedItems[item.idAuto] = isChecked;
+    //     });
+    //     setCheckedItems(newCheckedItems);
+    //     setDisableds(!isChecked);
+    // };
 
-    const areAllChecked = Object.values(checkedItems).length === currentItems.length && Object.values(checkedItems).every(Boolean);
+    // const areAllChecked = Object.values(checkedItems).length === currentItems.length && Object.values(checkedItems).every(Boolean);
 
     const selectedItems = currentItems.filter(item => checkedItems[item.idAuto]);
 
@@ -273,7 +273,7 @@ const downloadAagentPdf= async ()=>{
     
     useEffect(() => {
         fetchReport();
-        // setDisableds(data.agent_id_fk ==='' ?true:false)
+        setDisableds(data.agent_id_fk ==='' ?true:false)
     }, [data,agentId])
 
   return (
@@ -416,7 +416,7 @@ const downloadAagentPdf= async ()=>{
                                             <td></td>
                                             <td className='text-end'>{formatNumber(sumData[currency].money_percent_fee)} {sumData[currency].genus}</td>
                                             <td className='text-end'>{formatNumber(sumData[currency].expences_pays_taxes)} {sumData[currency].genus}</td>
-                                            <td></td>
+                                            <td className='sticky-col first-col-end bg-white'></td>
                                         </tr>
                                 ))}
                             </>
