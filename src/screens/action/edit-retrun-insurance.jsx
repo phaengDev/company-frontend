@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { SelectPicker, Input, InputGroup, DatePicker, InputPicker, Button, Loader } from 'rsuite'
+import { SelectPicker, Input,InputNumber, InputGroup, DatePicker, InputPicker, Button, Loader } from 'rsuite'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Config } from '../../config/connenct';
 import { useAgent, useCompany, useType, useCurrency } from '../../config/select-option';
@@ -129,7 +129,9 @@ export default function EditRetrun() {
       reader.readAsText(file);
     }
   };
-
+  function toThousands(value) {
+    return value ? `${value}`.replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,') : value;
+  }
   useEffect(() => {
     showDataRetrun();
   }, [])
@@ -183,7 +185,7 @@ export default function EditRetrun() {
                 </div>
                 <div className="col-sm-3  mb-2">
                   <label htmlFor="" className='form-label'>ຍອດເງິນ</label>
-                  <Input value={numeral(inputs.retrun_balance).format('0,00.00')} onChange={(e) => handelChange('retrun_balance', e)} placeholder='0,00' block required />
+                  <InputNumber value={inputs.retrun_balance} formatter={toThousands} onChange={(e) => handelChange('retrun_balance', e)} placeholder='0,00' block required />
                 </div>
                 <div className="col-sm-3  mb-2">
                   <label htmlFor="" className='form-label'>ສະກຸນເງິນ</label>
