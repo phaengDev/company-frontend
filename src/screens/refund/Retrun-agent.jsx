@@ -108,6 +108,8 @@ export default function RetrunAgent() {
       status_retrun:2,
       balance_agent:item.balance_agent,
       percent_agent:item.percent_agent,
+      file_pay: '',
+      status_pay: 2
     })
     setOpen(true);
   }

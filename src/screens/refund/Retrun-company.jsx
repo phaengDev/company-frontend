@@ -87,7 +87,7 @@ export default function RetrunCompany() {
   const [values, setValues] = useState({
     insurance_retrun_id: '',
     remark_text: '',
-    status_retrun: 2,
+    status_retrun: 1,
     retrun_date: new Date(),
     retrun_balance: 0,
     genus: '',
@@ -102,6 +102,8 @@ export default function RetrunCompany() {
       retrun_balance: item.retrun_balance,
       genus: item.genus,
       status_retrun: 1,
+      file_pay: '',
+      status_pay: 1
     })
     setOpen(true);
   }
@@ -125,6 +127,7 @@ export default function RetrunCompany() {
     for (const key in values) {
       imputData.append(key, values[key])
     }
+    console.log(values);
     try {
       axios.post(api + 'retrun/retrun', imputData)
         .then(function (respones) {

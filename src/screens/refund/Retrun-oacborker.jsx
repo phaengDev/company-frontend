@@ -108,6 +108,8 @@ export default function RetrunOacborker() {
       status_retrun: 3,
       percent_oac:item.percent_oac,
       balance_oac:item.balance_oac,
+      file_pay: '',
+      status_pay: 3
     })
     setOpen(true);
   }
