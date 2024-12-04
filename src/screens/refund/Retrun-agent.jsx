@@ -96,7 +96,7 @@ export default function RetrunAgent() {
     percent_agent:0,
     balance_agent:0,
     file_pay: '',
-    status_pay: 2
+    status_pay: 2,
   })
   const handleRetrun = (item) => {
     setValues({
@@ -109,7 +109,7 @@ export default function RetrunAgent() {
       balance_agent:item.balance_agent,
       percent_agent:item.percent_agent,
       file_pay: '',
-      status_pay: 2
+      status_pay: 2,
     })
     setOpen(true);
   }

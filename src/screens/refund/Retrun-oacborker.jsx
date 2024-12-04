@@ -96,7 +96,7 @@ export default function RetrunOacborker() {
     percent_oac:0,
     balance_oac:0,
     file_pay: '',
-    status_pay: 3
+    status_pay: 3,
   })
   const handleRetrun = (item) => {
     setValues({
@@ -109,7 +109,7 @@ export default function RetrunOacborker() {
       percent_oac:item.percent_oac,
       balance_oac:item.balance_oac,
       file_pay: '',
-      status_pay: 3
+      status_pay: 3,
     })
     setOpen(true);
   }
