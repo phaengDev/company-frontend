@@ -176,8 +176,6 @@ export default function ReportCommisPay() {
 
 //=============================
     const [disableds,setDisableds]=useState(false)
-
-
     const [checkedItems, setCheckedItems] = useState({});
     const handleItemChange = (item) => {
         setCheckedItems(prevState => ({
@@ -196,11 +194,14 @@ export default function ReportCommisPay() {
     };
 
     const areAllChecked = Object.values(checkedItems).length === currentItems.length && Object.values(checkedItems).every(Boolean);
-
     const selectedItems = currentItems.filter(item => checkedItems[item.idAuto]);
-
     const [isload,setIsLoad]=useState(false)
+    const [validated,setValidated]=useState('')
 const downloadAagentPdf= async ()=>{
+    if(data.agent_id_fk===''){
+        setValidated('ກະລຸນາເລືອກຊື່ຕົວແທນກອນ');
+    }else{
+    setValidated('');
     setIsLoad(true)
     const hiddenContainer = document.createElement('div');
     hiddenContainer.style.position = 'fixed';
@@ -232,6 +233,7 @@ const downloadAagentPdf= async ()=>{
     pdf.save(`ໃບແຈ້ງໜີ້ຄອມຈ່າຍ.pdf`);
     document.body.removeChild(hiddenContainer);
     setIsLoad(false);
+    }
 }
 
     // ================================
@@ -306,6 +308,7 @@ const downloadAagentPdf= async ()=>{
                     <div className="col-sm-4 col-md-2">
                         <label htmlFor="" className='form-label'>ຕົວແທນຂາຍ</label>
                         <SelectPicker block data={itemagent} onChange={(e) => handleChange('agent_id_fk', e)} />
+                            <label className='text-red'>{validated}</label>
                     </div>
                 </div>
                 <div class="d-lg-flex align-items-center mb-3">

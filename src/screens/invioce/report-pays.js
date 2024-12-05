@@ -8,16 +8,16 @@ const GetReportData = ({ item }) => {
       <table width={'100%'} className='mb-3'>
         <tr>
           <td rowSpan={3} width={'50%'}><img src='./assets/img/logo/oac-invoice.png' width={'40%'} /></td>
-          <td className=' fs-28px' width={'50%'}>ຈ່າຍຄ່າຄອມມິດຊັນ</td>
+          <td className=' fs-28px' width={'50%'}>COMMISSION PAYMENT</td>
         </tr>
         <tr>
-          <td className='fs-20px'>Agent Code: {item.idcrad_code}</td>
+          <td className='fs-20px'><span className='ms-5'>AGENT CODE: {item.idcrad_code}</span></td>
         </tr>
         <tr>
-          <td className='fs-18px text-red'>Agent Name: {item.agent_name}</td>
+          <td className='fs-18px'><span className='ms-5'>AGENT NAME: {item.agent_name}</span></td>
         </tr>
       </table>
-      <p className='fs-20px text-end'>No: OAC /{moment(new Date()).format('DD - MM')}</p>
+      <p className='fs-20px text-end'>NO: OAC /{moment(new Date()).format('DD - MM')}-_ _ _</p>
       <table className='table-r'>
         <thead>
           <tr>
@@ -66,18 +66,33 @@ const GetReportData = ({ item }) => {
         </tbody>
       </table>
       <p className='right fs-14px'>Vientiance Capital the Date : {moment(new Date()).format('DD/MM/YYYY')}</p>
-      <table width={'100%'} className='mt-5'>
+      <table width={'100%'} className='mt-5 mb-4'>
         <tr>
           <td className='center'><h4><u>ຜູ້ສະເໜີ</u></h4> </td>
-          <td  className='center'><h4><u>ຜູ້ອະນຸມັດ</u></h4></td>
-          <td  className='center'><h4><u>ຜູ້ຮັບ</u></h4></td>
+          <td className='center'><h4><u>ຜູ້ຈ່າຍ</u></h4></td>
+          <td className='center'><h4><u>ຜູ້ຮັບ</u></h4></td>
+        </tr>
+        <br />
+      <br />
+      <br />
+      <br />
+        <tr>
+          <td className='center fs-14px'><h5><u>ວັນທີ:</u> ____/____/______</h5> </td>
+          <td className='center fs-14px'><h5><u>ວັນທີ:</u> ____/____/______</h5></td>
+          <td className='center fs-14px'><h5><u>ວັນທີ:</u> ____/____/______</h5></td>
         </tr>
       </table>
       <br />
       <br />
       <br />
       <br />
-      <p className='mt-4 center'>ສຳນັກງານຕັ້ງຢູ່: ໜ່າຍ19 ບ້ານທາດຫຼວງກາງ, ເມືອງໄຊເສດຖາ, ນະຄອນຫຼວງວຽງຈັນ ໂທລະສັບ: 030 290 0026 / 020 5645 5595.  ເວັບໄຊທ໌: www.oacbroker.com, ເຟດບຸກ: OAC Insurance Broker</p>
+      <p className='mt-4 text-center' style={{ position: 'absolute', bottom: '0px',textAlign: 'center', width: '100%' }}>
+        <span style={{textAlign: 'center' }}>
+        Address: Kamphengmeuang Rd,Thadluangkang Village xaysettha District, Vientiane Capital, Lao PDR
+        <br />
+        Tel: 030 290 0026 / 020 29 888 668, www.oacbroker.com, Facebok Page: OAC Insurance Broker
+        </span>
+      </p>
     </div>
   );
 };

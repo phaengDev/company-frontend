@@ -46,20 +46,20 @@ const GetReportAgent = ({ itemData }) => {
   const agentData = data[agentKey];
 
   return (
-    <div id="exportData">
+    <div id="exportData" style={{ height: '100%', position: 'relative' }}>
       <table width={'100%'} className='mb-3'>
         <tr>
-          <td rowSpan={3} width={'50%'}><img src='./assets/img/logo/oac-invoice.png' width={'40%'} /></td>
-          <td className=' fs-28px' width={'50%'}><u>COMMISSION PAYMENT</u></td>
+          <td rowSpan={3} width={'40%'}><img src='./assets/img/logo/oac-invoice.png' width={'50%'} /></td>
+          <td className='fs-28px ' width={'60%'}><u>COMMISSION PAYMENT</u></td>
         </tr>
         <tr>
-          <td className='fs-20px'>AGENT CODE: {agentData.idcrad_code}</td>
+          <td className='fs-18px w-100' ><span className='ms-5'> AGENT CODE: {agentData.idcrad_code}</span></td>
         </tr>
         <tr>
-          <td className='fs-18px text-red'>AGENT NAME: {agentData.agent_name}</td>
+          <td className='fs-18px w-100 '><span className='ms-5'>AGENT NAME: {agentData.agent_name}</span></td>
         </tr>
       </table>
-      <p className='fs-20px text-end'>NO: OAC /{moment(new Date()).format('DD - MM')}_ _ _ _</p>
+      <p className='fs-20px text-end'>NO: OAC /{moment(new Date()).format('DD - MM')} - _ _ _</p>
       <table className='table-r table-striped'>
         <thead>
           <tr>
@@ -90,7 +90,7 @@ const GetReportAgent = ({ itemData }) => {
               <td>{item.contract_number}</td>
               <td className='center'>{moment(item.contract_start_date).format('DD/MM/YYYY')}</td>
               <td className='center'>{moment(item.contract_end_date).format('DD/MM/YYYY')}</td>
-              <td>{item.status_ins===1? item.type_buyer_name:item.car_registration}</td>
+              <td>{item.status_ins === 1 ? item.type_buyer_name : item.car_registration}</td>
               <td>{item.type_in_name}</td>
               <td>{item.options_name}</td>
               <td className="right">{numeral(item.initial_fee).format('0,00.00')}  {item.genus}</td>
@@ -128,17 +128,30 @@ const GetReportAgent = ({ itemData }) => {
       <table width={'100%'} className='mt-5 mb-4'>
         <tr>
           <td className='center'><h4><u>ຜູ້ສະເໜີ</u></h4> </td>
-          <td className='center'><h4><u>ຜູ້ອະນຸມັດ</u></h4></td>
+          <td className='center'><h4><u>ຜູ້ຈ່າຍ</u></h4></td>
           <td className='center'><h4><u>ຜູ້ຮັບ</u></h4></td>
+        </tr>
+        <br />
+      <br />
+      <br />
+      <br />
+        <tr>
+          <td className='center fs-14px'><h5><u>ວັນທີ:</u> ____/____/______</h5> </td>
+          <td className='center fs-14px'><h5><u>ວັນທີ:</u> ____/____/______</h5></td>
+          <td className='center fs-14px'><h5><u>ວັນທີ:</u> ____/____/______</h5></td>
         </tr>
       </table>
       <br />
       <br />
       <br />
       <br />
-      <p className='mt-4 center'>Address: Kamphengmeuang Rd,Thadluangkang Village xaysettha District, Vientiane Capital, Lao PDR
-          <br/>
-      Tel: 030 290 0026 / 020 29 888 668, www.oacbroker.com, Facebok Page: OAC Insurance Broker</p>
+      <p className='mt-4 text-center' style={{ position: 'absolute', bottom: '0px',textAlign: 'center', width: '100%' }}>
+        <span style={{textAlign: 'center' }}>
+        Address: Kamphengmeuang Rd,Thadluangkang Village xaysettha District, Vientiane Capital, Lao PDR
+        <br />
+        Tel: 030 290 0026 / 020 29 888 668, www.oacbroker.com, Facebok Page: OAC Insurance Broker
+        </span>
+      </p>
     </div>
   );
 };
