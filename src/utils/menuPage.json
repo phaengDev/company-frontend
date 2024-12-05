@@ -75,11 +75,17 @@
         {
           "subId": 9,
           "mainFk": 3,
+          "subName": "ສັນຍາໃກ້ໝົດຄວາມຄຸ້ມຄອງ",
+          "sublink": "almost"
+        },
+        {
+          "subId": 10,
+          "mainFk": 3,
           "subName": "ສັນຍາໝົດຄວາມຄຸ້ມຄອງ",
           "sublink": "report-ends"
         },
         {
-          "subId": 10,
+          "subId": 11,
           "mainFk": 3,
           "subName": "ປະຫວັນການຕໍ່ສັນຍາ",
           "sublink": "history"
@@ -94,25 +100,25 @@
       "icon":"fa-solid fa-copy bg-gradient-yellow-green",
       "subMenu": [
         {
-          "subId": 11,
+          "subId": 12,
           "mainFk": 4,
           "subName": "ລາຍງານສັນຍາທັງໝົດ",
           "sublink": "retrun-all"
         },
         {
-          "subId": 12,
+          "subId": 13,
           "mainFk": 4,
           "subName": "ສັນຍາຄືນເງິນລູກຄ້າ",
           "sublink": "retrun-company"
         },
         {
-          "subId": 13,
+          "subId": 14,
           "mainFk": 4,
           "subName": "ສັນຍາຮັບເງິນຄືນຕົວແທນ",
           "sublink": "retrun-agent"
         },
         {
-          "subId": 14,
+          "subId": 15,
           "mainFk": 4,
           "subName": "ສັນຍາຄືນເງິນບໍລິສັດປະກັນ",
           "sublink": "retrun-oac"
@@ -127,25 +133,25 @@
       "icon":"fa-solid fa-wallet bg-gradient-yellow-red",
       "subMenu": [
         {
-          "subId": 15,
+          "subId": 16,
           "mainFk": 5,
           "subName": "ຂໍ້ມູນໜີ້ທັງໝົດ",
           "sublink": "debt"
         },
         {
-          "subId": 16,
+          "subId": 17,
           "mainFk": 5,
           "subName": "ການຈ່າຍບໍລິສັດ",
           "sublink": "r-debcom"
         },
         {
-          "subId": 17,
+          "subId": 18,
           "mainFk": 5,
           "subName": "ການຈ່າຍຕົວແທນ",
           "sublink": "r-debagent"
         },
         {
-          "subId": 18,
+          "subId": 19,
           "mainFk": 5,
           "subName": "ການຮັບຄອມ",
           "sublink": "r-deboac"
@@ -160,13 +166,13 @@
       "icon":"fa-solid fa-folder-open",
       "subMenu": [
         {
-          "subId": 19,
+          "subId": 20,
           "mainFk": 6,
           "subName": "ເອກສານປະກັນໄພ",
           "sublink": "doc"
         },
         {
-          "subId": 20,
+          "subId": 21,
           "mainFk": 6,
           "subName": "ເອກສານຈ່າຍຄ່າຄອມ",
           "sublink": "doct-com"
@@ -181,25 +187,25 @@
       "icon":"fa-solid fa-users bg-gradient-orange",
       "subMenu": [
         {
-          "subId": 21,
+          "subId": 22,
           "mainFk": 7,
           "subName": "ບໍລິສັດປະກັນໄພ",
           "sublink": "company"
         },
         {
-          "subId": 22,
+          "subId": 23,
           "mainFk": 7,
           "subName": "ຕົວແທນຂາຍປະກັນ",
           "sublink": "agent"
         },
         {
-          "subId": 23,
+          "subId": 24,
           "mainFk": 7,
           "subName": "ຂໍ້ມູນລູກຄ້າຊື້ປະກັນ",
           "sublink": "custom"
         },
         {
-          "subId": 24,
+          "subId": 25,
           "mainFk": 7,
           "subName": "ຕັ້ງຄ່າຄອມມິດຊັນ",
           "sublink": "comission"
@@ -214,37 +220,37 @@
       "icon":"fa-solid fa-sliders",
       "subMenu": [
         {
-          "subId": 24,
+          "subId": 26,
           "mainFk": 8,
           "subName": "ປະເພດປະກັນໄພ",
           "sublink": "type-in"
         },
         {
-          "subId": 25,
+          "subId": 27,
           "mainFk": 8,
           "subName": "ຕັ້ງຄ່າປະເພດລົດ",
           "sublink": "type-car"
         },
         {
-          "subId": 26,
+          "subId": 28,
           "mainFk": 8,
           "subName": "ຕັ້ງຄ່າຍີ່ຫໍ້ລົດ",
           "sublink": "brand"
         },
         {
-          "subId": 27,
+          "subId": 29,
           "mainFk": 8,
           "subName": "ຕັ້ງຄ່າລຸ້ນລົດ",
           "sublink": "version"
         },
         {
-          "subId": 28,
+          "subId": 30,
           "mainFk": 8,
           "subName": "ລົງທະບຽນຜູ້ເຂົ້າໃຊ້",
           "sublink": "user"
         },
         {
-          "subId": 29,
+          "subId": 31,
           "mainFk": 8,
           "subName": "ຕັ້ງຄ່າສະກຸນເງິນ",
           "sublink": "currency"
@@ -264,8 +270,16 @@
       "typeUser":"2",
       "icon": "fa-solid fa-tags bg-orange-400",
       "subMenu": []
-    }
-    ,{
+    },
+    {
+      "id": 14,
+      "mainName": "ລາຍງານໜີ້",
+      "link": "r-debt",
+      "typeUser":"2",
+      "icon": "fa-solid fa-bars-staggered bg-teal-600",
+      "subMenu": []
+    },
+    {
       "id": 11,
       "mainName": "ລາຍງານຄອມຄ້າງຮັບ",
       "link": "r-commit",
@@ -294,14 +308,6 @@
       "link": "report-ends",
       "typeUser":"2",
       "icon": "fa-solid fa-file-circle-xmark bg-indigo-400",
-      "subMenu": []
-    },
-    {
-      "id": 14,
-      "mainName": "ລາຍງານໜີ້",
-      "link": "r-debt",
-      "typeUser":"2",
-      "icon": "fa-solid fa-bars-staggered bg-teal-600",
       "subMenu": []
     },
 

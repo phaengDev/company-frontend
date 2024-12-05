@@ -5,6 +5,7 @@ import { Config } from '../../config/connenct';
 import { Loader } from 'rsuite';
 import axios from 'axios';
 import numeral from 'numeral';
+import { useNavigate } from 'react-router-dom';
 export default function HomePageOac() {
     const api = Config.urlApi;
     const user_type = parseInt(localStorage.getItem('user_type'), 10);
@@ -128,8 +129,10 @@ export default function HomePageOac() {
             console.error('Error fetching data:', error);
         }
     };
-
-
+    const navigate = useNavigate();
+    const linkPages = () => {
+        navigate('/almost');
+    };
 
     useEffect(() => {
         fetchDataMonth();
@@ -169,7 +172,7 @@ export default function HomePageOac() {
                         </div>
                         <div class="stats-info">
                             <h4 className='fs-16px'>ສັນຍາໃກ້ຈະໝົດຄວາມຄຸ້ມຄອງ</h4>
-                            <p>{isLoading === true ? (<Loader size="md" content="ກຳລັງໂຫລດ..." />) : (balance.qty_almost + ' (ສັນຍາ)')} </p>
+                            <p role='button' onClick={linkPages}>{isLoading === true ? (<Loader size="md" content="ກຳລັງໂຫລດ..." />) : (balance.qty_almost + ' (ສັນຍາ)')} </p>
                         </div>
                     </div>
                 </div>

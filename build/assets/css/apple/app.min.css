@@ -19022,6 +19022,13 @@ a:focus {
   font-size: 17px;
   line-height: 34px;
 }
+.btn-group-lg > .btn.btn-icon,
+.btn.btn-icon.btn-xl {
+  width: 40px;
+  height: 40px;
+  font-size: 17px;
+  line-height: 34px;
+}
 .btn.btn-xs {
   font-size: 0.6875rem;
   padding: 2px 6px;
@@ -25580,6 +25587,26 @@ a:focus {
   --bs-pos-sidebar-product-border-color: #7a7a7a;
   --bs-pos-sidebar-product-confirmation-bg: rgba(56, 56, 56, 0.95);
 }
+
+.renew-insurace {
+  position: fixed;
+  bottom: 60px;
+  right: 12px;
+  z-index: 1020;
+  padding: 10px;
+  width: 60px;
+  height: 60px;
+  text-decoration: none;
+  color: var(--bs-component-bg);
+  display: none;
+  border-radius: 50px;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+
 .pos-mobile-sidebar-toggler {
   position: fixed;
   bottom: 60px;

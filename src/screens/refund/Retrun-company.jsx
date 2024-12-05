@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { DatePicker, SelectPicker, Input, InputGroup, Placeholder, Loader, Modal, Button } from 'rsuite'
 import { useCompany, useType, useAgent } from '../../config/select-option';
-import { Config } from '../../config/connenct';
+import { Config ,imageUrl} from '../../config/connenct';
 import axios from 'axios';
 import numeral from 'numeral';
 import moment from 'moment';
 import Alert from '../../utils/config';
 export default function RetrunCompany() {
   const api = Config.urlApi;
+  const url=imageUrl.url;
   const itemcm = useCompany();
   const itemType = useType();
   const itemAg = useAgent();
@@ -29,7 +30,6 @@ export default function RetrunCompany() {
     })
   }
 
-
   const status = [{
     label: 'ຄ້າງຄືນ', value: 1
   }, {
@@ -47,6 +47,7 @@ export default function RetrunCompany() {
       console.log(response.data);
       setItemData(response.data);
       setDataFilter(response.data);
+      console.log(response.data)
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -143,6 +144,29 @@ export default function RetrunCompany() {
     }
   }
 
+
+  const downloadFilePay = async (fileUrl,constact) => {
+    try {
+        const response = await fetch(fileUrl); // Replace with your server URL
+        if (!response.ok) {
+            throw new Error('File download failed');
+        }
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const fileExtension = fileUrl.split('.').pop(); // Get the extension from the URL
+        const fileName = `${constact}.${fileExtension}`; 
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', fileName);
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+    } catch (error) {
+        alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
+    }
+};
+
   useEffect(() => {
     fetchReport();
   }, [data])
@@ -152,7 +176,7 @@ export default function RetrunCompany() {
     <div id="content" className="app-content p-0 bg-component">
       <div class="app-content-padding px-4 py-3">
         <div class="d-lg-flex mb-lg-3 mb-2">
-          <h3 class="page-header mb-0 flex-1 fs-20px">ລາງການສັນຍາສົ່ງເງິນຄືນລູກຄ້າ</h3>
+          <h3 class="page-header mb-0 flex-1 fs-20px">ລາງການສັນຍາສົ່ງເງິນຄືນລູກຄ້າ </h3>
           {/* <span class="d-none d-lg-flex align-items-center">
             <button class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
               <i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF
@@ -261,7 +285,16 @@ export default function RetrunCompany() {
                         <td className="text-center">
                           {item.status_company === 1 ? (
                             <button onClick={() => handleRetrun(item)} className='btn btn-xs btn-blue ms-2'> <i class="fa-solid fa-pen-to-square"></i> ຢືນຢັນ</button>
-                          ) : (<i class="fa-solid fa-circle-check text-green fs-4"></i>)}
+                          ) : (<>
+                          <i class="fa-solid fa-circle-check text-green fs-4"></i>
+                          {item.doc_pays &&(
+                                item.doc_pays
+                                    .filter(pay => pay.status_pay === 1)
+                                    .map((pay, key) => (
+                                  <button type='button' onClick={() => downloadFilePay(`${url}docPay/${pay.file_doct}`,item.contract_number)} className='btn btn-xs btn-blue ms-2'><i class="fa-solid fa-cloud-arrow-down"/></button>
+                                )))
+                              }
+                          </>)}
 
                         </td>
                       </tr>

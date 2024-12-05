@@ -238,10 +238,9 @@ const filteredData = filterChecked
                     <th className="text-center">ເປີເຊັນຮັບ</th>
                     <th className="text-center">ອາກອນ</th>
                     <th className="text-end">ຄອມຈ່າຍຫຼັງອາກອນ</th>
-                    <th className="text-center">ວັນທີຮັບ</th>
                     <th className="text-center">ວັນທີຄ້າງຈ່າຍ</th>
                     <th className="text-center">ຈຳນວນວັນ</th>
-                    
+                    <th className="text-center sticky-col first-col-end">ໜີ້</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -276,9 +275,9 @@ const filteredData = filterChecked
                             <td className='text-center'>{item.precent_incom}%</td>
                             <td className='text-center'>{item.percent_akorn}%</td>
                             <td className='text-end'>{numeral(item.incom_finally).format('0,00.00')} {item.genus}</td>
-                            <td className='text-center'>{moment(item.company_date).format('DD/MM/YYYY')}</td>
                             <td className='text-center'>{moment(item.oac_date).format('DD/MM/YYYY')}</td>
-                            <td className='text-center'>{item.day_oac} ວັນ</td>
+                            <td className='text-center'>{item.status_company===1 ? item.day_company : item.day_oac + 'ວັນ'}</td>
+                            <td className='text-center bg-white sticky-col first-col-end'>{item.status_company===1?(<i class="fa-solid fa-circle-exclamation fs-4 text-orange "/>):(<><i class="fa-solid fa-circle-check fs-4 text-green"/></>)}</td>
 
                           </tr>
                         ))}

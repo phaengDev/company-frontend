@@ -50,16 +50,16 @@ const GetReportAgent = ({ itemData }) => {
       <table width={'100%'} className='mb-3'>
         <tr>
           <td rowSpan={3} width={'50%'}><img src='./assets/img/logo/oac-invoice.png' width={'40%'} /></td>
-          <td className=' fs-28px' width={'50%'}>ຈ່າຍຄ່າຄອມມິດຊັນ</td>
+          <td className=' fs-28px' width={'50%'}><u>COMMISSION PAYMENT</u></td>
         </tr>
         <tr>
-          <td className='fs-20px'>Agent Code: {agentData.idcrad_code}</td>
+          <td className='fs-20px'>AGENT CODE: {agentData.idcrad_code}</td>
         </tr>
         <tr>
-          <td className='fs-18px text-red'>Agent Name: {agentData.agent_name}</td>
+          <td className='fs-18px text-red'>AGENT NAME: {agentData.agent_name}</td>
         </tr>
       </table>
-      <p className='fs-20px text-end'>No: OAC /{moment(new Date()).format('DD - MM')}</p>
+      <p className='fs-20px text-end'>NO: OAC /{moment(new Date()).format('DD - MM')}_ _ _ _</p>
       <table className='table-r table-striped'>
         <thead>
           <tr>
@@ -136,7 +136,9 @@ const GetReportAgent = ({ itemData }) => {
       <br />
       <br />
       <br />
-      <p className='mt-4 center'>ສຳນັກງານຕັ້ງຢູ່: ໜ່າຍ19 ບ້ານທາດຫຼວງກາງ, ເມືອງໄຊເສດຖາ, ນະຄອນຫຼວງວຽງຈັນ ໂທລະສັບ: 030 290 0026 / 020 5645 5595.  ເວັບໄຊທ໌: www.oacbroker.com, ເຟດບຸກ: OAC Insurance Broker</p>
+      <p className='mt-4 center'>Address: Kamphengmeuang Rd,Thadluangkang Village xaysettha District, Vientiane Capital, Lao PDR
+          <br/>
+      Tel: 030 290 0026 / 020 29 888 668, www.oacbroker.com, Facebok Page: OAC Insurance Broker</p>
     </div>
   );
 };

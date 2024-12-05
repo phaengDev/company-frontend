@@ -37,9 +37,11 @@ export default function ReportAlmostExpire() {
     company_id_fk: '',
     insurance_type_fk: '',
     agent_id_fk: '',
+    custom_id_fk:'',
     type_buyer_fk: '',
     option_id_fk: '',
     day_contract: 10,
+    user_type: user_type,
     status: 1, //=========  ສະຖານະ 1 ສັນຍາປະຈຸບັນ  2 ປະຫວັດຕໍ່ສັນຍາ
     statusDay: 1, //=========  ສະຖານະ 1 ໃກ້ຈະຫມົດ  2 ສັນຍາຫມົດຄວາມຄຸ້ມຄອງ
   })
@@ -47,6 +49,7 @@ export default function ReportAlmostExpire() {
     setData({
       ...data, [name]: value
     })
+    fetchReport();
   }
 
   const [isLoading, setIsLoading] = useState(true)
@@ -68,6 +71,15 @@ export default function ReportAlmostExpire() {
     setItemData(filter.filter(n => n.contract_number.toLowerCase().includes(event)))
   }
 
+
+  useEffect(() => {
+    setData((prevData) => ({
+      ...prevData,
+      company_id_fk: user_type === 4 ? companyId : '',
+      agent_id_fk: user_type === 2 ? companyId : '',
+      user_type: user_type,
+  }));
+  }, [user_type, companyId]);
   const handleRenew = (id) => {
     navigate(`/from-renew?id=${btoa(id)}`);
   }
@@ -159,13 +171,8 @@ export default function ReportAlmostExpire() {
 
   useEffect(() => {
     fetchReport();
-    setData((prevData) => ({
-      ...prevData,
-      company_id_fk: user_type === 4 ? companyId : '',
-      agent_id_fk: user_type === 2 ? companyId : '',
-  }));
-
-  }, [user_type,companyId]);
+  console.log(data)
+  }, [data]);
   return (
     <div id="content" className="app-content p-0 bg-component">
 

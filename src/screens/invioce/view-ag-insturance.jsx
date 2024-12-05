@@ -5,10 +5,12 @@ import moment from 'moment';
 import numeral from 'numeral';
 import { imageUrl } from '../../config/connenct';
 import { Modal } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 export const ViewInsturanceAg = ({show, handleClose, data }) => {
     const url = imageUrl.url
     const [item, setItem] = React.useState({ file_doc: [] });
   
+    const navigate = useNavigate();
 
 useEffect(() => {
     if(data){
@@ -55,6 +57,11 @@ const age = calculateAge(item.agent_dob);
             alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
         }
     }
+
+
+    const handleRenew = (id) => {
+        navigate(`/from-renew?id=${btoa(id)}`);
+      }
 
     return (
         <Modal show={show} size={'fullscreen'} onHide={handleClose}>
@@ -229,6 +236,9 @@ const age = calculateAge(item.agent_dob);
             ))}
 
         </div>
+        {item.day_contract <=10 && (
+        <button type='button' onClick={() => handleRenew(item.incuranec_code)} class="btn btn-blue btn-icon btn-circle btn-xl renew-insurace"><i class="fa-solid fa-file-pen"></i></button>
+    )}
         </Modal.Body>
         </Modal>
     )

@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect } from 'react'
-import { SelectPicker, InputPicker, Placeholder } from 'rsuite';
+import { SelectPicker, InputPicker, Placeholder, Input, Button } from 'rsuite';
 import { Config, imageUrl } from '../../config/connenct';
 import { Link, useNavigate } from 'react-router-dom'
 import moment from 'moment';
-import { useProvince,useTypeBuyer } from '../../config/select-option';
+import {useCompany, useProvince, useTypeBuyer, suePage } from '../../config/select-option';
 import Alert from '../../utils/config';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -12,8 +12,9 @@ export default function CustomBuyer() {
     const api = Config.urlApi;
     const url = imageUrl.url;
     const itemPv = useProvince();
-    const type=useTypeBuyer();
+    const type = useTypeBuyer();
     const [iDdis, setIdDis] = useState('');
+    const itemCompany = useCompany();
     const [itemDis, setItemDis] = useState([]);
     const showDis = async () => {
         if (iDdis === null) return;
@@ -42,7 +43,8 @@ export default function CustomBuyer() {
     const [dataSearch, setDataSearch] = useState({
         provinceId: '',
         districtId: '',
-        type_buyerId: ''
+        type_buyerId: '',
+        companyId: ''
     });
 
     const [data, setData] = useState([]);
@@ -63,10 +65,13 @@ export default function CustomBuyer() {
     const Filter = (event) => {
         setItemCustom(data.filter(n => n.customer_name.toLowerCase().includes(event)))
     }
+
+
+    const itemLimit = suePage(itemCustom.length);
     //=====================
 
     const [currentPage, setcurrentPage] = useState(1);
-    const [itemsPage, setitemsPage] = useState(150);
+    const [itemsPage, setitemsPage] = useState(100);
     const handleShowLimit = (value) => {
         setitemsPage(value);
     };
@@ -174,55 +179,35 @@ export default function CustomBuyer() {
             <div className="panel panel-inverse">
                 <div className="panel-body">
                     <div className="row mb-3">
-                        <div className="col-sm-3">
+                        <div className="col-sm-2 col-6">
                             <label htmlFor="" className='form-label'>ແຂວງ</label>
                             <SelectPicker data={itemPv} onChange={(e) => provinceSearch('provinceId', e)} block />
                         </div>
-                        <div className="col-sm-3">
+                        <div className="col-sm-2 col-6">
                             <label htmlFor="" className='form-label'>ເມືອງ</label>
                             <SelectPicker data={Dist} onChange={(e) => chengeSearch('districtId', e)} block />
                         </div>
                         <div className="col-sm-3">
-                            <label htmlFor="" className='form-label'>ປະເພດ</label>
-                            <InputPicker data={type} onChange={(e) => chengeSearch('type_buyerId', e)} block />
+                            <label htmlFor="" className='form-label'>ບໍລິສັດປະກັນໄພ</label>
+                            <SelectPicker data={itemCompany} onChange={(e) => chengeSearch('companyId', e)}  block />
                         </div>
-                        <div className="col-sm-3">
-                            <label htmlFor="" className='form-label'>ຊື່ລູກຄ້າ</label>
-                            <div class="input-group">
-                                <input type='search' onChange={(e) => Filter(e.target.value)} className='form-control rounded fs-14px' placeholder='ຄົ້ນຫາ...' />
-                                <button type="button" onClick={fetchCustom} class="btn btn-blue  rounded ms-2" >
-                                    <i className="fas fa-search fs-5"></i>
-                                </button>
-                            </div>
+                        <div className="col-sm-2 col-8">
+                            <label htmlFor="" className='form-label'>ປະເພດ</label>
+                            <SelectPicker data={type} onChange={(e) => chengeSearch('type_buyerId', e)} block />
+                        </div>
+                        <div className="col-sm-1 col-4 mt-4">
+                            <Button type="button" appearance="primary" color='blue' onClick={fetchCustom} >ຄົ້ນຫາ</Button>
                         </div>
                     </div>
-                    <div className="d-lg-flex align-items-center mb-3">
-                        <div className="d-lg-flex d-none align-items-center text-nowrap">
-                            ສະແດງ:
-                            <select onChange={(e) => handleShowLimit(e.target.value)} className="form-select border-blue form-select-sm ms-2  ps-2 pe-30px" >
-                                <option value={150} selected>150</option>
-                                <option value={500}>500</option>
-                                <option value={1000}>1000</option>
-                                <option value={1500}>1500</option>
-                                <option value={qtyItem}>ທັງໝົດ</option>
-                            </select>
+                    <div className="row mb-3">
+                        <div className="col-sm-1 col-3">
+                            <InputPicker data={itemLimit} value={itemsPage} onChange={(e) => handleShowLimit(e)} className="" />
                         </div>
-                        <div className="d-lg-block d-none ms-2 text-body text-opacity-50"> ລາຍການ </div>
-                        {currentItems.length > 0 ? (
-                            <div className="pagination  mb-0 ms-auto justify-content-center">
-                                <ul className="pagination  mb-0 ms-auto justify-content-center">
-                                    <li className="page-item "><span role="button" onClick={handlePrevbtn} className={`page-link  ${currentPage === pages[0] ? 'disabled' : 'border-blue'}`} ><i class="fa-solid fa-angles-left" /></span></li>
-                                    {minPageNumberLimit >= 1 ? (
-                                        <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
-                                    ) : ''}
-                                    {renderPageNumbers}
-                                    {pages.length > maxPageNumberLimit ? (
-                                        <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
-                                    ) : ''}
-                                    <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage === pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}><i class="fa-solid fa-angles-right" /></span></li>
-                                </ul>
-                            </div>
-                        ) : ''}
+                        <div className="col-sm-8 col-3"></div>
+                        <div className="col-sm-3 col-6">
+                            <Input onChange={(e) => Filter(e)} placeholder="ຄົ້ນຫາ..." />
+                        </div>
+
                     </div>
                     <div className="table-responsive">
                         <table className="table table-striped table-bordered align-middle w-100 text-nowrap">

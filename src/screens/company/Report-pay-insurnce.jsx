@@ -11,6 +11,17 @@ export default function ReportsPay() {
   const url=imageUrl.url;
   const companyId = localStorage.getItem('company_agent_id');
 
+const typeget=[
+  {
+    label:'ຈ່າຍຄ່າປະກັນໄພ',
+    value:1
+  },
+  {
+    label:'ຈ່າຍຄ່າຄອມ',
+    value:3
+  }
+];
+
   const dataType = useTypeCm(companyId)
   const [typeId, setTypeId] = useState(null)
   const handleShowType = (value) => {
@@ -28,13 +39,14 @@ export default function ReportsPay() {
     insurance_type_fk: '',
     agent_id_fk: '',
     option_id_fk: '',
-    status_doc: 2
+    status_doc: 1,
   });
   const handelShearch = (name, value) => {
     setInputs({
       ...inputs, [name]: value
     })
   }
+const [validated,setValidated]=useState()
 
   const [isLoading, setIsLoading] = useState(true)
   const [itemData, setItemData] = useState([]);
@@ -42,7 +54,11 @@ export default function ReportsPay() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(100);
   const fetchReport = async () => {
+    if(!inputs.status_doc){
+      setValidated('!ກະລຸນາເລືອກປະເພດຢ່າງໃດຢ່າງໜື້ງກ່ອນ')
+    }else{
     setIsLoading(true);
+    setValidated('')
     try {
       const response = await axios.post(api + 'pays/report', inputs);
       setItemData(response.data);
@@ -53,6 +69,7 @@ export default function ReportsPay() {
     } finally {
       setIsLoading(false);
     }
+  }
   };
   const Filter = (event) => {
     setItemData(dataFilter.filter(n =>
@@ -172,11 +189,11 @@ const handleDownload = async (fileUrl,constact) => {
             <Button appearance="primary" color="red" size="sm" onClick={handleExportPDF}><i class="fa-solid fa-cloud-arrow-down me-2"/> PDF</Button>
           }
           </div>
-          <h1 class="page-header"> ລາຍການຈ່າຍຄ່າຄອມ</h1>
+          <h1 class="page-header"> ລາຍງານການຊຳລະ </h1>
           <div class="panel">
             <div class="panel-body p-0">
               <div className="row fs-14px mb-3">
-                <div className="col-sm-6 col-lg-5">
+                <div className="col-sm-6 col-lg-4 mb-2">
                   <div className="row ">
                     <div className="col-6">
                       <label htmlFor="" className="form-label">ວັນທີ</label>
@@ -188,16 +205,20 @@ const handleDownload = async (fileUrl,constact) => {
                     </div>
                   </div>
                 </div>
-                <div className="col-sm-4 col-lg-3 col-6">
+                <div className="col-sm-4 col-lg-3 col-6 mb-2">
                   <label htmlFor="" className="form-label">ປະເພດປະກັນ</label>
                   <SelectPicker data={dataType} value={typeId} onChange={value => handleShowType(value)} placeholder={'- ເລືອກປະເພດ -'} block />
                 </div>
-                <div className="col-sm-4 col-lg-2 col-6">
+                <div className="col-sm-4 col-lg-2 col-6 mb-2">
                   <label htmlFor="" className="form-label">ທາງເລືອກ</label>
                   <SelectPicker data={dataOption}  value={inputs.option_id_fk} placeholder={'ທາງເລືອກ'} onChange={value => handelShearch('option_id_fk', value)} block />
                 </div>
-
-                <div className="col-sm-4 col-lg-2  mt-4">
+                <div className="col-sm-4 col-lg-2 col-6 mb-2">
+                  <label htmlFor="" className="form-label">ປະເພດຈ່າຍ</label>
+                  <SelectPicker data={typeget}   placeholder={'ທາງເລືອກ'} defaultValue={inputs.status_doc} onChange={value => handelShearch('status_doc', value)} block />
+                  <label className="text-red fs-12px">{validated}</label>
+                </div>
+                <div className="col-sm-2 col-lg-1  mt-4">
                   <Button color="red" appearance="primary" onClick={() => fetchReport()}>ດືງລາຍງານ</Button>
                 </div>
               </div>
@@ -279,10 +300,10 @@ const handleDownload = async (fileUrl,constact) => {
                                                 <td className='text-end'>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-center'>{item.percent_taxes}%</td>
                                                 <td className='text-end'>{numeral(item.registration_fee).format('0,00.00')} {item.genus}</td>
-                                                <td className='text-end'>{numeral(item.insuranc_included).format('0,00.00')} {item.genus}</td>
+                                                <td className={`text-end ${item.status_doc === 1 ? 'text-blue' : ''}`}>{numeral(item.insuranc_included).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-center'>{item.precent_incom}%</td>
                                                 <td className='text-center'>{item.percent_akorn}%</td>
-                                                <td className='text-end'>{numeral(item.incom_finally).format('0,00.00')} {item.genus}</td>
+                                                <td className={`text-end ${item.status_doc === 3 ? 'text-blue' : ''}`}>{numeral(item.incom_finally).format('0,00.00')} {item.genus}</td>
                                                 <td>{item.debt_remark}</td>
                                                 <td className="text-center">
                                                   {item.docom_file ?(
@@ -298,9 +319,9 @@ const handleDownload = async (fileUrl,constact) => {
                                             <td className='text-end'>{formatNumber(sumData[currency].initial_fee)}</td>
                                             <td></td>
                                             <td className='text-end'>{formatNumber(sumData[currency].registration_fee)}</td>
-                                            <td className='text-end'>{formatNumber(sumData[currency].insuranc_included)}</td>
+                                            <td className={`text-end ${inputs.status_doc === 1 ? 'text-blue' : ''}`}>{formatNumber(sumData[currency].insuranc_included)}</td>
                                             <td colSpan={2}></td>
-                                            <td className='text-end'>{formatNumber(sumData[currency].incom_finally)}</td>
+                                            <td className={`text-end ${inputs.status_doc === 3 ? 'text-blue' : ''}`}>{formatNumber(sumData[currency].incom_finally)}</td>
                                             <td colSpan={3}></td>
                                         </tr>
                                          ))}

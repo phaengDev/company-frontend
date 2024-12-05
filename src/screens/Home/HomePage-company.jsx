@@ -26,15 +26,17 @@ function HomePageCompany() {
       custom_qty: 0
   })
   const [isLoading, setIsLoading] = useState(true);
+
   const datack = {
       user_type: user_type,
-      companyId: companyId
+      companyId: companyId,
   };
 
   const fetchData = async () => {
       try {
           const res = await axios.post(api + 'home/balanch', datack);
           const resData = res.data;
+          console.log(datack);
           setBalance({
               insuranc_included: resData.data1.insuranc_included,
               incom_finally: resData.data1.incom_finally,
@@ -150,7 +152,7 @@ const [qtyPay, setQtyPay] = useState(0);
       fetchDataMonth();
       fetchData();
       fetchDataPay();
-  }, [companyId,user_type]);
+  }, [user_type, companyId]);
   return (
     <div id="content" class="app-content text-center">
      
@@ -179,7 +181,7 @@ const [qtyPay, setQtyPay] = useState(0);
                         <div class="stats-icon text-white"><i class="fa-solid fa-users-slash" /></div>
                         <div class="stats-info">
                             <h4 className='fs-16px'>ສັນຍາໝົດຄວາມຄຸ້ມຄອງ</h4>
-                            <p>{isLoading === true ? (<Loader size="md" content="ກຳລັງໂຫລດ..." />) : (balance.run_out + ' (ສັນຍາ)')} </p>
+                            <p role='button' onClick={() => navigate('/arrearscm')}>{isLoading === true ? (<Loader size="md" content="ກຳລັງໂຫລດ..." />) : (balance.run_out + ' (ສັນຍາ)')} </p>
                         </div>
                     </div>
                 </div>

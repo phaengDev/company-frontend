@@ -28,25 +28,27 @@ function ViewInsurance({ open, handleClose, data }) {
     }
   };
 
-  // const downloadFilePay = async (fileName) => {
-  //   try {
-  //     const response = await fetch(fileName); // Replace with your server URL
-  //     if (!response.ok) {
-  //       throw new Error('File download failed');
-  //     }
+  const downloadFilePay = async (fileUrl,constact) => {
+    try {
+      const response = await fetch(fileUrl); // Replace with your server URL
+      if (!response.ok) {
+          throw new Error('File download failed');
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(new Blob([blob]));
+      const fileExtension = fileUrl.split('.').pop(); // Get the extension from the URL
+      const fileName = `${constact}.${fileExtension}`; 
 
-  //     const blob = await response.blob();
-  //     const url = window.URL.createObjectURL(new Blob([blob]));
-  //     const link = document.createElement('a');
-  //     link.href = url;
-  //     link.setAttribute('download', fileName);
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     link.parentNode.removeChild(link);
-  //   } catch (error) {
-  //     alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
-  //   }
-  // }
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+  } catch (error) {
+      alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
+  }
+  }
 
   useEffect(() => {
     if (data) {
@@ -184,13 +186,29 @@ function ViewInsurance({ open, handleClose, data }) {
                 <th>ສະຖານະບໍລິສັດ:</th>
                 <td>{item.status_company === 1 ? 'ຄ້າງຮັບ (' + item.day_company + ' )' : 'ຮັບແລ້ວ'}</td>
                 <th className='text-end'>ວັນທີ:</th>
-                <td>{moment(item.company_date).format('DD/MM/YYYY')} </td>
+                <td>{moment(item.company_date).format('DD/MM/YYYY')} 
+                {item.file_comits &&(
+                                item.file_comits
+                                    .filter(pay => pay.status_doc === 1)
+                                    .map((pay, key) => (
+                                        <span className='float-end text-red' onClick={() => downloadFilePay(`${url}docPay/${pay.docom_file},${item.contract_number}`)} role='button'><i class="fa-solid fa-cloud-arrow-down text-red fs-4" /></span>
+                                   ) ))}
+                </td>
               </tr>
               <tr>
                 <th>ສະຖານະຈ່າຍຄ່າຄອມ:</th>
                 <td>{item.status_oac === 1 ? 'ຄ້າງຈ່າຍຄ່າຄອມ (' + item.day_oac + ' )' : 'ຈ່າຍແລ້ວ'}</td>
                 <th className='text-end'>ວັນທີ:</th>
-                <td>{moment(item.oac_date).format('DD/MM/YYYY')} </td>
+                <td>{moment(item.oac_date).format('DD/MM/YYYY')} 
+                {
+                    item.file_comits && (
+                        item.file_comits.filter(pay => pay.status_doc === 3)
+                       .map((pay, key) => (
+                      <span className='float-end text-red' onClick={() => downloadFilePay(`${url}docPay/${pay.docom_file},${item.contract_number}`)} role='button'><i class="fa-solid fa-cloud-arrow-down text-red fs-4" /></span>
+                   ))
+                    )
+                }
+                </td>
               </tr>
 
             </tbody>

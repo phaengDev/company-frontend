@@ -89,16 +89,6 @@ useEffect(()=>{
                         <td colspan="3">{item.registra_tel}</td>
                     </tr>
                     
-                   
-                    <tr class="section">
-                        <th colspan="4" className='fs-17px'>ຕົວແທນຂາຍ</th>
-                    </tr>
-                    <tr>
-                        <th>ເປິເຊັນຂາຍ (%):</th>
-                        <td>{item.percent_oac} %</td>
-                        <th className='text-end'>ຄ່າຄອມມິດຊັ່ນ :</th>
-                        <td>{numeral(item.balance_oac).format('0,0.00')} {item.genus}</td>
-                    </tr>
                     <tr class="section">
                         <th colspan="4" className='fs-17px'>ຂໍ້ມູນຄ່າທຳນຽມປະກັນໄພ</th>
                     </tr>

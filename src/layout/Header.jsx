@@ -90,6 +90,7 @@ export default function Header() {
         const res = await axios.post(api + 'home/paydebt', datack);
         const resData = res.data;
         setItemPay(resData);
+        console.log(resData);
     } catch (error) {
         console.error('Error fetching data:', error);
     }
@@ -186,7 +187,7 @@ export default function Header() {
             <span class="badge bg-danger text-white">{itemPay.length > 9 ? '+9' : itemPay.length}</span>
           </a>
           <div class="dropdown-menu media-list dropdown-menu-end">
-            <div class="dropdown-header fs-14px">ລາຍການຊຳລະ ({itemPay.length}) ສັນຍາ ວັນທີ {moment(new Date()).format('DD/MM/YYYY')}</div>
+            <div class="dropdown-header fs-14px">ລາຍການຊຳລະ ({itemPay.length}) ສັນຍາ ວັນທີ {moment(new Date()).format('DD/MM/YYYY')} </div>
             {itemPay.length > 0 ? (
               itemPay.slice(0, 5).map((val, index) =>
                 <div key={index} class="dropdown-item media">

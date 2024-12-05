@@ -70,6 +70,10 @@ export default function ReportEndsCoverage() {
     setItemData(filter.filter(n => n.contract_number.toLowerCase().includes(event)))
   }
 
+
+
+
+
   const handleRenew = (id) => {
     navigate(`/from-renew?id=${btoa(id)}`);
   }
@@ -295,9 +299,9 @@ export default function ReportEndsCoverage() {
                             </>
                           )}</td>
                         <td className='text-center'>
-                          {user_type === 1 && (
+                          {/* {user_type === 1 && ( */}
                             <button type="button" onClick={() => handleRenew(item.incuranec_code)} className='btn btn-xs btn-blue ms-2'><i class="fa-solid fa-pen-to-square"></i> ຕໍ່ສັນຍາ </button>
-                          )}
+                          {/* )} */}
                         </td>
                       </tr>
                     ))}
