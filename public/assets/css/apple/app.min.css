@@ -22262,7 +22262,7 @@ a:focus {
 }
 .file-tree .file-node {
   position: relative;
-  padding-left: 0.9375rem;
+  padding-left: 0;
 }
 .file-tree .file-node .file-link {
   text-decoration: none;

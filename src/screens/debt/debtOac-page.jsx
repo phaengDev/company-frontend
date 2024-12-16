@@ -314,7 +314,6 @@ export default function DebtOac() {
                                     <th className="">ປະເພດຜູ້ຊື້ປະກັນ</th>
                                     <th className="">ປະເພດປະກັນ</th>
                                     <th className="">ທາງເລືອກ</th>
-                                    <th className="">ລູກຄ້າຊື້ປະກັນ</th>
                                     <th className="text-end">ຄ່າທຳນຽມເບື້ອງຕັ້ນ	</th>
                                     <th className="text-center">ເປີເຊັນຮັບ</th>
                                     <th className="text-end">ຄອມຮັບ</th>
@@ -323,7 +322,7 @@ export default function DebtOac() {
                                     <th className="text-end">ຄອມຈ່າຍຫຼັງອາກອນ</th>
                                     <th className="text-center">ວັນທີຄ້າງ</th>
                                     <th className="text-center">ຈຳນວນວັນ</th>
-                                    <th width='10%' className="text-center">ການຕັ້ງຄ່າ</th>
+                                    <th width='10%' className="text-center sticky-col first-col-end">ການຕັ້ງຄ່າ</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -350,7 +349,6 @@ export default function DebtOac() {
                                                     <td>{item.type_buyer_name}</td>
                                                     <td>{item.type_in_name}</td>
                                                     <td>{item.options_name}</td>
-                                                    <td>{item.customer_name}</td>
                                                     <td className='text-end'>{numeral(item.initial_fee).format('0,00.00')} {item.genus}</td>
                                                     <td className='text-center'>{item.precent_incom}%</td>
                                                     <td className='text-end'>{numeral(item.pre_tax_profit).format('0,00.00')} {item.genus}</td>
@@ -368,7 +366,7 @@ export default function DebtOac() {
                                             ))}
                                             {Object.keys(sumData).map((currency, key) => (
                                         <tr key={key}>
-                                            <td colSpan={12} className='text-end'>ລວມຍອດຮັບທັງໝົດ ({currency})</td>
+                                            <td colSpan={11} className='text-end'>ລວມຍອດຮັບທັງໝົດ ({currency})</td>
                                             <td className='text-end'>{formatNumber(sumData[currency].initial_fee)}</td>
                                             <td></td>
                                             <td className='text-end'>{formatNumber(sumData[currency].pre_tax_profit)}</td>

@@ -53,7 +53,7 @@ const GetReportAgent = ({ itemData }) => {
           <td className='fs-28px ' width={'60%'}><u>COMMISSION PAYMENT</u></td>
         </tr>
         <tr>
-          <td className='fs-18px w-100' ><span className='ms-5'> AGENT CODE: {agentData.idcrad_code}</span></td>
+          <td className='fs-18px w-100' ><span className=' '> AGENT CODE: {agentData.idcrad_code}</span></td>
         </tr>
         <tr>
           <td className='fs-18px w-100 '><span className='ms-5'>AGENT NAME: {agentData.agent_name}</span></td>

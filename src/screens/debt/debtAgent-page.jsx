@@ -399,7 +399,7 @@ export default function DebtAgent() {
                                     <td>ເລກທີສັນຍາ: <span className='fs-18px'>{debt.contract_number}</span> </td>
                                     <td rowSpan={3}>
                                         <span className='fs-16px'>ຍອດເງິນ</span>
-                                        <h3 className='text-red'>{numeral(debt.expences_pays_taxes).format('0,00.00')} ₭</h3>
+                                        <h3 className='text-red'>{numeral(debt.expences_pays_taxes).format('0,00.00')} </h3>
                                     </td>
                                 </tr>
                                 <tr>

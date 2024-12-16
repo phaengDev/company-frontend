@@ -17,6 +17,7 @@ export default function HomePageAgent() {
     companyId: companyId
   };
 
+
   const [balance, setBalance] = useState({
     insuranc_included: 0,
     incom_finally: 0,
@@ -131,12 +132,11 @@ export default function HomePageAgent() {
     }
   };
 
-
-
   useEffect(() => {
     fetchDataMonth();
     fetchData();
   }, [companyId,user_type]);
+
   return (
     <div id="content" class="app-content">
       <div class="row">
@@ -144,7 +144,7 @@ export default function HomePageAgent() {
           <div class="widget widget-stats  bg-blue border-4 border-top border-red rounded-4">
             <div class="stats-icon text-white"><img src="./assets/img/icon/insurannce-All.png" width={'100%'} alt="" /></div>
             <div class="stats-info">
-              <h4 className='fs-16px'>ຈຳນວນສັນຍາປະກັນໄພທັງໝົດ  </h4>
+              <h4 className='fs-16px'>ຈຳນວນສັນຍາປະກັນໄພທັງໝົດ</h4>
               <p>{isLoading === true ? (<Loader size="md" content="ກຳລັງໂຫລດ..." />) : (balance.qtyAll + ' (ສັນຍາ)')}</p>
 
             </div>
@@ -169,7 +169,6 @@ export default function HomePageAgent() {
             </div>
           </div>
         </div>
-
       </div>
 
       <div className="row">
