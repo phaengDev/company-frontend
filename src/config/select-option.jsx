@@ -152,6 +152,25 @@ export function useType() {
 }
 
 
+export function useTypeincar() {
+  const [itemType, setItemType] = useState([]);
+  useEffect(() => {
+    const showType = async () => {
+      try {
+        const response = await fetch(api + 'type-ins/s/'+2);
+        const jsonData = await response.json();
+        setItemType(jsonData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    showType();
+  }, []);
+  const data = itemType.map(item => ({ label: item.type_in_name, value: item.type_insid }));
+  return data;
+}
+
+
 export function useTypeCust(id) {
   const [itemType, setItemType] = useState([]);
   useEffect(() => {

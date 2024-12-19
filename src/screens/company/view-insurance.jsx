@@ -28,16 +28,16 @@ function ViewInsurance({ open, handleClose, data }) {
     }
   };
 
-  const downloadFilePay = async (fileUrl,constact) => {
+  const downloadFilePay = async (fileUrl, constact) => {
     try {
       const response = await fetch(fileUrl); // Replace with your server URL
       if (!response.ok) {
-          throw new Error('File download failed');
+        throw new Error('File download failed');
       }
       const blob = await response.blob();
       const url = window.URL.createObjectURL(new Blob([blob]));
       const fileExtension = fileUrl.split('.').pop(); // Get the extension from the URL
-      const fileName = `${constact}.${fileExtension}`; 
+      const fileName = `${constact}.${fileExtension}`;
 
       const link = document.createElement('a');
       link.href = url;
@@ -45,9 +45,9 @@ function ViewInsurance({ open, handleClose, data }) {
       document.body.appendChild(link);
       link.click();
       link.parentNode.removeChild(link);
-  } catch (error) {
+    } catch (error) {
       alert('ຂໍອະໄພບໍ່ມີໄຟລ໌ໃນໂຟນເດີ ກະລຸນາອັບເດດໄຟລ໌ເຂົ້າໃໝ່!', error);
-  }
+    }
   }
 
   useEffect(() => {
@@ -114,6 +114,12 @@ function ViewInsurance({ open, handleClose, data }) {
                 <>
                   <tr class="section">
                     <th colspan="4" className='fs-17px'>2. ຂໍ້ມູນລົດ</th>
+                  </tr>
+                  <tr>
+                    <th>ປະເພດລົດ: </th>
+                    <td>{item.typecar_name}</td>
+                    <th>ຍີ່ຫໍ້ລົດ:</th>
+                    <td>{item.brands_name}  / ( {item.version_name}  )</td>
                   </tr>
                   <tr>
                     <th>ທະບຽນລົດ:</th>
@@ -186,28 +192,28 @@ function ViewInsurance({ open, handleClose, data }) {
                 <th>ສະຖານະບໍລິສັດ:</th>
                 <td>{item.status_company === 1 ? 'ຄ້າງຮັບ (' + item.day_company + ' )' : 'ຮັບແລ້ວ'}</td>
                 <th className='text-end'>ວັນທີ:</th>
-                <td>{moment(item.company_date).format('DD/MM/YYYY')} 
-                {item.file_comits &&(
-                                item.file_comits
-                                    .filter(pay => pay.status_doc === 1)
-                                    .map((pay, key) => (
-                                        <span className='float-end text-red' onClick={() => downloadFilePay(`${url}docPay/${pay.docom_file},${item.contract_number}`)} role='button'><i class="fa-solid fa-cloud-arrow-down text-red fs-4" /></span>
-                                   ) ))}
+                <td>{moment(item.company_date).format('DD/MM/YYYY')}
+                  {item.file_comits && (
+                    item.file_comits
+                      .filter(pay => pay.status_doc === 1)
+                      .map((pay, key) => (
+                        <span className='float-end text-red' onClick={() => downloadFilePay(`${url}docPay/${pay.docom_file},${item.contract_number}`)} role='button'><i class="fa-solid fa-cloud-arrow-down text-red fs-4" /></span>
+                      )))}
                 </td>
               </tr>
               <tr>
                 <th>ສະຖານະຈ່າຍຄ່າຄອມ:</th>
                 <td>{item.status_oac === 1 ? 'ຄ້າງຈ່າຍຄ່າຄອມ (' + item.day_oac + ' )' : 'ຈ່າຍແລ້ວ'}</td>
                 <th className='text-end'>ວັນທີ:</th>
-                <td>{moment(item.oac_date).format('DD/MM/YYYY')} 
-                {
+                <td>{moment(item.oac_date).format('DD/MM/YYYY')}
+                  {
                     item.file_comits && (
-                        item.file_comits.filter(pay => pay.status_doc === 3)
-                       .map((pay, key) => (
-                      <span className='float-end text-red' onClick={() => downloadFilePay(`${url}docPay/${pay.docom_file},${item.contract_number}`)} role='button'><i class="fa-solid fa-cloud-arrow-down text-red fs-4" /></span>
-                   ))
+                      item.file_comits.filter(pay => pay.status_doc === 3)
+                        .map((pay, key) => (
+                          <span className='float-end text-red' onClick={() => downloadFilePay(`${url}docPay/${pay.docom_file},${item.contract_number}`)} role='button'><i class="fa-solid fa-cloud-arrow-down text-red fs-4" /></span>
+                        ))
                     )
-                }
+                  }
                 </td>
               </tr>
 

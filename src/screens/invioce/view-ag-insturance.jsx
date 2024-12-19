@@ -120,6 +120,12 @@ const age = calculateAge(item.agent_dob);
                                 <th colspan="4" className='fs-17px'>2. ຂໍ້ມູນລົດ</th>
                             </tr>
                             <tr>
+                                <th>ປະເພດລົດ: </th>
+                                <td>{item.typecar_name}</td>
+                                <th>ຍີ່ຫໍ້ລົດ:</th>
+                                <td>{item.brands_name}  / ( {item.version_name}  )</td>
+                            </tr>
+                            <tr>
                                 <th>ທະບຽນລົດ:</th>
                                 <td colspan="3">{item.car_registration}</td>
                             </tr>
