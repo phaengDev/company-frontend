@@ -5,6 +5,10 @@ import axios from 'axios';
 import { Config } from '../../config/connenct';
 import Alert from '../../utils/config';
 import { useNavigate } from 'react-router-dom';
+import PagePreviousIcon from '@rsuite/icons/PagePrevious';
+import PageTopIcon from '@rsuite/icons/PageTop';
+import ArrowRightLineIcon from '@rsuite/icons/ArrowRightLine';
+import PageEndIcon from '@rsuite/icons/PageEnd';
 export default function CommissionPay() {
     const api = Config.urlApi;
     const [open, setOpen] = React.useState(false);
@@ -163,62 +167,71 @@ export default function CommissionPay() {
 
 
     // =================== custom pages============
-    const [currentPage, setcurrentPage] = useState(1);
-    const [itemsPerPage, setitemsPerPage] = useState(100);
-    const handleShowLimit = (value) => {
-        setitemsPerPage(value);
-    };
-    const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(5);
-    const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
-    const handlePageClick = (event) => {
-        setcurrentPage(Number(event.target.id));
-        setI(indexOfLastItem + 1)
-    };
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(100); // Number of items per page
+    const [maxPageNumberLimit, setMaxPageNumberLimit] = useState(5);
+    const [minPageNumberLimit, setMinPageNumberLimit] = useState(0);
+    
     const pages = [];
     for (let i = 1; i <= Math.ceil(itemCommis.length / itemsPerPage); i++) {
         pages.push(i);
     }
+
+
     const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = itemCommis.slice(indexOfFirstItem, indexOfLastItem);
-
-    const [i, setI] = useState(1);
-    const qtyItem = itemCommis.length;
-    const renderPageNumbers = pages.map((number) => {
-        if (number > minPageNumberLimit && number <= maxPageNumberLimit) {
-            return (
-                <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
-                    <button role="button" id={number} onClick={handlePageClick} className="page-link border-blue">
-                        {number}
-                    </button>
-                </li>
-            );
-        } else {
-            return (
-                <li key={number} className="page-item active" >
-                    <button role="button" className="page-link border-blue">1</button>
-                </li>
-            )
-        }
-    });
-
-    const handleNextbtn = () => {
-        setcurrentPage(currentPage + 1);
+const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+const currentItems = itemCommis.slice(indexOfFirstItem, indexOfLastItem);
+const handleNextbtn = () => {
+    if (currentPage < pages.length) {
+        setCurrentPage(currentPage + 1);
         if (currentPage + 1 > maxPageNumberLimit) {
-            setmaxPageNumberLimit(maxPageNumberLimit + 5);
-            setminPageNumberLimit(minPageNumberLimit + 5);
+            setMaxPageNumberLimit(maxPageNumberLimit + 5);
+            setMinPageNumberLimit(minPageNumberLimit + 5);
         }
-    };
+    }
+};
 
-    const handlePrevbtn = () => {
-        setcurrentPage(currentPage - 1);
-        setI(indexOfLastItem - 1)
-
+const handlePrevbtn = () => {
+    if (currentPage > 1) {
+        setCurrentPage(currentPage - 1);
         if ((currentPage - 1) % 5 === 0) {
-            setmaxPageNumberLimit(maxPageNumberLimit - 5);
-            setminPageNumberLimit(minPageNumberLimit - 5);
+            setMaxPageNumberLimit(maxPageNumberLimit - 5);
+            setMinPageNumberLimit(minPageNumberLimit - 5);
         }
-    };
+    }
+};
+
+const handlePageClick = (page) => {
+    setCurrentPage(page);
+};
+const renderPageNumbers = pages.map((number) => {
+    if (number < maxPageNumberLimit + 1 && number > minPageNumberLimit) {
+        return (
+            <li
+                key={number}
+                className={`page-item ${currentPage === number ? 'active' : ''}`}
+            >
+                <span role="button" className="page-link" onClick={() => handlePageClick(number)}>
+                    {number}
+                </span>
+            </li>
+        );
+    } else {
+        return null;
+    }
+});
+const handleGoToFirstPage = () => {
+    setCurrentPage(1);
+    setMaxPageNumberLimit(5);
+    setMinPageNumberLimit(0);
+};
+
+const handleGoToLastPage = () => {
+    setCurrentPage(pages.length);
+    setMaxPageNumberLimit(Math.floor((pages.length - 1) / 5) * 5 + 5);
+    setMinPageNumberLimit(Math.floor((pages.length - 1) / 5) * 5);
+};
+
 
     const showNotification=(icon,MessageName)=>{
         toaster.push(
@@ -320,7 +333,7 @@ export default function CommissionPay() {
                             )}
                     </tbody>
                 </table>
-                <div class="d-md-flex align-items-center">
+                {/* <div class="d-md-flex align-items-center">
                     <div class="me-md-auto text-md-left text-center mb-2 mb-md-0">
                         ສະແດງ 1 ຫາ {itemsPerPage} ຂອງ {qtyItem} ລາຍການ
                     </div>
@@ -335,7 +348,64 @@ export default function CommissionPay() {
                         ) : ''}
                         <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage === pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}>ໜ້າຕໍ່ໄປ</span></li>
                     </ul>
-                </div>
+                </div> */}
+
+
+<div className="d-md-flex align-items-center">
+    <div className="me-md-auto text-md-left text-center mb-2 mb-md-0">
+        ສະແດງ {indexOfFirstItem + 1} ຫາ {Math.min(indexOfLastItem, itemCommis.length)} ຂອງ {itemCommis.length} ລາຍການ
+    </div>
+    <ul className="pagination mb-0 ms-auto justify-content-center">
+    <li className="page-item">
+            <span
+                role="button"
+                onClick={handleGoToFirstPage}
+                className={`page-link ${currentPage === 1 ? 'disabled' : 'border-blue'}`}
+            >
+                <PageTopIcon/>
+            </span>
+        </li>
+        <li className="page-item">
+            <span
+                role="button"
+                onClick={handlePrevbtn}
+                className={`page-link ${currentPage === pages[0] ? 'disabled' : 'border-blue'}`}
+            >
+                <PagePreviousIcon/>
+            </span>
+        </li>
+        {minPageNumberLimit >= 1 && (
+            <li className="page-item">
+                <span role="button" className="page-link disabled">...</span>
+            </li>
+        )}
+        {renderPageNumbers}
+        {pages.length > maxPageNumberLimit && (
+            <li className="page-item">
+                <span role="button" className="page-link disabled">...</span>
+            </li>
+        )}
+        <li className="page-item">
+            <span
+                role="button"
+                onClick={handleNextbtn}
+                className={`page-link ${currentPage === pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}
+            >
+                <ArrowRightLineIcon/>
+            </span>
+        </li>
+        <li className="page-item">
+            <span
+                role="button"
+                onClick={handleGoToLastPage}
+                className={`page-link ${currentPage === pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}
+            >
+                <PageEndIcon/>
+            </span>
+        </li>
+    </ul>
+</div>
+
             </div>
         </div>
     </div>

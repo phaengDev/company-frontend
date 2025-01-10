@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Config } from "./connenct";
+import axios from "axios";
 const api = Config.urlApi;
 
 export function useStatus() {
@@ -326,6 +327,37 @@ export function useCurrency() {
   const data = itemCurrency.map(item => ({ label: item.currency_name + '/' + item.genus, value: item.currency_id }));
   return data;
 }
+
+
+export function usePercentCommition(comId,agentId,typeId) {
+  // alert(comId)
+  const values = {
+    companyId: comId,
+    agentId: agentId,
+    typeinsId: typeId
+  };
+  const [percent, setPercent] = useState({
+    percentGet: 0,
+    percentPay: 0
+  });
+  useEffect(() => {
+    const showPercent = async () => {
+      try {
+        const response = await axios.post(api + 'comisget/single/',values);
+        const jsonData = await response.data;
+        setPercent({
+          percentGet: jsonData.percentGet,
+          percentPay: jsonData.percentPay
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    showPercent();
+  }, [comId,agentId,typeId]);
+  return percent;
+}
+
 
 
 

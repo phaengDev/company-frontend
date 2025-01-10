@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { SelectPicker, Input,InputNumber, InputGroup, DatePicker, InputPicker, Button, Loader } from 'rsuite'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Config } from '../../config/connenct';
-import { useAgent, useCompany, useType, useCurrency } from '../../config/select-option';
+import { useAgent, useCompany, useType, useCurrency,usePercentCommition } from '../../config/select-option';
 import axios from 'axios';
 import numeral from 'numeral';
 import Alert from '../../utils/config';
@@ -16,10 +16,29 @@ export default function EditRetrun() {
   const searchParams = new URLSearchParams(location.search);
   const retrunId = atob(searchParams.get('id'));
 
+
+const [values, setValues] = useState({
+    company: '',
+    agent: '',
+    type: '',
+  });
+
+const percent = usePercentCommition(values.company,values.agent,values.type);
+
+useEffect(() => {
+  setInputs({
+    ...inputs, percent_oac: percent.percentGet,
+    percent_agent: percent.percentPay
+  });
+}, [percent]);
+
   const [itemOption, setItemOption] = useState([]);
   const handleOption = async (name, value) => {
     setInputs({
       ...inputs, [name]: value
+    });
+    setValues({
+      ...values, type: value
     })
     try {
       const response = await fetch(api + `options/t/${value}`);
@@ -37,7 +56,10 @@ export default function EditRetrun() {
     setLoading(true);
     setInputs({
       ...inputs, [name]: value
-    })
+    });
+    setValues({
+      ...values, company: value
+    });
     try {
       const response = await fetch(api + `custom/cm/${value}`);
       const jsonData = await response.json();
@@ -78,6 +100,12 @@ export default function EditRetrun() {
         remark_text: data.remark_text,
         file_doc:'',
       });
+
+      setValues({
+        company: data.company_id_fk,
+        agent: data.agent_id_fk,
+        type: data.insurance_type_fk
+      })
       // handelCompany('',data.company_id_fk)
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -90,7 +118,12 @@ export default function EditRetrun() {
   const handelChange = (name, value) => {
     setInputs({
       ...inputs, [name]: value
-    })
+    });
+    if (name === 'agent_id_fk') {
+      setValues({
+        ...values, agent: value
+      })
+    }
   }
   const [isLoading, setIsLoading] = useState(false);
   const handleSubmit = (e) => {
@@ -132,9 +165,10 @@ export default function EditRetrun() {
   function toThousands(value) {
     return value ? `${value}`.replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,') : value;
   }
+  // alert(percent.percentPay)
   useEffect(() => {
     showDataRetrun();
-  }, [])
+  }, []);
   return (
     <>
       <div id="content" className="app-content">

@@ -225,7 +225,7 @@ export default function ComissionSale() {
                 <li class="breadcrumb-item"><a href="javascript:;">ໜ້າຫຼັກ</a></li>
                 <li class="breadcrumb-item active">ຄ່າຄອມມິດຊັນ</li>
             </ol>
-            <h1 class="page-header">ຕັ້ງຄ່າ ຄ່າຄອມມິດຊັນຂາຍປະກັນໄພ </h1>
+            <h1 class="page-header">ຕັ້ງຄ່າ ຄ່າຄອມມິດຊັນຂາຍປະກັນໄພ</h1>
             <div class="row">
                 <div class="col-xl-4 col-md-6">
                     <div class="widget widget-stats bg-blue border-4 border-top border-red rounded-4">

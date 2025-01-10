@@ -128,7 +128,7 @@ useEffect(()=>{
                     </tr>
                     <tr>
                         <th>ສະຖານະຮັບຄອມຄືນ:</th>
-                        <td>{item.status_oac === 1 ? 'ຄ້າງຈ່າຍຕົວແທນ (' + item.day_oac + ' )' : 'ຈ່າຍແລ້ວ'}</td>
+                        <td>{item.status_oac === 1 ? 'ຄ້າງຮັບຄອມຄືນ (' + item.day_oac + ' )' : 'ຈ່າຍແລ້ວ'}</td>
                         <th className='text-end'>ວັນທີຈ່າຍ:</th>
                         <td>{moment(item.oac_date).format('DD/MM/YYYY')}
                             {/* {

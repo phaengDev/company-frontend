@@ -9,6 +9,8 @@ import { ViewInsturanceAg } from "../screens/invioce/view-ag-insturance";
 import { ViewInsturanceBy } from "../screens/invioce/view-buy-insturance";
 import { Notific } from "../utils/Notific";
 import numeral from "numeral";
+import { IconButton,Tooltip, Whisper,} from 'rsuite';
+import CopyIcon from '@rsuite/icons/Copy';
 import moment from "moment";
 export default function Header() {
   const api = Config.urlApi;
@@ -110,6 +112,19 @@ export default function Header() {
     })
   }, [user_type,companyId])
 
+  const [copied, setCopied] = useState('ສຳເນົາ');
+  const handleCopy = (contractNumber) => {
+    navigator.clipboard.writeText(contractNumber)
+      .then(() => {
+        setCopied('ສຳເນົາສຳເລັດ');
+        setTimeout(() => setCopied('ສຳເນົາ'), 2000); // Reset to default after 2 seconds
+      })
+      .catch((err) => {
+        setCopied('ບໍ່ສາມາດສຳເນົາໄດ້');
+        setTimeout(() => setCopied('ສຳເນົາ'), 2000); // Reset to default after 2 seconds
+        console.error('Copy failed:', err);
+      });
+  };
   return (
     <div id="header" className="app-header">
       <div className="navbar-header">
@@ -165,7 +180,13 @@ export default function Header() {
                     <i class="fa-regular fa-address-card text-blue media-object-icon"></i>
                   </div>
                   <div class="media-body">
-                    <h6 class="media-heading">{val.contract_number}</h6>
+                    <h6 class="media-heading"> {val.contract_number} 
+                      <span className="float-end">
+                    <Whisper placement="top" controlId="control-id-hover" trigger="hover" speaker={<Tooltip>{copied} </Tooltip>}>
+                     <IconButton size="xs" onClick={() => handleCopy(val.contract_number)} icon={<CopyIcon />} appearance="subtle" /> 
+                      </Whisper>
+                     </span>
+                     </h6>
                     <p>{val.customer_name}, || {val.registra_tel}</p>
                     <div class="text-muted fs-10px">{val.day_contract} ວັນ</div>
                   </div>
@@ -196,7 +217,13 @@ export default function Header() {
                     <i class="fa-regular fa-address-card text-blue media-object-icon"></i>
                   </div>
                   <div class="media-body">
-                    <h6 class="media-heading">{val.contract_number}</h6>
+                    <h6 class="media-heading">{val.contract_number} 
+                    <span className="float-end">
+                    <Whisper placement="top" controlId="control-id-hover" trigger="hover" speaker={<Tooltip>{copied} </Tooltip>}>
+                     <IconButton size="xs" onClick={() => handleCopy(val.contract_number)} icon={<CopyIcon />} appearance="subtle" /> 
+                      </Whisper>
+                     </span>
+                    </h6>
                     <p>{val.customer_name}, || {val.registra_tel}</p>
                   </div>
                 </div>

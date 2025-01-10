@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState ,useEffect} from 'react'
 import { SelectPicker, Input,InputNumber, InputGroup, DatePicker, InputPicker, Button, Loader } from 'rsuite'
 import { Link} from 'react-router-dom';
 import { Config } from '../../config/connenct';
-import { useAgent, useCompany, useType, useCurrency } from '../../config/select-option';
+import { useAgent, useCompany, useType, useCurrency,usePercentCommition } from '../../config/select-option';
 import axios from 'axios';
 import numeral from 'numeral';
 import Alert from '../../utils/config';
+import { use } from 'react';
+import { set } from 'lodash';
 export default function RetrunInsurance() {
   const api = Config.urlApi;
   const itemAg = useAgent();
@@ -13,11 +15,21 @@ export default function RetrunInsurance() {
   const itemType = useType();
   const itemCry = useCurrency();
   // const location = useLocation();
+  const [values, setValues] = useState({
+    company: '',
+    agent: '',
+    type: '',
+  });
+
+const percent = usePercentCommition(values.company,values.agent,values.type);
 
   const [itemOption, setItemOption] = useState([]);
   const handleOption = async (name, value) => {
     setInputs({
       ...inputs, [name]: value
+    });
+    setValues({
+      ...values, type: value
     })
     try {
       const response = await fetch(api + `options/t/${value}`);
@@ -35,7 +47,10 @@ export default function RetrunInsurance() {
     setLoading(true);
     setInputs({
       ...inputs, [name]: value
-    })
+    });
+    setValues({
+      ...values, company: value
+    });
     try {
       const response = await fetch(api + `custom/cm/${value}`);
       const jsonData = await response.json();
@@ -48,7 +63,6 @@ export default function RetrunInsurance() {
   }
 
   const dataBuy = itemBuy.map(item => ({ label: item.customer_name, value: item.custom_uuid }));
-
   const [inputs, setInputs] = useState({
     insurance_retrunId: '',
     company_id_fk: null,
@@ -73,7 +87,12 @@ export default function RetrunInsurance() {
   const handelChange = (name, value) => {
     setInputs({
       ...inputs, [name]: value
-    })
+    });
+    if (name === 'agent_id_fk') {
+      setValues({
+        ...values, agent: value
+      })
+    }
   }
   const [isLoading, setIsLoading] = useState(false);
   const handleSubmit = (e) => {
@@ -137,6 +156,14 @@ export default function RetrunInsurance() {
       reader.readAsText(file);
     }
   };
+
+
+  useEffect(() => {
+    setInputs({
+      ...inputs, percent_oac: percent.percentGet,
+      percent_agent: percent.percentPay
+    })
+  }, [percent]);
 
   return (
     <>
@@ -208,7 +235,7 @@ export default function RetrunInsurance() {
                     </select>
                     </div>
                   <div className="col-sm-6">
-                  <label htmlFor="" className='form-label'>ເປິເຊັນຈ່າຍ {inputs.percent_oac}%</label>
+                  <label htmlFor="" className='form-label'>ເປິເຊັນຈ່າຍ {inputs.percent_oac}% </label>
                   <Input type='number' value={inputs.percent_oac} onChange={(e)=>handelChange('percent_oac',e)} />
                   </div>
                   </div>
