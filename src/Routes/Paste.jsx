@@ -67,6 +67,8 @@ import ReportRefundCompany from '../screens/refund/Report-refund-all-cn';
 import ReportRefundArrearsCm from '../screens/refund/Report-refund-customer';
 import ReportRefundAgent from '../screens/refund/Report-refund-oac';
 import ReportInsuranceCar from '../screens/cars/report-insurance-car';
+import DocumentRefund from '../screens/refund/Document-Refund';
+
 import { Routes, Route, Navigate } from 'react-router-dom';
 export default function AppContent() {
   return (
@@ -136,6 +138,7 @@ export default function AppContent() {
             <Route path='/refund-cm' element={<ReportRefundArrearsCm />} />
             <Route path='/refund-agent' element={<ReportRefundAgent />} />
           <Route path='/caritem' element={<ReportInsuranceCar />} />
+          <Route path='/doct-refund' element={<DocumentRefund />} />
             
         </Routes>
   )

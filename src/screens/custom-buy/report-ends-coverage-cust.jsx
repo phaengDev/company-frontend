@@ -284,6 +284,7 @@ export default function ReportEndsCoverageCust() {
                               </div>
                             </>
                           )}</td>
+                          <td></td>
                       </tr>
                     ))}
                   </>

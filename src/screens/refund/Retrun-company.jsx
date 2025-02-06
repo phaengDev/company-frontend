@@ -47,7 +47,6 @@ export default function RetrunCompany() {
       console.log(response.data);
       setItemData(response.data);
       setDataFilter(response.data);
-      console.log(response.data)
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -191,11 +190,11 @@ export default function RetrunCompany() {
         <div className="row mb-3">
           <div className="col-sm-4 col-md-2 col-6">
             <label htmlFor="" className='form-label'>ວັນທີ</label>
-            <DatePicker oneTap defaultValue={data.start_date} onChange={(e) => handleChange('start_date', e)} format="dd/MM/yyyy" placeholder='ວັນທີ' block />
+            <DatePicker oneTap value={data.start_date} onChange={(e) => handleChange('start_date', e)} format="dd/MM/yyyy" placeholder='ວັນທີ' block />
           </div>
           <div className="col-sm-4 col-md-2  col-6">
             <label htmlFor="" className='form-label'>ຫາວັນທີ</label>
-            <DatePicker oneTap defaultValue={data.end_date} onChange={(e) => handleChange('end_date', e)} format="dd/MM/yyyy" placeholder='ຫາວັນທີ' block />
+            <DatePicker oneTap value={data.end_date} onChange={(e) => handleChange('end_date', e)} format="dd/MM/yyyy" placeholder='ຫາວັນທີ' block />
           </div>
           <div className="col-sm-4 col-md-2">
             <label htmlFor="" className='form-label'>ບໍລິສັດປະກັນໄພ</label>
@@ -211,7 +210,7 @@ export default function RetrunCompany() {
           </div>
           <div className="col-sm-4 col-md-2  col-6">
             <label htmlFor="" className='form-label'>ສະຖານະ</label>
-            <SelectPicker block data={status} defaultValue={1} onChange={(e) => handleChange('statusRetrun', e)} />
+            <SelectPicker block data={status} value={data.statusRetrun} onChange={(e) => handleChange('statusRetrun', e)} />
           </div>
         </div>
 
@@ -281,7 +280,16 @@ export default function RetrunCompany() {
                         <td className='text-end'>{numeral(item.retrun_balance).format('0,00.00')} {item.genus}</td>
                         <td className="text-center">{item.status_company === 1 ? 'ຄ້າງຄືນ' : 'ຄືນແລ້ວ'}</td>
                         <td className="text-center">{moment(item.company_date).format('DD/MM/YYYY')}</td>
-                        <td className="">{item.remark_text}</td>
+                        <td className="">
+                        {item.doc_pays ?(
+                                item.doc_pays
+                                    .filter(pay => pay.status_pay === 1)
+                                    .map((pay, key) => (
+                                  pay.desciption
+                                ))):(
+                                  item.remark_text
+                                )
+                              }</td>
                         <td className="text-center">
                           {item.status_company === 1 ? (
                             <button onClick={() => handleRetrun(item)} className='btn btn-xs btn-blue ms-2'> <i class="fa-solid fa-pen-to-square"></i> ຢືນຢັນ</button>

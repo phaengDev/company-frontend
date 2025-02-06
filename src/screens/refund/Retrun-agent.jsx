@@ -290,7 +290,15 @@ export default function RetrunAgent() {
                         <td className='text-end'>{numeral(item.balance_agent).format('0,00.00')} {item.genus}</td>
                         <td className="text-center">{item.status_agent === 1 ? 'ຄ້າງຄືນ' : 'ຄືນແລ້ວ'}</td>
                         <td className="text-center">{moment(item.agent_date).format('DD/MM/YYYY')}</td>
-                        <td className="">{item.remark_text}</td>
+                        <td className="">  {item.doc_pays ?(
+                                item.doc_pays
+                                    .filter(pay => pay.status_pay === 1)
+                                    .map((pay, key) => (
+                                  pay.desciption
+                                ))):(
+                                  item.remark_text
+                                )
+                              }</td>
                         <td className="text-center">
                           {item.status_agent === 1 ? (
                             <button onClick={() => handleRetrun(item)} className='btn btn-xs btn-blue ms-2'> <i class="fa-solid fa-pen-to-square"></i> ຢືນຢັນ</button>

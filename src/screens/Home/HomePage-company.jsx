@@ -36,7 +36,6 @@ function HomePageCompany() {
       try {
           const res = await axios.post(api + 'home/balanch', datack);
           const resData = res.data;
-          console.log(datack);
           setBalance({
               insuranc_included: resData.data1.insuranc_included,
               incom_finally: resData.data1.incom_finally,

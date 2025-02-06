@@ -217,7 +217,7 @@ setData({
                       <td className='text-center'>{item.percent_oac} %</td>
                       <td className='text-end'>{numeral(item.balance_oac).format('0,00.00')} {item.genus}</td>
                       <td className="text-center">{moment(item.company_date).format('DD/MM/YYYY')}</td>
-                      <td className="">{item.remark_text}</td>
+                      <td className="">{item.desciption ? item.desciption : item.remark_text}</td>
                      <td className='text-center bg-white sticky-col first-col-end'>
                       {item.file_pay ?(
                       <button type='button' onClick={() => handleDownload(`${url}docPay/${item.file_pay}`,item.contract_number)} className='btn btn-green btn-xs'><i class="fa-solid fa-cloud-arrow-down"/></button>

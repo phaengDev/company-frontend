@@ -192,7 +192,7 @@ export default function ReportPayDebtoac() {
                                                 <td className='text-end'>{numeral(item.incom_money).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-end'>{numeral(item.incom_finally).format('0,00.00')} {item.genus}</td>
                                                 <td>{item.debt_remark}</td>
-                                                <td>{item.docom_file && (<span role='button' className='text-danger fs-16px'><i class="fa-solid fa-download"></i></span>)}</td>
+                                                <td className='text-center'>{item.docom_file && (<span role='button' className='text-danger fs-16px'><i class="fa-solid fa-download"></i></span>)}</td>
                                             </tr>
                                         ))}
 
