@@ -5,6 +5,7 @@ import moment from 'moment';
 import numeral from 'numeral';
 export default function ViewRefundAll({ show, handleClose, data }) {
     const url = imageUrl.url;
+const typeUser=localStorage.getItem('user_type');
 
     const [item, setItem] = useState('');
     useEffect(() => {
@@ -57,7 +58,7 @@ const downloadFilePay = async (fileName) => {
     return (
         <Modal show={show} size={'fullscreen'} onHide={handleClose}>
             <Modal.Header className='bg-red-700 text-white py-2' closeButton>
-                <Modal.Title ><span className='text-orange' onClick={handleClose} role='button'><i class="fa-solid fa-circle-arrow-left fs-3"></i></span> ລາຍລະອຽດສັນຍາປະກັນໄພ</Modal.Title>
+                <Modal.Title ><span className='text-orange' onClick={handleClose} role='button'><i class="fa-solid fa-circle-arrow-left fs-3"></i></span> ລາຍລະອຽດສັນຍາປະກັນໄພ {typeUser}</Modal.Title>
             </Modal.Header>
             <Modal.Body className='p-0'>
             <div class="container p-0">
@@ -151,7 +152,17 @@ const downloadFilePay = async (fileName) => {
                     </tr>
                     <tr>
                         <th>ສະຖານະຈ່າຍຄືນລູກຄ້າ:</th>
-                        <td>{item.status_company === 1 ? 'ຄ້າງຈ່າຍຄືນລູກຄ້າ (' + item.day_cpn + ' )' : 'ຈ່າຍຄືນແລ້ວ'}</td>
+                        <td>{item.status_company === 1 ? 'ຄ້າງຈ່າຍຄືນລູກຄ້າ (' + item.day_cpn + ' )' : 'ຈ່າຍຄືນແລ້ວ'}
+                        {
+                                item.file_pay && (
+                                    item.file_pay.filter(pay => pay.status_pay === 1)
+                                        .map((pay, key) => (
+                                            <div className='fs-11px text-blue'>{pay.desciption}</div>
+                                        ))
+                                )
+                            }
+
+                        </td>
                         <th className='text-end'>ວັນທີ:</th>
                         <td>{moment(item.company_date).format('DD/MM/YYYY')}
                             {
@@ -164,9 +175,19 @@ const downloadFilePay = async (fileName) => {
                             }
                         </td>
                     </tr>
+                    
+                       
                     <tr>
-                        <th>ສະຖານະຮັບຄອມຄືນ:</th>
-                        <td>{item.status_agent === 1 ? 'ຄ້າງຮັບຈາກຕົວແທນ (' + item.day_agent + ' )' : 'ຮັບແລ້ວ'}</td>
+                        <th>ສະຖານະຄືນຄອມມິດຊັ່ນ:</th>
+                        <td>{item.status_agent === 1 ? 'ຄ້າງຄືນຄ່າຄອມມິດຊັ່ນ (' + item.day_agent + ' )' : (<><i className="fas fa-check text-green" />  ຄືນແລ້ວ</>)} 
+                        {
+                                item.file_pay &&(
+                                item.file_pay
+                                    .filter(pay => pay.status_pay === 2)
+                                    .map((pay, key) => (
+                            <div className='fs-11px text-blue'>{pay.desciption}</div>
+                        )  ))}
+                        </td>
                         <th className='text-end'>ວັນທີ:</th>
                         <td>{moment(item.agent_date).format('DD/MM/YYYY')}
                             {
@@ -178,9 +199,17 @@ const downloadFilePay = async (fileName) => {
                                   )  ))}
                         </td>
                     </tr>
+                    {typeUser === '1' && (
                     <tr>
                         <th>ສະຖານະຈ່າຍຄືນບໍລິສັດ:</th>
-                        <td>{item.status_oac === 1 ? 'ຄ້າງຈ່າຍບໍລິສັດ (' + item.day_oac + ' )' : 'ຈ່າຍແລ້ວ'}</td>
+                        <td>{item.status_oac === 1 ? 'ຄ້າງຈ່າຍບໍລິສັດ (' + item.day_oac + ' )' : 'ຈ່າຍແລ້ວ'}
+                        {item.file_pay &&(
+                                item.file_pay
+                                    .filter(pay => pay.status_pay === 3)
+                                    .map((pay, key) => (
+                                        <div className='fs-11px text-blue'>{pay.desciption}</div>
+                                   ) ))}
+                        </td>
                         <th className='text-end'>ວັນທີ:</th>
                         <td>{moment(item.oac_date).format('DD/MM/YYYY')}
                             {item.file_pay &&(
@@ -191,6 +220,8 @@ const downloadFilePay = async (fileName) => {
                                    ) ))}
                         </td>
                     </tr>
+                  
+                     )}
                 </tbody>
             </table>
             {item.file_doc &&(

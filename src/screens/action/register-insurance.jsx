@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Input, InputNumber, SelectPicker, InputGroup, DatePicker, Button, InputPicker, DateInput } from 'rsuite';
 import { useAgent, useCompany, useType, useTypeCar, useBrandCar, useProvince, useCurrency, useStatus } from '../../config/select-option';
 import Select from 'react-select'
@@ -145,6 +145,7 @@ export default function RegisterInsurance() {
     option_id_fk: '',
     currency_id_fk: 22001,
     contract_number: '',
+    contract_number2: '',
     contract_start_date: new Date(),
     contract_end_date: new Date(),
     file_doct: '',
@@ -247,11 +248,14 @@ export default function RegisterInsurance() {
         .then(function (respones) {
           if (respones.status === 200) {
             Alert.Successreload(respones.data.message)
+          } else if(respones.status === 201){
+            Alert.infoData(respones.data.message)
           } else {
-            Alert.errorData(respones.data.error)
+            Alert.errorData(respones.data.message)
           }
         });
     } catch (error) {
+      Alert.errorData(error);
       console.error('Error inserting data:', error);
     }
   }

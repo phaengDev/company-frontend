@@ -61,6 +61,7 @@ export default function FormEditInsurance() {
         option_id_fk: data.option_id_fk,
         currency_id_fk: data.currency_id_fk,
         contract_number: data.contract_number,
+        contract_number2: data.contract_number,
         contract_start_date: new Date(data.contract_start_date),
         contract_end_date: new Date(data.contract_end_date),
         user_fname: data.user_fname,
@@ -257,11 +258,14 @@ export default function FormEditInsurance() {
         .then(function (respones) {
           if (respones.status === 200) {
             Alert.Successlocation('/report');
-          } else {
-            Alert.errorData(respones.data.error)
+          } else if(respones.status === 201){
+            Alert.infoData(respones.data.message)
+          }else {
+            Alert.errorData(respones.data.message)
           }
         });
     } catch (error) {
+      Alert.errorData(error)
       console.error('Error inserting data:', error);
     }
   }

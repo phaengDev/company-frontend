@@ -62,14 +62,14 @@ const dataOption=useOption(typeId)
     setItemData(
         filter.filter(
             n => n.contract_number.toLowerCase().includes(searchTerm) || 
-                 n.car_registration.toLowerCase().includes(searchTerm)
+                 n.car_registration.toLowerCase().includes(searchTerm) ||
+                 n.vehicle_number.toLowerCase().includes(searchTerm) ||
+                 n.tank_number.toLowerCase().includes(searchTerm)
         )
     );
 };
 
 
- 
-  const navigate = useNavigate();
 
   // =================== custom pages============
   const [currentPage, setcurrentPage] = useState(1);
@@ -273,7 +273,7 @@ const handleView = (value) => {
             ສະແດງ 1 ຫາ {itemsPerPage} ຂອງ {qtyItem} ລາຍການ
           </div>
           <ul className="pagination  mb-0 ms-auto justify-content-center">
-            <li className="page-item "><span role="button" onClick={handlePrevbtn} className={`page-link  ${currentPage == pages[0] ? 'disabled' : 'border-blue'}`} ><i class="fa-solid fa-angles-left"></i></span></li>
+            <li className="page-item "><span role="button" onClick={handlePrevbtn} className={`page-link  ${currentPage === pages[0] ? 'disabled' : 'border-blue'}`} ><i class="fa-solid fa-angles-left"></i></span></li>
             {minPageNumberLimit >= 1 ? (
               <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
             ) : ''}
@@ -281,7 +281,7 @@ const handleView = (value) => {
             {pages.length > maxPageNumberLimit ? (
               <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
             ) : ''}
-            <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage == pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}><i class="fa-solid fa-angles-right"></i></span></li>
+            <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage === pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}><i class="fa-solid fa-angles-right"></i></span></li>
           </ul>
         </div>
       </div>
