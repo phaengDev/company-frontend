@@ -1,125 +1,144 @@
-import React, { useEffect } from 'react';
-import * as XLSX from 'xlsx';
+import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import numeral from 'numeral';
 import moment from 'moment';
 
-const ExportPaydebtAgent = ({itemData}) => {
-  // Calculate sumData
-  const sumData = itemData.reduce((acc, item) => {
-    const currency = item.currency_name;
-    if (!acc[currency]) {
-      acc[currency] = {
-        initial_fee: 0,
-        money_taxes: 0,
-        registration_fee: 0,
-        insuranc_included: 0,
-        pays_advance_fee: 0,
-        money_percent_fee: 0,
-        expences_pays_taxes: 0,
-        Total_Premium: 0
-      };
-    }
+// Example base64 logo string (replace this with your own base64 string)
+const logoBase64 = 'data:image/png;base64,iVBORw...'; // Your base64 string here
 
-    acc[currency].initial_fee += parseFloat(item.initial_fee);
-    acc[currency].registration_fee += parseFloat(item.registration_fee);
-    acc[currency].money_taxes += parseFloat(item.money_taxes);
-    acc[currency].insuranc_included += parseFloat(item.insuranc_included);
-    acc[currency].pays_advance_fee += parseFloat(item.pays_advance_fee);
-    acc[currency].money_percent_fee += parseFloat(item.money_percent_fee);
-    acc[currency].expences_pays_taxes += parseFloat(item.expences_pays_taxes);
-    acc[currency].Total_Premium += parseFloat(item.insuranc_included - item.expences_pays_taxes);
-    return acc;
-  }, {});
+const ExportPaydebtAgent = (itemData, agentData) => {
+  const wb = new ExcelJS.Workbook();
+  const ws = wb.addWorksheet('Sheet1');
 
-  const formatNumber = (num) => numeral(num).format('0,00.00');
+  // Add logo to the sheet using base64 image
+  ws.addImage({
+    base64: logoBase64, // Base64 image string
+    extension: 'png',
+    tl: { col: 0, row: 0 }, // Position of the image in the sheet
+    ext: { width: 100, height: 50 } // Set image dimensions
+  });
 
-  useEffect(() => {
-    const exportToExcel = () => {
-        const wb = XLSX.utils.book_new();
-        const ws = XLSX.utils.table_to_sheet(document.getElementById('exportData'));
-        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-        const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
-        const s2ab = (s) => {
-          const buf = new ArrayBuffer(s.length);
-          const view = new Uint8Array(buf);
-          for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xff;
-          return buf;
-        };
-        const blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' });
-        saveAs(blob, 'file2.xlsx');
+  // Set up the title and agent information in the Excel sheet
+  const titleRow = ws.addRow([{ text: 'COMMISSION PAYMENT', style: { font: { bold: true, size: 18 } } }]);
+  titleRow.eachCell((cell) => {
+    cell.alignment = { horizontal: 'center', vertical: 'middle' }; // Center alignment for the title
+  });
+
+  const agentInfoRows = [
+    `Agent Code: 2424324`,
+    `Agent Name: 2424242`,
+    `NO: OAC /${moment(new Date()).format('DD - MM')} - _ _ _`
+  ];
+
+  // Add agent info rows and align them to the right
+  agentInfoRows.forEach((info) => {
+    const row = ws.addRow([info]);
+    row.eachCell((cell) => {
+      cell.alignment = { horizontal: 'right', vertical: 'middle' }; // Right alignment for agent info
+    });
+  });
+
+  // Add a header row for the table
+  const headerRow = ws.addRow([
+    "NO.", "Agent", "Name and Surname", "Policy Number", "MFG", "EXP", "Plat / Type",
+    "Option", "Option", "Net Premium", "Register Fee", "Vat 10%", "Total Premium",
+    "Rate", "Total Commission", "Vat 5%", "Net Commission", "Total Premium After Commission"
+  ]);
+
+  // Apply a style for the header row (bold, centered)
+  headerRow.eachCell((cell, colNumber) => {
+    cell.font = { bold: true };
+    cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    // Apply borders to the header cells
+    cell.border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' }
     };
+  });
 
-    exportToExcel();
-  }, [itemData]); // Include 'data' in the dependency array if 'data' changes and you want to re-export
+  // Initialize totals
+  let totalNetPremium = 0;
+  let totalRegisterFee = 0;
+  let totalTotalPremium = 0;
+  let totalCommission = 0;
+  let totalNetCommission = 0;
+  let totalPremiumAfterCommission = 0;
 
-  return (
-    <div id="exportData">
-      <table style={{ borderCollapse: 'collapse', width: '100%', border: '1px solid black' }}>
-        <thead>
-          <tr>
-            <th>NO.</th>
-            <th>Agent</th>
-            <th>Name and Surname</th>
-            <th>Policy Number</th>
-            <th>MFG</th>
-            <th>EXP</th>
-            <th>Plat / Type</th>
-            <th>Option</th>
-            <th>Option</th>
-            <th>Net Premium</th>
-            <th>Register Fee</th>
-            <th>Vat 10%</th>
-            <th>Total Premium</th>
-            <th>Rate</th>
-            <th>Total Commission</th>
-            <th>Vat 5%</th>
-            <th>Net Commission</th>
-            <th>Total Premium After Commission</th>
-          </tr>
-        </thead>
-        <tbody>
-          {itemData.map((item, index) => (
-            <tr key={index}>
-              <td className="text-center">{index + 1}</td>
-              <td>{item.agent_name}</td>
-              <td>{item.customer_name}</td>
-              <td>{item.contract_number}</td>
-              <td>{moment(item.contract_start_date).format('DD/MM/YYYY')}</td>
-              <td>{moment(item.contract_end_date).format('DD/MM/YYYY')}</td>
-              <td>{item.type_buyer_name}</td>
-              <td>{item.type_in_name}</td>
-              <td>{item.options_name}</td>
-              <td className="text-end">{numeral(item.initial_fee).format('0,00.00')}  {item.genus}</td>
-              <td className="text-end">{numeral(item.registration_fee).format('0,00.00')}  {item.genus}</td>
-              <td className="text-end">{numeral(item.money_taxes).format('0,00.00')}  {item.genus}</td>
-              <td className="text-end">{numeral(item.insuranc_included).format('0,00.00')}  {item.genus}</td>
-              <td className="text-center">{item.percent_eps}%</td>
-              <td className="text-end">{numeral(item.pays_advance_fee).format('0,00.00')}  {item.genus}</td>
-              <td className="text-center">{item.percent_fee_eps}% = {numeral(item.money_percent_fee).format('0,00.00')}  {item.genus}</td>
-              <td className="text-end">{numeral(item.expences_pays_taxes).format('0,00.00')} {item.genus}</td>
-              <td className="text-end">{numeral(item.insuranc_included - item.expences_pays_taxes).format('0,00.00')} {item.genus}</td>
-            </tr>
-          ))}
-          {Object.keys(sumData).map((currency, key) => (
-            <tr key={key}>
-              <td colSpan={10} className="text-end">ລວມຍອດຄ້າງຈ່າຍທັງໝົດ ({currency})</td>
-              <td className="text-end">{formatNumber(sumData[currency].initial_fee)}</td>
-              <td className="text-end">{formatNumber(sumData[currency].registration_fee)}</td>
-              <td className="text-end">{formatNumber(sumData[currency].money_taxes)}</td>
-              <td className="text-end">{formatNumber(sumData[currency].insuranc_included)}</td>
-              <td></td>
-              <td className="text-end">{formatNumber(sumData[currency].pays_advance_fee)}</td>
-              <td className="text-end">{formatNumber(sumData[currency].money_percent_fee)}</td>
-              <td className="text-end">{formatNumber(sumData[currency].expences_pays_taxes)}</td>
-              <td className="text-end">{formatNumber(sumData[currency].Total_Premium)}</td>
-              <td></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+  // Map itemData to rows
+  itemData.forEach((item, index) => {
+    const row = ws.addRow([
+      index + 1,
+      item.agent_name,
+      item.customer_name,
+      item.contract_number,
+      moment(item.contract_start_date).format('DD/MM/YYYY'),
+      moment(item.contract_end_date).format('DD/MM/YYYY'),
+      item.type_buyer_name,
+      item.type_in_name,
+      item.options_name,
+      numeral(item.initial_fee).format('0,00.00') + " " + item.genus,
+      numeral(item.registration_fee).format('0,00.00') + " " + item.genus,
+      numeral(item.money_taxes).format('0,00.00') + " " + item.genus,
+      numeral(item.insuranc_included).format('0,00.00') + " " + item.genus,
+      item.percent_eps + "%",
+      numeral(item.pays_advance_fee).format('0,00.00') + " " + item.genus,
+      item.percent_fee_eps + "% = " + numeral(item.money_percent_fee).format('0,00.00') + " " + item.genus,
+      numeral(item.expences_pays_taxes).format('0,00.00') + " " + item.genus,
+      numeral(item.insuranc_included - item.expences_pays_taxes).format('0,00.00') + " " + item.genus
+    ]);
+
+    // Add the values to the totals
+    totalNetPremium += item.initial_fee;
+    totalRegisterFee += item.registration_fee;
+    totalTotalPremium += item.insuranc_included;
+    totalCommission += item.pays_advance_fee;
+    totalNetCommission += item.money_percent_fee;
+    totalPremiumAfterCommission += item.insuranc_included - item.expences_pays_taxes;
+
+    // Apply borders to each cell in the row
+    row.eachCell((cell, colNumber) => {
+      cell.border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+      };
+    });
+  });
+
+  // Add a total row at the bottom
+  const totalRow = ws.addRow([
+    '', '', '', '', '', '', '', '', '', 
+    numeral(totalNetPremium).format('0,00.00'),
+    numeral(totalRegisterFee).format('0,00.00'),
+    '', // You can leave empty if no total for this column
+    numeral(totalTotalPremium).format('0,00.00'),
+    '', // You can leave empty if no total for this column
+    numeral(totalCommission).format('0,00.00'),
+    '', // You can leave empty if no total for this column
+    numeral(totalNetCommission).format('0,00.00'),
+    numeral(totalPremiumAfterCommission).format('0,00.00')
+  ]);
+
+  // Apply a style for the total row (bold and center-aligned)
+  totalRow.eachCell((cell) => {
+    cell.font = { bold: true };
+    cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    cell.border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' }
+    };
+  });
+
+  // Save the workbook as an Excel file
+  wb.xlsx.writeBuffer().then((buffer) => {
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'exported_file.xlsx');
+  });
 };
 
 export default ExportPaydebtAgent;

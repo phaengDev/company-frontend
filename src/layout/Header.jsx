@@ -11,6 +11,7 @@ import { Notific } from "../utils/Notific";
 import numeral from "numeral";
 import { IconButton,Tooltip, Whisper,} from 'rsuite';
 import CopyIcon from '@rsuite/icons/Copy';
+import EyeRoundIcon from '@rsuite/icons/EyeRound';
 import moment from "moment";
 export default function Header() {
   const api = Config.urlApi;
@@ -66,7 +67,7 @@ export default function Header() {
     setInputValue(e.target.value);
     e.target.setCustomValidity(''); // Reset custom validity
   };
-  const hanldeSubmit = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     try {
       const response = await axios.post(api + 'report/search', values);
@@ -80,6 +81,26 @@ export default function Header() {
     }
 
   }
+
+
+  const handleViews = async (data) => {
+    try {
+      const payload = {
+        ...values, // Preserve existing state values
+        contract_number: data,
+      };
+      const response = await axios.post(api + 'report/search', payload);
+      if (response.status === 200) {
+        setOpen(true);
+        setDataSearch(response.data);
+      }
+    } catch (error) {
+      Notific('warning', 'ຂໍອະໄພ', 'ບໍ່ພົບເລກທີ່ສັນຍາ');
+      console.error('Error fetching data:', error);
+    }
+  };
+  
+
 
   const handleInputInvalid = (e) => {
     e.target.setCustomValidity('ກະລຸນາປ້ອນເລກທີສັນຍາ!'); // Custom message
@@ -113,18 +134,22 @@ export default function Header() {
   }, [user_type,companyId])
 
   const [copied, setCopied] = useState('ສຳເນົາ');
-  const handleCopy = (contractNumber) => {
-    navigator.clipboard.writeText(contractNumber)
-      .then(() => {
-        setCopied('ສຳເນົາສຳເລັດ');
-        setTimeout(() => setCopied('ສຳເນົາ'), 2000); // Reset to default after 2 seconds
-      })
-      .catch((err) => {
-        setCopied('ບໍ່ສາມາດສຳເນົາໄດ້');
-        setTimeout(() => setCopied('ສຳເນົາ'), 2000); // Reset to default after 2 seconds
-        console.error('Copy failed:', err);
-      });
-  };
+  const [textCopy,setTextCopy] = useState('')
+
+const handleCopy = (text) => {
+  navigator.clipboard.writeText(text).then(() => {
+    setCopied("ສຳເນົາສຳເລັດ!"); // Update tooltip text
+    setTextCopy(text)
+    setTimeout(() => setCopied("ສຳເນົາ"), 2000); // Reset after 2 seconds
+  }).catch(err => console.error("ບໍ່ສາມາດສຳເນົາໄດ້: ", err));
+};
+
+const [tooltipText, setTooltipText] = useState("Paste item");
+
+const handlePaste = () => {
+  setTooltipText("Pasted!"); // Change tooltip text on paste
+  setTimeout(() => setTooltipText("Paste item"), 2000); // Reset after 2 sec
+};
   return (
     <div id="header" className="app-header">
       <div className="navbar-header">
@@ -147,7 +172,7 @@ export default function Header() {
       </div>
       <div className="navbar-nav">
         <div className="navbar-item navbar-form">
-          <form onSubmit={hanldeSubmit}>
+          <form onSubmit={handleSubmit}>
             <div className="form-group">
               <input
                 type="text"
@@ -155,7 +180,9 @@ export default function Header() {
                 onChange={handleInputChange}
                 className="form-control"
                 onInvalid={handleInputInvalid}
-                placeholder="ຄົ້ນຫາເລກທີສັນຍາ...." required
+                onPaste={handlePaste}
+                placeholder="ຄົ້ນຫາເລກທີສັນຍາ...."
+                title={textCopy && textCopy} required
               />
               <button type="submit" className="btn btn-search">
                 <i className="fas fa-search" />
@@ -184,6 +211,11 @@ export default function Header() {
                       <span className="float-end">
                     <Whisper placement="top" controlId="control-id-hover" trigger="hover" speaker={<Tooltip>{copied} </Tooltip>}>
                      <IconButton size="xs" onClick={() => handleCopy(val.contract_number)} icon={<CopyIcon />} appearance="subtle" /> 
+                      </Whisper>
+                      <Whisper placement="top" controlId="control-id-hover" trigger="hover" speaker={<Tooltip>ເບີ່ງລາຍລະອຽດ</Tooltip>}>
+                     <IconButton size="xs" onClick={() => {
+                    handleViews(val.contract_number); // Update state safely
+                  }}  icon={<i class="fa-solid fa-eye"></i>} appearance="subtle" /> 
                       </Whisper>
                      </span>
                      </h6>
@@ -219,8 +251,23 @@ export default function Header() {
                   <div class="media-body">
                     <h6 class="media-heading">{val.contract_number} 
                     <span className="float-end">
-                    <Whisper placement="top" controlId="control-id-hover" trigger="hover" speaker={<Tooltip>{copied} </Tooltip>}>
-                     <IconButton size="xs" onClick={() => handleCopy(val.contract_number)} icon={<CopyIcon />} appearance="subtle" /> 
+                      <Whisper 
+                      placement="top" 
+                      controlId="control-id-hover" 
+                      trigger="hover" 
+                      speaker={<Tooltip>{copied}</Tooltip>}
+                    >
+                      <IconButton 
+                        size="xs" 
+                        onClick={() => handleCopy(val.contract_number)} 
+                        icon={<CopyIcon />} 
+                        appearance="subtle" 
+                      /> 
+                    </Whisper>
+                    <Whisper placement="top" controlId="control-id-hover" trigger="hover" speaker={<Tooltip>ເບີ່ງລາຍລະອຽດ</Tooltip>}>
+                     <IconButton size="xs" onClick={() => {
+                    handleViews(val.contract_number); // Update state safely
+                  }}  icon={<i class="fa-solid fa-eye"></i>} appearance="subtle" /> 
                       </Whisper>
                      </span>
                     </h6>
@@ -255,15 +302,12 @@ export default function Header() {
             </span>
           </a>
           <div className="dropdown-menu dropdown-menu-end me-1">
-            <button type="button" className="dropdown-item">
+            {/* <button type="button" className="dropdown-item">
               Edit Profile
             </button>
             <button type="button" className="dropdown-item">
-              Calendar
-            </button>
-            <button type="button" className="dropdown-item">
               Settings
-            </button>
+            </button> */}
             <div className="dropdown-divider" />
             <button type="button" onClick={handleLogout} className="dropdown-item ">
               <i class="fa-solid fa-right-from-bracket"></i> Log Out

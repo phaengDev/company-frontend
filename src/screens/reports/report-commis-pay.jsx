@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, {useRef, useState, useEffect } from 'react'
 import { DatePicker, Input, InputGroup, SelectPicker, Placeholder, Loader } from 'rsuite'
 import { useCompany, useType, useAgent } from '../../config/select-option';
 import { Config } from '../../config/connenct';
@@ -10,6 +10,7 @@ import html2canvas from 'html2canvas';
 import ReactDOM from 'react-dom';
 import  GetReportData  from '../invioce/report-pays';
 import GetReportAgent from '../invioce/report-paysAgent';
+import ExportPaydebtAgent from '../invioce/export-paydebt-agent';
 export default function ReportCommisPay() {
     const api = Config.urlApi;
     const itemcm = useCompany();
@@ -170,9 +171,21 @@ export default function ReportCommisPay() {
         document.body.removeChild(hiddenContainer);
     };
 
+const agentData ={
+    idcrad_code:'wwwerw-wrw',   
+    agent_name:'phaengs yse',
 
-    const downloadExcel = () => {
+}
+const downloadExcel = () => {
+    // Make sure itemData is not empty or undefined
+    if (Array.isArray(itemData) && itemData.length > 0) {
+      ExportPaydebtAgent(itemData);
+    } else {
+      console.error("Item data is missing or invalid.");
     }
+  };
+  
+   
 
 //=============================
     const [disableds,setDisableds]=useState(false)
@@ -278,7 +291,7 @@ const downloadAagentPdf= async ()=>{
                         <button onClick={downloadAagentPdf} disabled={disableds} class="btn btn-danger btn-sm d-flex me-2 pe-3 rounded-3">
                           {isload===true ?(<Loader content="ກຳລັງໂຫລດ..." />):(<><i class="fa-solid fa-file-pdf fs-18px me-2 ms-n1"></i> Export PDF</>)}  
                         </button>
-                        <button onClick={downloadExcel} class="btn btn-success btn-sm d-flex me-2 pe-3 rounded-3">
+                        <button  onClick={() => downloadExcel()} class="btn btn-success btn-sm d-flex me-2 pe-3 rounded-3">
                             <i class="fa-solid fa-cloud-arrow-down fs-18px me-2 ms-n1"></i>
                             Export Excel
                         </button>
@@ -439,6 +452,7 @@ const downloadAagentPdf= async ()=>{
                     </ul>
                 </div>
             </div>
+           
         </div >
     )
 }

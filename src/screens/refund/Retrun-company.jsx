@@ -283,7 +283,7 @@ export default function RetrunCompany() {
                         <td className="">
                         {item.doc_pays ?(
                                 item.doc_pays
-                                    .filter(pay => pay.status_pay === 1)
+                                    .filter(pay => pay.status_pay === 1) 
                                     .map((pay, key) => (
                                   pay.desciption
                                 ))):(

@@ -87,6 +87,7 @@ useEffect(() => {
         insurance_type_fk: data.insurance_type_fk,
         option_id_fk: data.option_id_fk,
         contract_number: data.contract_number,
+        contract_number2: data.contract_number,
         retrun_balance: data.retrun_balance,
         currency_id_fk: data.currency_id_fk,
         status_company: data.status_company,

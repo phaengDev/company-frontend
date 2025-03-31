@@ -58,18 +58,16 @@ const dataOption=useOption(typeId)
     }
   };
   const Filter = (event) => {
-    const searchTerm = event.toLowerCase();
+    const searchTerm = event ? event.toLowerCase() : ""; // Ensure event is a string
     setItemData(
-        filter.filter(
-            n => n.contract_number.toLowerCase().includes(searchTerm) || 
-                 n.car_registration.toLowerCase().includes(searchTerm) ||
-                 n.vehicle_number.toLowerCase().includes(searchTerm) ||
-                 n.tank_number.toLowerCase().includes(searchTerm)
+        filter.filter(n => 
+            (n.contract_number?.toLowerCase() || "").includes(searchTerm) || 
+            (n.car_registration?.toLowerCase() || "").includes(searchTerm) ||
+            (n.vehicle_number?.toLowerCase() || "").includes(searchTerm) ||
+            (n.tank_number?.toLowerCase() || "").includes(searchTerm)
         )
     );
 };
-
-
 
   // =================== custom pages============
   const [currentPage, setcurrentPage] = useState(1);
