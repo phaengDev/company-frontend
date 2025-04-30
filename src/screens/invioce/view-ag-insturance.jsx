@@ -24,7 +24,6 @@ const age = calculateAge(item.agent_dob);
             if (!response.ok) {
                 throw new Error('File download failed');
             }
-
             const blob = await response.blob();
             const url = window.URL.createObjectURL(new Blob([blob]));
             const link = document.createElement('a');

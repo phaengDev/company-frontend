@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { DatePicker, Input, InputGroup, SelectPicker, Placeholder, Loader } from 'rsuite'
 import { useCompany, useTypeincar, useAgent,useTypeCar,useOption } from '../../config/select-option';
 import { Config, imageUrl } from '../../config/connenct';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
 import { ViewInsturance } from '../invioce/view-data-insturance';

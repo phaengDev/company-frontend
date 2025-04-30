@@ -6,7 +6,7 @@ import Alert from '../../utils/config';
 function FormEditrefund({ open, handleClose, data, fetchData }) {
     const api = Config.urlApi;
 
-    const [values, setValues] = React.useState({
+    const [values, setValues] = useState({
         file_id: data.file_id,
         file_doct: data.file_doct,
         file_pay: null,
@@ -79,7 +79,7 @@ function FormEditrefund({ open, handleClose, data, fetchData }) {
                                 ) : (
                                     <>  <i class="fa-solid fa-paperclip"></i> ເລືອກໄຟລ໌ແນບ</>
                                 )}
-                                <input type="file" hidden onChange={handledSelectFile} accept='image/*' />
+                                <input type="file" hidden onChange={handledSelectFile} accept='image/*,.pdf' />
                             </label>
                         </div>
                     </div>

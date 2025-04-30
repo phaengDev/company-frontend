@@ -57,7 +57,8 @@ export default function RetrunCompany() {
     const query = event.toLowerCase();
     setItemData(dataFilter.filter(n =>
       n.contract_number.toLowerCase().includes(query) ||
-      n.currency_name.toLowerCase().includes(query)
+      n.currency_name.toLowerCase().includes(query)||
+      n.customer_name.toLowerCase().includes(query)
     ));
   };
   const [itemsPerPage, setitemsPerPage] = useState(100);

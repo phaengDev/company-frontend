@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DatePicker, SelectPicker, Input, InputGroup, Placeholder, Loader } from 'rsuite'
+import { DatePicker, SelectPicker, Input, InputGroup, Placeholder, Loader, InputPicker } from 'rsuite'
 import { useCompany, useType, useAgent } from '../../config/select-option';
 import { Config, imageUrl } from '../../config/connenct';
 import { useNavigate } from 'react-router-dom'
@@ -162,25 +162,33 @@ export default function ReportRetrunAll() {
                 </div>
 
                 <div className="row mb-3">
-                    <div className="col-sm-4 col-md-2 col-6">
-                        <label htmlFor="" className='form-label'>ວັນທີ</label>
-                        <DatePicker oneTap defaultValue={data.start_date} onChange={(e) => handleChange('start_date', e)} format="dd/MM/yyyy" block />
-                    </div>
-                    <div className="col-sm-4 col-md-2  col-6">
-                        <label htmlFor="" className='form-label'>ຫາວັນທີ</label>
-                        <DatePicker oneTap defaultValue={data.end_date} onChange={(e) => handleChange('end_date', e)} format="dd/MM/yyyy" block />
+                    <div className="col-sm-4">
+                        <div className="row">
+                            <div className="col-sm-6 col-md-6 col-6">
+                                <label htmlFor="" className='form-label'>ວັນທີ</label>
+                                <DatePicker oneTap defaultValue={data.start_date} onChange={(e) => handleChange('start_date', e)} format="dd/MM/yyyy" block />
+                            </div>
+                            <div className="col-sm-6 col-md-6 col-6">
+                                <label htmlFor="" className='form-label'>ຫາວັນທີ</label>
+                                <DatePicker oneTap defaultValue={data.end_date} onChange={(e) => handleChange('end_date', e)} format="dd/MM/yyyy" block />
+                            </div>
+                        </div>
                     </div>
                     <div className="col-sm-4 col-md-3">
                         <label htmlFor="" className='form-label'>ບໍລິສັດປະກັນໄພ</label>
                         <SelectPicker block data={itemcm} onChange={(e) => handleChange('companyId_fk', e)} />
                     </div>
-                    <div className="col-sm-4 col-md-3  col-6">
+                    <div className="col-sm-4 col-md-2  col-6">
                         <label htmlFor="" className='form-label'>ປະເພດປະກັນ</label>
                         <SelectPicker block data={itemType} onChange={(e) => handleChange('insurance_typeId', e)} />
                     </div>
                     <div className="col-sm-4 col-md-2  col-6">
                         <label htmlFor="" className='form-label'>ຕົວແທນຂາຍ </label>
                         <SelectPicker block data={itemAg} value={data.agentId_fk} onChange={(e) => handleChange('agentId_fk', e)} readOnly={user_type === '2' && 'readOnly'} />
+                    </div>
+                    <div className="col-sm-4 col-md-1  col-6">
+                        <label htmlFor="" className='form-label'>ຕົວແທນຂາຍ </label>
+                        <InputPicker block data={itemAg} value={data.agentId_fk} onChange={(e) => handleChange('agentId_fk', e)} readOnly={user_type === '2' && 'readOnly'} />
                     </div>
                 </div>
 
