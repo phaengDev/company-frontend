@@ -6,6 +6,7 @@ import Select from 'react-select'
 import { Config, imageUrl } from '../../config/connenct';
 import axios from 'axios';
 import numeral from 'numeral';
+import moment from 'moment';
 import Alert from '../../utils/config';
 export default function RegisterInsurance() {
   const api = Config.urlApi;
@@ -199,9 +200,11 @@ export default function RegisterInsurance() {
     }
 
     if (name === 'contract_start_date') {
+      const nextYear = moment(value).add(1, 'year').toDate();
       setInputs({
         ...inputs,
         contract_start_date:new Date(value),
+        contract_end_date: nextYear,
         company_date: new Date(value),
         agent_date: new Date(value),
         oac_date: new Date(value)
@@ -303,34 +306,34 @@ export default function RegisterInsurance() {
             <div className="row fs-15px mb-4">
               <div className="col-sm-6 mb-2">
                 <label htmlFor="" className='form-label'>ບໍລິສັດປະກັນໄພ</label>
-                <SelectPicker data={itemcn} onChange={(e) => handelChange('company_id_fk', e)} placeholder={'ບໍລິສັດປະກັນໄພ'} block required />
+                <SelectPicker data={itemcn} value={inputs.company_id_fk} onChange={(e) => handelChange('company_id_fk', e)} placeholder={'ບໍລິສັດປະກັນໄພ'} block required />
               </div>
               <div className="col-sm-6  mb-2">
                 <label htmlFor="" className='form-label'>ຕົວແທນຂາຍປະກັນ</label>
-                <SelectPicker data={itemAg} placeholder={'ຕົວແທນຂາຍ'} onChange={(e) => handelChange('agent_id_fk', e)} block required />
+                <SelectPicker data={itemAg} value={inputs.agent_id_fk} placeholder={'ຕົວແທນຂາຍ'} onChange={(e) => handelChange('agent_id_fk', e)} block required />
               </div>
               <div className="col-sm-6  mb-2">
                 <label htmlFor="" className='form-label'>ປະເພດປະກັນໄພ</label>
-                <SelectPicker data={itemType} onChange={(e) => handleOption('insurance_type_fk', e)} placeholder={'ປະເພດປະກັນ'} block required />
+                <SelectPicker data={itemType} value={inputs.insurance_type_fk} onChange={(e) => handleOption('insurance_type_fk', e)} placeholder={'ປະເພດປະກັນ'} block required />
               </div>
               <div className="col-sm-6  mb-2">
                 <label htmlFor="" className='form-label'>ທາງເລືອກ</label>
-                <SelectPicker data={dataOption} onChange={(e) => handelChange('option_id_fk', e)} placeholder={'ທາງເລືອກ'} block required />
+                <SelectPicker data={dataOption} value={inputs.option_id_fk} onChange={(e) => handelChange('option_id_fk', e)} placeholder={'ທາງເລືອກ'} block required />
               </div>
               <div className="col-sm-4  mb-2">
                 <label htmlFor="" className='form-label'>ເລກທີສັນຍາ</label>
                 <InputGroup inside >
                   <InputGroup.Addon><i className="fa-regular fa-id-card" /></InputGroup.Addon>
-                  <Input onChange={(e) => handelChange('contract_number', e)} placeholder='xxx  xxx-xxx-xxxx' block required />
+                  <Input value={inputs.contract_number} onChange={(e) => handelChange('contract_number', e)} placeholder='xxx  xxx-xxx-xxxx' block required />
                 </InputGroup>
               </div>
               <div className="col-sm-4  mb-2">
                 <label htmlFor="" className='form-label'>ວັນທີເລີມສັນຍາ</label>
-                <DatePicker oneTap format="dd/MM/yyyy" onChange={(e) => handelChange('contract_start_date', e)} placeholder='ວັນທີເລີມ' block required />
+                <DatePicker oneTap format="dd/MM/yyyy" value={inputs.contract_start_date} onChange={(e) => handelChange('contract_start_date', e)} placeholder='ວັນທີເລີມ' block required />
               </div>
               <div className="col-sm-4  mb-2">
                 <label htmlFor="" className='form-label'>ວັນທີສິນສຸດສັນຍາ</label>
-                <DatePicker oneTap format="dd/MM/yyyy" onChange={(e) => handelChange('contract_end_date', e)} placeholder='ວັນທີສິນສຸດ' block required />
+                <DatePicker oneTap format="dd/MM/yyyy" value={inputs.contract_end_date} onChange={(e) => handelChange('contract_end_date', e)} placeholder='ວັນທີສິນສຸດ' block required />
               </div>
             </div>
           </div>
@@ -358,39 +361,39 @@ export default function RegisterInsurance() {
                       </div>
                       <div className="col-sm-4 col-6 mb-2">
                         <label htmlFor="" className='form-label'>ຊື່ແທ້</label>
-                        <Input onChange={(e) => handelChange('user_fname', e)} placeholder="ຊື່ແທ້" />
+                        <Input value={inputs.user_fname} onChange={(e) => handelChange('user_fname', e)} placeholder="ຊື່ແທ້" />
                       </div>
                       <div className="col-sm-3 col-6 mb-2">
                         <label htmlFor="" className='form-label'>ນາມສະກຸນ</label>
-                        <Input onChange={(e) => handelChange('user_lname', e)} placeholder="ນາມສະກຸນ" />
+                        <Input value={inputs.user_lname} onChange={(e) => handelChange('user_lname', e)} placeholder="ນາມສະກຸນ" />
                       </div>
                       <div className="col-sm-3 col-6 mb-2">
                         <label htmlFor="" className='form-label'>ວັນເດືອນປີເກິດ</label>
-                        <DateInput format='dd/MM/yyyy' oneTap block onChange={(e) => handelChange('user_dob', e)} placeholder="ວັນ/ເດືອນ/ປີ" />
+                        <DateInput format='dd/MM/yyyy' value={inputs.user_dob} oneTap block onChange={(e) => handelChange('user_dob', e)} placeholder="ວັນ/ເດືອນ/ປີ" />
                       </div>
                       <div className="col-sm-3 col-6 mb-2">
                         <label htmlFor="" className='form-label'>ແຂວງ</label>
-                        <SelectPicker data={itemPv} onChange={(e) => handelShowDist(e)} placeholder='ເລືອກ' block />
+                        <SelectPicker data={itemPv}  onChange={(e) => handelShowDist(e)} placeholder='ເລືອກ' block />
                       </div>
                       <div className="col-sm-3 col-6 mb-2">
                         <label htmlFor="" className='form-label'>ເມືອງ</label>
-                        <SelectPicker data={dataDist} onChange={(e) => handelChange('user_district_fk', e)} placeholder='ເລືອກ' block />
+                        <SelectPicker data={dataDist} value={inputs.user_district_fk} onChange={(e) => handelChange('user_district_fk', e)} placeholder='ເລືອກ' block />
                       </div>
                       <div className="col-sm-3 col-6 mb-2">
                         <label htmlFor="" className='form-label'>ບ້ານ</label>
-                        <Input onChange={(e) => handelChange('user_village', e)} placeholder='ບ້ານ' block />
+                        <Input value={inputs.user_village} onChange={(e) => handelChange('user_village', e)} placeholder='ບ້ານ' block />
                       </div>
                       <div className="col-sm-3 col-6 mb-2">
                         <label htmlFor="" className='form-label'>ເບີໂທລະສັບ</label>
-                        <Input type='tel' onChange={(e) => handelChange('user_tel', e)} placeholder='020 999999999' block />
+                        <Input type='tel' value={inputs.user_tel} onChange={(e) => handelChange('user_tel', e)} placeholder='020 999999999' block />
                       </div>
                       <div className="col-sm-4 col-6 mb-2">
                         <label htmlFor="" className='form-label'>ລະຫັດບັດ</label>
-                        <Input type='text' onChange={(e) => handelChange('no_contract', e)} placeholder='XXX-XXXX-XXXXXX' block />
+                        <Input type='text'  value={inputs.no_contract} onChange={(e) => handelChange('no_contract', e)} placeholder='XXX-XXXX-XXXXXX' block />
                       </div>
                       <div className="col-sm-3 col-6 mb-2">
                         <label htmlFor="" className='form-label'>ສະຖານະພະນັກງານ</label>
-                        <SelectPicker data={itemStatus} onChange={(e) => handelChange('status_use', e)} placeholder='ເລືອກ' block />
+                        <SelectPicker data={itemStatus} value={inputs.status_use} onChange={(e) => handelChange('status_use', e)} placeholder='ເລືອກ' block />
                       </div>
                     </div>
                   </fieldset>
@@ -411,27 +414,27 @@ export default function RegisterInsurance() {
               <div className="row fs-15px">
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ປະເພດລົດ</label>
-                  <Select options={itemTypeCar} onChange={(e) => handelChange('car_type_id_fk', e.value)} placeholder="ເລືອກ" />
+                  <Select options={itemTypeCar} value={inputs.car_type_id_fk} onChange={(e) => handelChange('car_type_id_fk', e.value)} placeholder="ເລືອກ" />
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ຢີ່ຫໍ້ລົດ</label>
-                  <Select options={itemBrand} onChange={(e) => handelChange('car_brand_id_fk', e.value)} placeholder="ເລືອກ" />
+                  <Select options={itemBrand} value={inputs.car_brand_id_fk} onChange={(e) => handelChange('car_brand_id_fk', e.value)} placeholder="ເລືອກ" />
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ລຸ່ນລົດ</label>
-                  <Input value={inputs.version_name} onChange={(e) => handelChange('version_name', e)} placeholder='ລຸ່ນລົດ' />
+                  <Input value={inputs.version_name}  onChange={(e) => handelChange('version_name', e)} placeholder='ລຸ່ນລົດ' />
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ທະບຽນລົດ</label>
-                  <Input onChange={(e) => handelChange('car_registration', e)} placeholder='xxx xxxx' block />
+                  <Input value={inputs.car_registration} onChange={(e) => handelChange('car_registration', e)} placeholder='xxx xxxx' block />
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ເລກຈັກ</label>
-                  <Input onChange={(e) => handelChange('vehicle_number', e)} placeholder='xxx-xxxx-xxxxx' block />
+                  <Input value={inputs.vehicle_number} onChange={(e) => handelChange('vehicle_number', e)} placeholder='xxx-xxxx-xxxxx' block />
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ເລກຖັງ</label>
-                  <Input onChange={(e) => handelChange('tank_number', e)} placeholder='xxx-xxxx-xxxxx' block />
+                  <Input value={inputs.tank_number} onChange={(e) => handelChange('tank_number', e)} placeholder='xxx-xxxx-xxxxx' block />
                 </div>
               </div>
             </div>
@@ -484,7 +487,7 @@ export default function RegisterInsurance() {
               </div>
               <div className="col-sm-3 col-6 mb-2">
                 <label htmlFor="" className='form-label'>ສະກຸນ </label>
-                <InputPicker defaultValue={inputs.currency_id_fk} data={itemCry} onChange={(e) => handelChange('currency_id_fk', e)} block />
+                <InputPicker value={inputs.currency_id_fk} data={itemCry} onChange={(e) => handelChange('currency_id_fk', e)} block />
               </div>
 
               <div className="col-sm-12 mt-4 ">
