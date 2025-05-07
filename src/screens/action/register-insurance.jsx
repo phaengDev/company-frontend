@@ -79,14 +79,17 @@ export default function RegisterInsurance() {
       ...valueComis, typeinsId: value
     })
     setOpId(value);
-    setInputs({
-      ...inputs, [name]: value
-    })
+    // setInputs({
+    //   ...inputs, [name]: value
+    // });
+
     const response = await fetch(api + 'type-ins/' + value)
     const data = await response.json();
-    setTypeInsurance(data.status_ins)
+    setTypeInsurance(data.status_ins);
     setInputs({
-      ...inputs, statusIns: data.status_ins
+      ...inputs,
+      [name]: value,
+       statusIns: data.status_ins
     })
   }
 
@@ -136,7 +139,7 @@ export default function RegisterInsurance() {
 
   }
 
-
+  const nextYear = moment(new Date()).add(1, 'year').toDate();
   const [inputs, setInputs] = useState({
     incuranecCode: '',
     custom_id_fk: customId,
@@ -148,7 +151,7 @@ export default function RegisterInsurance() {
     contract_number: '',
     contract_number2: '',
     contract_start_date: new Date(),
-    contract_end_date: new Date(),
+    contract_end_date: new Date(nextYear),
     file_doct: '',
     // statuStaff: [{}],
     no_contract: '',
@@ -204,7 +207,7 @@ export default function RegisterInsurance() {
       setInputs({
         ...inputs,
         contract_start_date:new Date(value),
-        contract_end_date: nextYear,
+        contract_end_date: new Date(nextYear),
         company_date: new Date(value),
         agent_date: new Date(value),
         oac_date: new Date(value)
