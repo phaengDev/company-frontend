@@ -417,11 +417,11 @@ export default function RegisterInsurance() {
               <div className="row fs-15px">
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ປະເພດລົດ</label>
-                  <Select options={itemTypeCar} value={inputs.car_type_id_fk} onChange={(e) => handelChange('car_type_id_fk', e.value)} placeholder="ເລືອກ" />
+                  <Select options={itemTypeCar} value={itemTypeCar.find(obj => obj.value === inputs.car_type_id_fk)}  onChange={(e) => handelChange('car_type_id_fk', e.value)} placeholder="ເລືອກ" />
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ຢີ່ຫໍ້ລົດ</label>
-                  <Select options={itemBrand} value={inputs.car_brand_id_fk} onChange={(e) => handelChange('car_brand_id_fk', e.value)} placeholder="ເລືອກ" />
+                  <Select options={itemBrand} value={itemBrand.find(obj => obj.value === inputs.car_brand_id_fk)}  onChange={(e) => handelChange('car_brand_id_fk', e.value)} placeholder="ເລືອກ" />
                 </div>
                 <div className="col-sm-4 col-6 mb-2">
                   <label htmlFor="" className='form-label'>ລຸ່ນລົດ</label>
