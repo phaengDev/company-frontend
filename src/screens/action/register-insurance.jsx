@@ -243,7 +243,6 @@ export default function RegisterInsurance() {
   //=================================== insert data to datablse============
   const handleSubmit = (event) => {
     event.preventDefault();
-    // console.log(inputs);return;
     const imputData = new FormData();
     for (const key in inputs) {
       imputData.append(key, inputs[key])

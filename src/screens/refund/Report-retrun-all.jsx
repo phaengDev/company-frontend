@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DatePicker, SelectPicker, Input, InputGroup, Placeholder, Loader, InputPicker } from 'rsuite'
+import { DatePicker, SelectPicker, Input, InputGroup, Placeholder, Loader, InputPicker, Button } from 'rsuite'
 import { useCompany, useType, useAgent } from '../../config/select-option';
 import { Config, imageUrl } from '../../config/connenct';
 import { useNavigate } from 'react-router-dom'
@@ -144,7 +144,7 @@ export default function ReportRetrunAll() {
 
     useEffect(() => {
         fetchReport();
-    }, [data, companyId])
+    }, [companyId])
     return (
         <div id="content" className="app-content p-0 bg-component">
             <div class="app-content-padding px-4 py-3">
@@ -187,8 +187,7 @@ export default function ReportRetrunAll() {
                         <SelectPicker block data={itemAg} value={data.agentId_fk} onChange={(e) => handleChange('agentId_fk', e)} readOnly={user_type === '2' && 'readOnly'} />
                     </div>
                     <div className="col-sm-4 col-md-1  col-6">
-                        <label htmlFor="" className='form-label'>ຕົວແທນຂາຍ </label>
-                        <InputPicker block data={itemAg} value={data.agentId_fk} onChange={(e) => handleChange('agentId_fk', e)} readOnly={user_type === '2' && 'readOnly'} />
+                      <Button appearance='primary' color='blue' className='mt-4' onClick={fetchReport} >ຄົ້ນຫາ</Button>
                     </div>
                 </div>
 

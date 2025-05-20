@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { DatePicker, Input, InputGroup, SelectPicker, Placeholder, Loader } from 'rsuite'
-import { useCompany, useType, useTypeBuyer,useAgent } from '../../config/select-option';
+import { useCompany, useType, useTypeBuyer, useAgent } from '../../config/select-option';
 import { Config } from '../../config/connenct';
 import axios from 'axios';
 import moment from 'moment';
@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import FormBeneficiaries from '../Modal/Form-Beneficiaries';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+// import NextPages from '../../utils/NextPages';
 export default function ReportSaleAll() {
     const api = Config.urlApi;
     const itemcm = useCompany();
@@ -73,86 +74,97 @@ export default function ReportSaleAll() {
         ));
     };
 
+    
 
-    // =================== custom pages============
-    const [currentPage, setcurrentPage] = useState(1);
-    const [itemsPerPage, setitemsPerPage] = useState(100);
-    const handleShowLimit = (value) => {
-        setitemsPerPage(value);
-    };
-    // const [pageNumberLimit, setpageNumberLimit] = useState(5);
-    const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(5);
-    const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(100);
+    const [maxPageNumberLimit, setMaxPageNumberLimit] = useState(5);
+    const [minPageNumberLimit, setMinPageNumberLimit] = useState(0);
 
-    const handlePageClick = (event) => {
-        setcurrentPage(Number(event.target.id));
-        setI(indexOfLastItem + 1)
-    };
+    const qtyItem = itemData.length;
 
     const pages = [];
-    for (let i = 1; i <= Math.ceil(itemData.length / itemsPerPage); i++) {
+    for (let i = 1; i <= Math.ceil(qtyItem / itemsPerPage); i++) {
         pages.push(i);
     }
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
     const currentItems = itemData.slice(indexOfFirstItem, indexOfLastItem);
 
-    const [i, setI] = useState(1);
-    const qtyItem = itemData.length;
+    const handlePageClick = (event) => {
+        const selectedPage = Number(event.target.id);
+        setCurrentPage(selectedPage);
+
+        if (selectedPage > maxPageNumberLimit) {
+            setMaxPageNumberLimit(maxPageNumberLimit + 5);
+            setMinPageNumberLimit(minPageNumberLimit + 5);
+        } else if (selectedPage <= minPageNumberLimit) {
+            setMaxPageNumberLimit(maxPageNumberLimit - 5);
+            setMinPageNumberLimit(minPageNumberLimit - 5);
+        }
+    };
+
+    const handleNextbtn = () => {
+        if (currentPage < pages.length) {
+            const nextPage = currentPage + 1;
+            setCurrentPage(nextPage);
+            if (nextPage > maxPageNumberLimit) {
+                setMaxPageNumberLimit(maxPageNumberLimit + 5);
+                setMinPageNumberLimit(minPageNumberLimit + 5);
+            }
+        }
+    };
+
+    const handlePrevbtn = () => {
+        if (currentPage > 1) {
+            const prevPage = currentPage - 1;
+            setCurrentPage(prevPage);
+            if (prevPage <= minPageNumberLimit) {
+                setMaxPageNumberLimit(maxPageNumberLimit - 5);
+                setMinPageNumberLimit(minPageNumberLimit - 5);
+            }
+        }
+    };
+
     const renderPageNumbers = pages.map((number) => {
         if (number > minPageNumberLimit && number <= maxPageNumberLimit) {
             return (
-                <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
-                    <span role="button" id={number} onClick={handlePageClick} className="page-link border-blue">
+                <li
+                    key={number}
+                    className={`page-item ${currentPage === number ? 'active' : ''}`}
+                >
+                    <span
+                        role="button"
+                        id={number}
+                        onClick={handlePageClick}
+                        className="page-link border-blue"
+                    >
                         {number}
                     </span>
                 </li>
             );
         } else {
-            return (
-                <li key={number} className="page-item active" >
-                    <span role="button" className="page-link border-blue">1</span>
-                </li>
-            )
+            return null; // Do not render page numbers outside limits
         }
     });
 
-    const handleNextbtn = () => {
-        setcurrentPage(currentPage + 1);
 
-        if (currentPage + 1 > maxPageNumberLimit) {
-            setmaxPageNumberLimit(maxPageNumberLimit + 5);
-            setminPageNumberLimit(minPageNumberLimit + 5);
+    const handleExportExcel = () => {
+        const table = document.getElementById('table-export');
+        if (table) {
+            const worksheet = XLSX.utils.table_to_sheet(table);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Data Export');
+            const excelBuffer = XLSX.write(workbook, {
+                bookType: 'xlsx',
+                type: 'array',
+            });
+            const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
+            saveAs(data, 'ລາຍງານສັນຍາປະກັນໄພທັງໝົດ.xlsx');
         }
     };
-
-    const handlePrevbtn = () => {
-        setcurrentPage(currentPage - 1);
-        setI(indexOfLastItem - 1)
-
-        if ((currentPage - 1) % 5 === 0) {
-            setmaxPageNumberLimit(maxPageNumberLimit - 5);
-            setminPageNumberLimit(minPageNumberLimit - 5);
-        }
-    };
-
-
-  
-const handleExportExcel = () => {
-    const table = document.getElementById('table-export');
-    if (table) {
-      const worksheet = XLSX.utils.table_to_sheet(table);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'Data Export');
-      const excelBuffer = XLSX.write(workbook, {
-        bookType: 'xlsx',
-        type: 'array',
-      });
-      const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
-      saveAs(data, 'ລາຍງານສັນຍາປະກັນໄພທັງໝົດ.xlsx');
-    }
-  };
 
     const handleEportPdf = () => {
 
@@ -244,7 +256,7 @@ const handleExportExcel = () => {
         fetchReport();
     }, [data])
 
-
+    // const mockData = Array.from({ length: 57 }, (_, i) => `Item ${i + 1}`);
 
     return (
         <div id="content" className="app-content p-0 bg-component">
@@ -292,7 +304,7 @@ const handleExportExcel = () => {
                 <div class="d-lg-flex align-items-center mb-3">
                     <div class="d-lg-flex d-none align-items-center text-nowrap">
                         ສະແດງ:
-                        <select onChange={(e) => handleShowLimit(e.target.value)} class="form-select form-select-sm ms-2 ps-2 pe-30px">
+                        <select onChange={(e) => setItemsPerPage(e.target.value)} class="form-select form-select-sm ms-2 ps-2 pe-30px">
                             <option value={100}>100</option>
                             <option value={205}>250</option>
                             <option value={500}>500</option>
@@ -385,16 +397,16 @@ const handleExportExcel = () => {
                                                 <td className='text-end'>{numeral(item.net_income).format('0,00.00')} {item.genus}</td>
                                                 <td className='text-center'>
                                                     <button type='button' onClick={() => handleView(item)} className='btn btn-xs btn-orange me-2'> <i class="fa-solid fa-eye"></i> </button>
-                                                    <button type='button' onClick={() => addBeneficiaRies(item.incuranec_code)} className='btn btn-xs btn-blue'> <i class="fa-solid fa-user-shield"/> </button>
+                                                    <button type='button' onClick={() => addBeneficiaRies(item.incuranec_code)} className='btn btn-xs btn-blue'> <i class="fa-solid fa-user-shield" /> </button>
                                                 </td>
                                                 <td>
-                                                    {item.contract_status===1 && (
+                                                    {item.contract_status === 1 && (
                                                         <>
-                                                    <button onClick={() => handleEdit(item.incuranec_code)} className='btn btn-xs btn-green ms-2'> <i class="fa-solid fa-file-pen"></i> </button>
-                                                    <button onClick={() => handleDelete(item.incuranec_code)} className='btn btn-xs btn-danger ms-2'> <i class="fa-solid fa-trash"></i> </button>
-                                                    </>
-                                                 )}
-                                                    </td>
+                                                            <button onClick={() => handleEdit(item.incuranec_code)} className='btn btn-xs btn-green ms-2'> <i class="fa-solid fa-file-pen"></i> </button>
+                                                            <button onClick={() => handleDelete(item.incuranec_code)} className='btn btn-xs btn-danger ms-2'> <i class="fa-solid fa-trash"></i> </button>
+                                                        </>
+                                                    )}
+                                                </td>
                                             </tr>
                                         ))}
                                         {Object.keys(groupedData).map((currency, key) => (
@@ -426,25 +438,51 @@ const handleExportExcel = () => {
                     </table>
 
                 </div>
-                <div class="d-md-flex align-items-center">
-                    <div class="me-md-auto text-md-left text-center mb-2 mb-md-0">
-                        ສະແດງ 1 ຫາ {itemsPerPage} ຂອງ {qtyItem} ລາຍການ
+                <div className="d-md-flex align-items-center">
+                    <div className="me-md-auto text-md-left text-center mb-2 mb-md-0">
+                        ສະແດງ {indexOfFirstItem + 1} ຫາ {Math.min(indexOfLastItem, qtyItem)} ຂອງ {qtyItem} ລາຍການ
                     </div>
-                    <ul className="pagination  mb-0 ms-auto justify-content-center">
-                        <li className="page-item "><span role="button" onClick={handlePrevbtn} className={`page-link  ${currentPage === pages[0] ? 'disabled' : 'border-blue'}`} >ກອນໜ້າ</span></li>
-                        {minPageNumberLimit >= 1 ? (
-                            <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
-                        ) : ''}
+                    <ul className="pagination mb-0 ms-auto justify-content-center">
+                        <li className={`page-item ${currentPage === pages[0] ? 'disabled' : ''}`}>
+                            <button
+                                type="button"
+                                onClick={handlePrevbtn}
+                                className="page-link border-blue"
+                                disabled={currentPage === pages[0]}
+                            >
+                                ກອນໜ້າ
+                            </button>
+                        </li>
+
+                        {minPageNumberLimit >= 1 && (
+                            <li className="page-item disabled">
+                                <span className="page-link">...</span>
+                            </li>
+                        )}
+
                         {renderPageNumbers}
-                        {pages.length > maxPageNumberLimit ? (
-                            <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
-                        ) : ''}
-                        <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage === pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}>ໜ້າຕໍ່ໄປ</span></li>
+
+                        {pages.length > maxPageNumberLimit && (
+                            <li className="page-item disabled">
+                                <span className="page-link">...</span>
+                            </li>
+                        )}
+
+                        <li className={`page-item ${currentPage === pages[pages.length - 1] ? 'disabled' : ''}`}>
+                            <button
+                                type="button"
+                                onClick={handleNextbtn}
+                                className="page-link border-blue"
+                                disabled={currentPage === pages[pages.length - 1]}
+                            >
+                                ໜ້າຕໍ່ໄປ
+                            </button>
+                        </li>
                     </ul>
                 </div>
-                
-                 <ViewInsturance show={showView} handleClose={() => setShowView(false)} data={dataView} />
-                  
+
+                <ViewInsturance show={showView} handleClose={() => setShowView(false)} data={dataView} />
+
             </div>
 
             <FormBeneficiaries
