@@ -7,7 +7,7 @@ import { Config } from '../../config/connenct';
 import axios from 'axios';
 import numeral from 'numeral';
 import Alert from '../../utils/config';
-
+import moment from 'moment';
 export default function FormEditInsurance() {
   const api = Config.urlApi;
   const itemAg = useAgent();
@@ -46,7 +46,7 @@ export default function FormEditInsurance() {
 
   const [typeInsurance, setTypeInsurance] = useState(2);
   const [inputs, setInputs] = useState({});
-
+  const nextYear = moment(new Date()).add(1, 'year').toDate();
   const showDataInsurance = async () => {
     try {
       const response = await fetch(api + `insurance/${Id}`);
@@ -162,10 +162,11 @@ export default function FormEditInsurance() {
     }
 
     if (name === 'contract_start_date') {
+       const nextYear = moment(value).add(1, 'year').toDate();
       setInputs({
         ...inputs,
-        contract_start_date:value, 
-        company_date: new Date(value),
+        contract_start_date:new Date(value),
+        contract_end_date: new Date(nextYear),
         agent_date: new Date(value),
         oac_date: new Date(value)
       });
