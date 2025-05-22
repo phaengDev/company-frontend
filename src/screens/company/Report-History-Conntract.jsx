@@ -115,7 +115,7 @@ export default function ReportHistoryConntract() {
         setcurrentPage(currentPage - 1);
         setI(indexOfLastItem - 1)
 
-        if ((currentPage - 1) % 5 == 0) {
+        if ((currentPage - 1) % 5 === 0) {
             setmaxPageNumberLimit(maxPageNumberLimit - 5);
             setminPageNumberLimit(minPageNumberLimit - 5);
         }

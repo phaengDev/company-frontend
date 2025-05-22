@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DatePicker, Input, InputGroup, SelectPicker, Placeholder, Loader } from 'rsuite'
+import {Input, InputGroup, SelectPicker, Placeholder, Loader } from 'rsuite'
 import { useCompany, useType, useAgent } from '../../config/select-option';
 import { Config } from '../../config/connenct';
 import axios from 'axios';
@@ -55,7 +55,11 @@ export default function ReportInsuranceHistory() {
         }
     };
     const Filter = (event) => {
-        setItemData(filter.filter(n => n.contract_number.toLowerCase().includes(event)))
+        setItemData(filter.filter(n => 
+            n.customer_name.toLowerCase().includes(event) ||
+            n.type_buyer_name.toLowerCase().includes(event) ||
+            n.contract_number.toLowerCase().includes(event)
+        ))
     }
 
     // =================== custom pages============
@@ -114,7 +118,7 @@ export default function ReportInsuranceHistory() {
         setcurrentPage(currentPage - 1);
         setI(indexOfLastItem - 1)
 
-        if ((currentPage - 1) % 5 == 0) {
+        if ((currentPage - 1) % 5 === 0) {
             setmaxPageNumberLimit(maxPageNumberLimit - 5);
             setminPageNumberLimit(minPageNumberLimit - 5);
         }

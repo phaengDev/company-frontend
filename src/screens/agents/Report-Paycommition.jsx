@@ -62,7 +62,10 @@ function ReportPaycommition() {
     }
   };
   const Filter = (event) => {
-    setItemData(dataFilter.filter(n => n.contract_number.toLowerCase().includes(event)))
+    setItemData(dataFilter.filter(n => n.contract_number.toLowerCase().includes(event)))||
+    setItemData(dataFilter.filter(n => n.customer_name.toLowerCase().includes(event)))||
+    setItemData(dataFilter.filter(n => n.type_buyer_name.toLowerCase().includes(event)))
+
   }
 
   const pages = suePage(itemData.length);

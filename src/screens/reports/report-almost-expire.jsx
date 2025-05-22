@@ -68,7 +68,11 @@ export default function ReportAlmostExpire() {
     }
   };
   const Filter = (event) => {
-    setItemData(filter.filter(n => n.contract_number.toLowerCase().includes(event)))
+    setItemData(filter.filter(n =>
+       n.contract_number.toLowerCase().includes(event)||
+       n.customer_name.toLowerCase().includes(event)||
+       n.type_buyer_name.toLowerCase().includes(event)
+      ))
   }
 
 
@@ -140,7 +144,7 @@ export default function ReportAlmostExpire() {
     setcurrentPage(currentPage - 1);
     setI(indexOfLastItem - 1)
 
-    if ((currentPage - 1) % 5 == 0) {
+    if ((currentPage - 1) % 5===0) {
       setmaxPageNumberLimit(maxPageNumberLimit - 5);
       setminPageNumberLimit(minPageNumberLimit - 5);
     }
@@ -311,7 +315,7 @@ export default function ReportAlmostExpire() {
             ສະແດງ 1 ຫາ {itemsPerPage} ຂອງ {qtyItem} ລາຍການ
           </div>
           <ul className="pagination  mb-0 ms-auto justify-content-center">
-            <li className="page-item "><span role="button" onClick={handlePrevbtn} className={`page-link  ${currentPage == pages[0] ? 'disabled' : 'border-blue'}`} ><i class="fa-solid fa-angles-left"></i></span></li>
+            <li className="page-item "><span role="button" onClick={handlePrevbtn} className={`page-link  ${currentPage===pages[0] ? 'disabled' : 'border-blue'}`} ><i class="fa-solid fa-angles-left"></i></span></li>
             {minPageNumberLimit >= 1 ? (
               <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
             ) : ''}
@@ -319,7 +323,7 @@ export default function ReportAlmostExpire() {
             {pages.length > maxPageNumberLimit ? (
               <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
             ) : ''}
-            <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage == pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}><i class="fa-solid fa-angles-right"></i></span></li>
+            <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage===pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}><i class="fa-solid fa-angles-right"></i></span></li>
           </ul>
         </div>
       </div>

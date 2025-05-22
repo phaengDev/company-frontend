@@ -45,7 +45,9 @@ function ReportDebtCustomer() {
     const Filter = (value) => {
         setItemData(filter.filter(n =>
             n.contract_number.toLowerCase().includes(value) ||
-            n.currency_name.toLowerCase().includes(value)
+            n.currency_name.toLowerCase().includes(value) ||
+            n.customer_name.toLowerCase().includes(value) ||
+            n.type_buyer_name.toLowerCase().includes(value)
         ));
     };
 

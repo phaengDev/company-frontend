@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button } from 'rsuite';
-import {Config} from "../../config/connenct";
+import { Config } from "../../config/connenct";
 import axios from 'axios';
 import Alert from "../../utils/config";
 import Swal from "sweetalert2";
@@ -12,10 +12,10 @@ function BrancecarPage() {
 
   //============= action =============
   const [inputs, setInputs] = useState({
-    brandsId:'',
-    brands_name:''
+    brandsId: '',
+    brands_name: ''
   })
-  const handleChange = (name,value) => {
+  const handleChange = (name, value) => {
     setInputs({ ...inputs, [name]: value });
   };
 
@@ -38,10 +38,10 @@ function BrancecarPage() {
     }
   };
 
-  const handleEdit=(item)=>{
+  const handleEdit = (item) => {
     setInputs({
-      brandsId:item.brands_Id,
-    brands_name:item.brands_name
+      brandsId: item.brands_Id,
+      brands_name: item.brands_name
     });
     setOpen(true);
   }
@@ -117,7 +117,7 @@ function BrancecarPage() {
   const renderPageNumbers = pages.map((number) => {
     if (number < maxPageNumberLimit + 1 && number > minPageNumberLimit) {
       return (
-        <li key={number} className={`page-item ${currentPage == number ? "active" : ''}`} >
+        <li key={number} className={`page-item ${currentPage === number ? "active" : ''}`} >
           <span role="button" id={number} onClick={handleClick} className="page-link border-blue">{number}</span>
         </li>
       );
@@ -141,7 +141,7 @@ function BrancecarPage() {
     setcurrentPage(currentPage - 1);
     setI(indexOfLastItem - 1)
 
-    if ((currentPage - 1) % pageNumberLimit == 0) {
+    if ((currentPage - 1) % pageNumberLimit === 0) {
       setmaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit);
       setminPageNumberLimit(minPageNumberLimit - pageNumberLimit);
     }
@@ -194,7 +194,7 @@ function BrancecarPage() {
                       <td width='1%' className="text-center">{key + 1}</td>
                       <td>{item.brands_name}</td>
                       <td width='10%' className='text-center'>
-                        <button type='button' onClick={()=>handleEdit(item)} class="btn btn-blue btn-xs me-2"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button type='button' onClick={() => handleEdit(item)} class="btn btn-blue btn-xs me-2"><i class="fa-solid fa-pen-to-square"></i></button>
                         <button type='button' onClick={() => headleDelete(item.brands_Id)} class="btn btn-red btn-xs"><i class="fa-solid fa-trash"></i></button>
                       </td>
                     </tr>
@@ -208,7 +208,7 @@ function BrancecarPage() {
                 ສະແດງ 1 ຫາ {itemsPerPage} ຂອງ {qtyItem} ລາຍການ
               </div>
               <ul className="pagination  mb-0 ms-auto justify-content-center">
-                <li className="page-item "><span role="button" onClick={handlePrevbtn} className={`page-link  ${currentPage == pages[0] ? 'disabled' : 'border-blue'}`} >ກອນໜ້າ</span></li>
+                <li className="page-item "><span role="button" onClick={handlePrevbtn} className={`page-link  ${currentPage === pages[0] ? 'disabled' : 'border-blue'}`} >ກອນໜ້າ</span></li>
                 {minPageNumberLimit >= 1 ? (
                   <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
                 ) : ''}
@@ -216,7 +216,7 @@ function BrancecarPage() {
                 {pages.length > maxPageNumberLimit ? (
                   <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
                 ) : ''}
-                <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage == pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}>ໜ້າຕໍ່ໄປ</span></li>
+                <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage === pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}>ໜ້າຕໍ່ໄປ</span></li>
               </ul>
             </div>
           </div>
@@ -230,7 +230,7 @@ function BrancecarPage() {
             <Modal.Body>
               <div className="from-group mb-2">
                 <label htmlFor="" className="from-label">ຊື່ຍີ່ຫໍ້ລົດ</label>
-                <input type="text" className="form-control border-blue" value={inputs.brands_name} onChange={(e)=>handleChange('brands_name',e.target.value)} placeholder="ຊື່ຍີ່ຫໍ້ລົດ" required />
+                <input type="text" className="form-control border-blue" value={inputs.brands_name} onChange={(e) => handleChange('brands_name', e.target.value)} placeholder="ຊື່ຍີ່ຫໍ້ລົດ" required />
               </div>
             </Modal.Body>
             <Modal.Footer>

@@ -64,7 +64,9 @@ function ReportInsuranteAgent() {
     const Filter = (event) => {
         setItemData(dataFilter.filter(n =>
             n.contract_number.toLowerCase().includes(event) ||
-            n.currency_name.toLowerCase().includes(event)
+            n.currency_name.toLowerCase().includes(event)||
+            n.customer_name.toLowerCase().includes(event) ||
+            n.type_buyer_name.toLowerCase().includes(event) 
         ))
     }
 

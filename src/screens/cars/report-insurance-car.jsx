@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { DatePicker, Input, InputGroup, SelectPicker, Placeholder, Loader } from 'rsuite'
-import { useCompany, useTypeincar, useAgent,useTypeCar,useOption } from '../../config/select-option';
+import { useCompany, useTypeincar, useAgent, useTypeCar, useOption } from '../../config/select-option';
 import { Config, imageUrl } from '../../config/connenct';
 // import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
 import { ViewInsturance } from '../invioce/view-data-insturance';
 function ReportInsuranceCar() {
-    const api = Config.urlApi;
+  const api = Config.urlApi;
   const url = imageUrl.url;
   const itemcm = useCompany();
   const itemType = useTypeincar();
@@ -23,16 +23,16 @@ function ReportInsuranceCar() {
       ...data, [name]: value
     })
   };
-const [typeId, setTypeId] = useState(null)
-const dataOption=useOption(typeId)
-  
+  const [typeId, setTypeId] = useState(null)
+  const dataOption = useOption(typeId)
+
   const [data, setData] = useState({
     start_date: new Date(),
     end_date: new Date(),
     company_id_fk: '',
     insurance_type_fk: '',
     agent_id_fk: '',
-    custom_id_fk:'',
+    custom_id_fk: '',
     car_type_id_fk: '',
     option_id_fk: '',
   })
@@ -60,14 +60,16 @@ const dataOption=useOption(typeId)
   const Filter = (event) => {
     const searchTerm = event ? event.toLowerCase() : ""; // Ensure event is a string
     setItemData(
-        filter.filter(n => 
-            (n.contract_number?.toLowerCase() || "").includes(searchTerm) || 
-            (n.car_registration?.toLowerCase() || "").includes(searchTerm) ||
-            (n.vehicle_number?.toLowerCase() || "").includes(searchTerm) ||
-            (n.tank_number?.toLowerCase() || "").includes(searchTerm)
-        )
+      filter.filter(n =>
+        (n.contract_number?.toLowerCase() || "").includes(searchTerm) ||
+        (n.car_registration?.toLowerCase() || "").includes(searchTerm) ||
+        (n.vehicle_number?.toLowerCase() || "").includes(searchTerm) ||
+        (n.tank_number?.toLowerCase() || "").includes(searchTerm) ||
+        (n.customer_name?.toLowerCase() || "").includes(searchTerm) ||
+        (n.type_buyer_name?.toLowerCase() || "").includes(searchTerm)
+      )
     );
-};
+  };
 
   // =================== custom pages============
   const [currentPage, setcurrentPage] = useState(1);
@@ -124,19 +126,19 @@ const dataOption=useOption(typeId)
     setcurrentPage(currentPage - 1);
     setI(indexOfLastItem - 1)
 
-    if ((currentPage - 1) % 5 == 0) {
+    if ((currentPage - 1) % 5 === 0) {
       setmaxPageNumberLimit(maxPageNumberLimit - 5);
       setminPageNumberLimit(minPageNumberLimit - 5);
     }
   };
 
   // =======================\\
-const [showView, setShowView] = useState(false);
-const [dataView, setDataView] = useState(null);
-const handleView = (value) => {
+  const [showView, setShowView] = useState(false);
+  const [dataView, setDataView] = useState(null);
+  const handleView = (value) => {
     setDataView(value)
     setShowView(true)
-}
+  }
 
   useEffect(() => {
     fetchReport();
@@ -230,9 +232,9 @@ const handleView = (value) => {
             </thead>
             <tbody>
               {isLoading ? (
-               <> <Placeholder.Grid rows={5} columns={6} active />
-                    <Loader size="lg" center content="ກຳລັງໂຫດ......" vertical />
-                    </>
+                <> <Placeholder.Grid rows={5} columns={6} active />
+                  <Loader size="lg" center content="ກຳລັງໂຫດ......" vertical />
+                </>
               ) : (
                 currentItems.length > 0 ? (
                   <>
@@ -256,8 +258,8 @@ const handleView = (value) => {
                         <td>{item.agent_name}</td>
                         <td>{item.agent_tel}</td>
                         <td className='text-center'>
-                            <button className='btn btn-orange btn-xs' onClick={() => handleView(item)} ><i class="fa-solid fa-eye"/></button>
-                         </td>
+                          <button className='btn btn-orange btn-xs' onClick={() => handleView(item)} ><i class="fa-solid fa-eye" /></button>
+                        </td>
                       </tr>
                     ))}
                   </>
@@ -285,7 +287,7 @@ const handleView = (value) => {
       </div>
 
       <ViewInsturance show={showView} handleClose={() => setShowView(false)} data={dataView} />
-                 
+
     </div>
   )
 }

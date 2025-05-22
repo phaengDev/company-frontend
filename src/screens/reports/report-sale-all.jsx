@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { DatePicker, Input, InputGroup, SelectPicker, Placeholder, Loader } from 'rsuite'
-import { useCompany, useType, useTypeBuyer, useAgent } from '../../config/select-option';
+import { useCompany, useType, useAgent } from '../../config/select-option';
 import { Config } from '../../config/connenct';
 import axios from 'axios';
 import moment from 'moment';
@@ -70,7 +70,8 @@ export default function ReportSaleAll() {
         setItemData(dataFilter.filter(n =>
             n.contract_number.toLowerCase().includes(searchTerm) ||
             n.currency_name.toLowerCase().includes(searchTerm) ||
-            n.customer_name.toLowerCase().includes(searchTerm)
+            n.customer_name.toLowerCase().includes(searchTerm)||
+            n.type_buyer_name.toLowerCase().includes(searchTerm)
         ));
     };
 

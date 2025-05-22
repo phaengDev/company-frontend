@@ -116,7 +116,7 @@ setOpen(true);
   const renderPageNumbers = pages.map((number) => {
     if (number < maxPageNumberLimit + 1 && number > minPageNumberLimit) {
       return (
-        <li key={number} className={`page-item ${currentPage == number ? "active" : ''}`} >
+        <li key={number} className={`page-item ${currentPage===number ? "active" : ''}`} >
           <span role="button" id={number} onClick={handleClick} className="page-link border-blue">{number}</span>
         </li>
       );
@@ -140,7 +140,7 @@ setOpen(true);
     setcurrentPage(currentPage - 1);
     setI(indexOfLastItem - 1)
 
-    if ((currentPage - 1) % pageNumberLimit == 0) {
+    if ((currentPage - 1) % pageNumberLimit===0) {
       setmaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit);
       setminPageNumberLimit(minPageNumberLimit - pageNumberLimit);
     }
@@ -207,7 +207,7 @@ setOpen(true);
                 ສະແດງ 1 ຫາ {itemsPerPage} ຂອງ {qtyItem} ລາຍການ
               </div>
               <ul className="pagination  mb-0 ms-auto justify-content-center">
-                <li className="page-item "><span role="button" onClick={handlePrevbtn} className={`page-link  ${currentPage == pages[0] ? 'disabled' : 'border-blue'}`} >ກອນໜ້າ</span></li>
+                <li className="page-item "><span role="button" onClick={handlePrevbtn} className={`page-link  ${currentPage===pages[0] ? 'disabled' : 'border-blue'}`} >ກອນໜ້າ</span></li>
                 {minPageNumberLimit >= 1 ? (
                   <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
                 ) : ''}
@@ -215,7 +215,7 @@ setOpen(true);
                 {pages.length > maxPageNumberLimit ? (
                   <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
                 ) : ''}
-                <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage == pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}>ໜ້າຕໍ່ໄປ</span></li>
+                <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage===pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}>ໜ້າຕໍ່ໄປ</span></li>
               </ul>
             </div>
           </div>

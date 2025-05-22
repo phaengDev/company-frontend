@@ -46,7 +46,6 @@ export default function FormEditInsurance() {
 
   const [typeInsurance, setTypeInsurance] = useState(2);
   const [inputs, setInputs] = useState({});
-  const nextYear = moment(new Date()).add(1, 'year').toDate();
   const showDataInsurance = async () => {
     try {
       const response = await fetch(api + `insurance/${Id}`);

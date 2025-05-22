@@ -59,7 +59,11 @@ export default function ReportCommisIncom() {
         }
     };
     const Filter = (event) => {
-        setItemData(dataFilter.filter(n => n.contract_number.toLowerCase().includes(event)))
+        setItemData(dataFilter.filter(n =>
+            n.customer_name.toLowerCase().includes(event) ||
+             n.contract_number.toLowerCase().includes(event) ||
+             n.type_buyer_name.toLowerCase().includes(event) 
+            ))
     }
 
 
@@ -119,7 +123,7 @@ export default function ReportCommisIncom() {
         setcurrentPage(currentPage - 1);
         setI(indexOfLastItem - 1)
 
-        if ((currentPage - 1) % 5 == 0) {
+        if ((currentPage - 1) % 5 === 0) {
             setmaxPageNumberLimit(maxPageNumberLimit - 5);
             setminPageNumberLimit(minPageNumberLimit - 5);
         }
@@ -327,7 +331,7 @@ export default function ReportCommisIncom() {
                         ສະແດງ 1 ຫາ {itemsPerPage} ຂອງ {qtyItem} ລາຍການ
                     </div>
                     <ul className="pagination  mb-0 ms-auto justify-content-center">
-                        <li className="page-item "><span role="button" onClick={handlePrevbtn} className={`page-link  ${currentPage == pages[0] ? 'disabled' : 'border-blue'}`} >ກອນໜ້າ</span></li>
+                        <li className="page-item "><span role="button" onClick={handlePrevbtn} className={`page-link  ${currentPage === pages[0] ? 'disabled' : 'border-blue'}`} >ກອນໜ້າ</span></li>
                         {minPageNumberLimit >= 1 ? (
                             <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
                         ) : ''}
@@ -335,7 +339,7 @@ export default function ReportCommisIncom() {
                         {pages.length > maxPageNumberLimit ? (
                             <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
                         ) : ''}
-                        <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage == pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}>ໜ້າຕໍ່ໄປ</span></li>
+                        <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage === pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}>ໜ້າຕໍ່ໄປ</span></li>
                     </ul>
                 </div>
             </div>

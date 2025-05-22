@@ -160,7 +160,7 @@ const [item, setItem] = useState('');
 
   const handlePrevbtn = () => {
     setcurrentPage(currentPage - 1);
-    if ((currentPage - 1) % pageNumberLimit == 0) {
+    if ((currentPage - 1) % pageNumberLimit === 0) {
       setmaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit);
       setminPageNumberLimit(minPageNumberLimit - pageNumberLimit);
     }
@@ -349,7 +349,7 @@ const handleExportPDF = () => {
                   ສະແດງ 1 ຫາ {itemsPerPage} ຂອງ {qtyItem} ລາຍການ
                 </div>
                 <ul className="pagination  mb-0 ms-auto justify-content-center">
-                  <li className="page-item "><span role="button" onClick={handlePrevbtn} className={`page-link  ${currentPage == pages[0] ? 'disabled' : 'border-blue'}`} ><i className="fa-solid fa-angles-left"></i></span></li>
+                  <li className="page-item "><span role="button" onClick={handlePrevbtn} className={`page-link  ${currentPage === pages[0] ? 'disabled' : 'border-blue'}`} ><i className="fa-solid fa-angles-left"></i></span></li>
                   {minPageNumberLimit >= 1 ? (
                     <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
                   ) : ''}
@@ -357,7 +357,7 @@ const handleExportPDF = () => {
                   {pages.length > maxPageNumberLimit ? (
                     <li className="page-item"><span role="button" className="page-link disabled">...</span></li>
                   ) : ''}
-                  <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage == pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}><i className="fa-solid fa-angles-right"></i></span></li>
+                  <li className="page-item"><span role="button" onClick={handleNextbtn} className={`page-link  ${currentPage === pages[pages.length - 1] ? 'disabled' : 'border-blue'}`}><i className="fa-solid fa-angles-right"></i></span></li>
                 </ul>
               </div>
             </div>
