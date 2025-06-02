@@ -1,11 +1,11 @@
 
 export const Config = {
-  urlApi: 'http://api-info.oacbroker.com/',
+  urlApi: 'https://api-info.oacbroker.com/',
   apiKey: 'your-api-key',
 };
 
 export const imageUrl = {
-  url: 'http://api-info.oacbroker.com/image/',
+  url: 'https://api-info.oacbroker.com/image/',
   apiKey: 'your-api-key',
 };
 
