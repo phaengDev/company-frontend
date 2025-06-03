@@ -8,10 +8,8 @@ import { ViewInsturance } from "../screens/invioce/view-data-insturance";
 import { ViewInsturanceAg } from "../screens/invioce/view-ag-insturance";
 import { ViewInsturanceBy } from "../screens/invioce/view-buy-insturance";
 import { Notific } from "../utils/Notific";
-import numeral from "numeral";
 import { IconButton,Tooltip, Whisper,} from 'rsuite';
 import CopyIcon from '@rsuite/icons/Copy';
-import EyeRoundIcon from '@rsuite/icons/EyeRound';
 import moment from "moment";
 export default function Header() {
   const api = Config.urlApi;
