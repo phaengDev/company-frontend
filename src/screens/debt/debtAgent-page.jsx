@@ -8,6 +8,8 @@ import numeral from 'numeral';
 import Alert from '../../utils/config';
 import { useCompany, useAgent } from '../../config/select-option';
 import FormPayDebt from './Form-PayDebt';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 export default function DebtAgent() {
     const api = Config.urlApi;
     const itemCompay = useCompany();
@@ -41,13 +43,19 @@ export default function DebtAgent() {
         }
 
     };
+
+
     const Filter = (value) => {
-        setItemData(filter.filter(n => 
-            n.contract_number.toLowerCase().includes(value) ||
-            n.currency_name.toLowerCase().includes(value) ||
-            n.customer_name.toLowerCase().includes(value) 
-        ));
+        setItemData(
+            filter.filter((n) =>
+                n.contract_number.toLowerCase().includes(value.toLowerCase()) ||
+                n.currency_name.toLowerCase().includes(value.toLowerCase()) ||
+                n.customer_name.toLowerCase().includes(value.toLowerCase())
+            )
+        );
     };
+
+
     const [sum, steSum] = useState({})
     const [loading, setLoading] = useState(true)
     const showTotalDebt = async () => {
@@ -109,7 +117,7 @@ export default function DebtAgent() {
     const closeFile = () => {
         setFileName('');
         setInputs({
-           ...inputs, docom_file: ''
+            ...inputs, docom_file: ''
         })
     }
     const handleSubmit = (event) => {
@@ -171,20 +179,20 @@ export default function DebtAgent() {
     const dataDebt = checkedItems.map(item => ({
         incuranec_code: item.incuranec_code,
         contract_number: item.contract_number,
-        contract_start_date:item.contract_start_date,
-        contract_end_date:item.contract_end_date,
-        currency_name:item.currency_name,
-        genus:item.genus,
-        initial_fee:item.initial_fee,
-        percent_eps:item.percent_eps,
-        pays_advance_fee:item.pays_advance_fee,
-        percent_fee_eps:item.percent_fee_eps,
-        money_percent_fee:item.money_percent_fee,
-        expences_pays_taxes:item.expences_pays_taxes
-      }));
+        contract_start_date: item.contract_start_date,
+        contract_end_date: item.contract_end_date,
+        currency_name: item.currency_name,
+        genus: item.genus,
+        initial_fee: item.initial_fee,
+        percent_eps: item.percent_eps,
+        pays_advance_fee: item.pays_advance_fee,
+        percent_fee_eps: item.percent_fee_eps,
+        money_percent_fee: item.money_percent_fee,
+        expences_pays_taxes: item.expences_pays_taxes
+    }));
 
     const [showPay, setShowPay] = useState(false);
-    const status=2;
+    const status = 2;
     const handlePayDebtMouti = () => {
         setShowPay(true);
     };
@@ -198,6 +206,52 @@ export default function DebtAgent() {
         fetchReport();
         showTotalDebt();
     }, [data])
+
+
+    const exportToExcel = () => {
+    // Transform `itemData` to a flat array of objects
+    const exportData = itemData.map((item, index) => ({
+        '#': index + 1,
+        'ສະຖານະ': item.status_company === 1 ? 'ຄັ້ງຈ່າຍບໍລິສັດ' : 'ບໍ່ຈ່າຍ',
+        'ຊື່ລູກຄ້າ': item.customer_name,
+        'ບໍລິສັດ': item.com_name_lao,
+        'ເລກທີສັນຍາ': item.contract_number,
+        'ວັນທີເລີ່ມ': moment(item.contract_start_date).format('DD/MM/YYYY'),
+        'ວັນທີສິ້ນສຸດ': moment(item.contract_end_date).format('DD/MM/YYYY'),
+        'ພະນັກງານ': item.agent_name,
+        'ປະເພດຜູ້ຊື້': item.type_buyer_name,
+        'ປະເພດລາຍຮັບ': item.type_in_name,
+        'ທາງເລືອກ': item.options_name,
+        'ຄ່າທຳນຽມເບື້ອງຕົ້ນ': numeral(item.initial_fee).format('0,00.00') + ' ' + item.genus,
+        '% EPS': item.percent_eps + '%',
+        'ຄ່າທຳນຽມລ່ວງໜ້າ': numeral(item.pays_advance_fee).format('0,00.00') + ' ' + item.genus,
+        '% ຄ່າທຳນຽມ EPS': item.percent_fee_eps + '%',
+        'ເງິນຄ່າທຳນຽມ': numeral(item.money_percent_fee).format('0,00.00') + ' ' + item.genus,
+        'ພາສີ': numeral(item.expences_pays_taxes).format('0,00.00') + ' ' + item.genus,
+        'ວັນທີມອບຫຼັກຊັບ': moment(item.agent_date).format('DD/MM/YYYY'),
+        'ຈຳນວນວັນ': item.day_agent + ' ວັນ',
+    }));
+
+  const worksheet = XLSX.utils.json_to_sheet([]);
+  XLSX.utils.sheet_add_aoa(worksheet, [
+    [`ລາຍການໜີ້ຄ້າງຈ່າຍ ຕົວແທນ (ທັງໝົດ ${itemData.length} ລາຍການ)`]
+  ], { origin: 'A1' });
+  XLSX.utils.sheet_add_json(worksheet, exportData, { origin: 'A3', skipHeader: false });
+  const totalColumns = Object.keys(exportData[0]).length;
+  worksheet['!merges'] = [
+    {
+      s: { r: 0, c: 0 }, // start cell (row 0, col 0)
+      e: { r: 0, c: totalColumns - 1 }, // end cell (row 0, last column)
+    }
+  ];
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'ContractList');
+
+  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+  saveAs(blob, `ໜີ້ຄ້າງຈ່າຍ ຕົວແທນ${moment().format('MMDD_HHmmss')}.xlsx`);
+};
+
     return (
         <div id="content" className="app-content">
             <ol className="breadcrumb float-end">
@@ -268,6 +322,7 @@ export default function DebtAgent() {
                             <button onClick={handlePayDebtMouti} className="btn btn-md btn-danger">ຢືນຢັນຕັດໜີ້</button>
                         ) : (
                             <>
+                             <button className=" rounded-4 px-2 me-2 text-green" onClick={exportToExcel}>Excel <i className="fa-solid fa-cloud-arrow-down"></i></button>
                                 <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
                                 <a href="javascript:;" class="btn btn-xs btn-icon btn-danger" data-toggle="panel-remove"><i class="fa fa-times"></i></a>
                             </>
@@ -331,9 +386,9 @@ export default function DebtAgent() {
                             <tbody>
                                 {isLoading ? (
                                     <tr>
-                                        <td colSpan={19}>
+                                        <td colSpan={20}>
                                             <Placeholder.Grid rows={6} columns={20} active />
-                                            {/* <Loader backdrop size="lg"  content="ກຳລັງໂຫດ......" vertical /> */}
+                                            <Loader center size="lg"  content="ກຳລັງໂຫດ......" vertical />
                                         </td>
                                     </tr>
                                 ) : (
@@ -345,7 +400,7 @@ export default function DebtAgent() {
                                                     <td className='text-center bg-white sticky-col first-col'>{item.status_company === 1 ? 'ຄັ້ງຈ່າຍບໍລິສັດ' : (<span onClick={() => handlePayDebt(item)} role='button' class="badge bg-primary"><i class="fa-brands fa-paypal"></i> ຕັດໜີ້ບໍລິສັດ</span>)}</td>
                                                     <td>{item.customer_name}</td>
                                                     <td>{item.com_name_lao}</td>
-                                                    <td className='text-center'>{item.contract_number}</td>
+                                                    <td>{item.contract_number}</td>
                                                     <td className='text-center'>{moment(item.contract_start_date).format('DD/MM/YYYY')}</td>
                                                     <td className='text-center'>{moment(item.contract_end_date).format('DD/MM/YYYY')}</td>
                                                     <td>{item.agent_name}</td>
@@ -361,9 +416,9 @@ export default function DebtAgent() {
                                                     <td className='text-center'>{moment(item.agent_date).format('DD/MM/YYYY')}</td>
                                                     <td className='text-center'>{item.day_agent} ວັນ</td>
                                                     <td className='text-center bg-white sticky-col first-col-end'>
-                                                    {item.status_company === 1 ? (<i class="fa-solid fa-triangle-exclamation text-orange"></i>) : (
-                                                        <input class="form-check-input" type="checkbox" onChange={() => handleCheckUse(item)} />
-                                                    )}
+                                                        {item.status_company === 1 ? (<i class="fa-solid fa-triangle-exclamation text-orange"></i>) : (
+                                                            <input class="form-check-input" type="checkbox" onChange={() => handleCheckUse(item)} />
+                                                        )}
                                                     </td>
                                                 </tr>
                                             ))}
@@ -442,14 +497,14 @@ export default function DebtAgent() {
                     </Modal.Footer>
                 </form>
             </Modal>
-            <FormPayDebt 
-            status={status}
-             show={showPay}
-             handleClose={handleClose}
-             data={dataDebt}
-             fetchReport={fetchReport}
-             showTotalDebt={showTotalDebt}
-             setCheckedItems={setCheckedItems}
+            <FormPayDebt
+                status={status}
+                show={showPay}
+                handleClose={handleClose}
+                data={dataDebt}
+                fetchReport={fetchReport}
+                showTotalDebt={showTotalDebt}
+                setCheckedItems={setCheckedItems}
             />
         </div>
     )

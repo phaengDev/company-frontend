@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DatePicker, SelectPicker, Placeholder, Loader, Button, Modal, Input } from 'rsuite'
+import { DatePicker, SelectPicker, Placeholder, Loader, Button, Modal, Input, InputGroup } from 'rsuite'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Config } from '../../config/connenct';
@@ -8,6 +8,8 @@ import numeral from 'numeral';
 import Alert from '../../utils/config';
 import FormPayDebtcom from './Form-PayDebtcom';
 import { useCompany, useAgent } from '../../config/select-option';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 export default function DebtCompany() {
     const api = Config.urlApi;
     const itemCompay = useCompany();
@@ -40,13 +42,17 @@ export default function DebtCompany() {
             setIsLoading(false);
         }
     };
+
     const Filter = (value) => {
-        setItemData(filter.filter(n => 
-            n.contract_number.toLowerCase().includes(value) ||
-            n.currency_name.toLowerCase().includes(value) ||
-            n.customer_name.toLowerCase().includes(value) 
-        ));
+        setItemData(
+            filter.filter((n) =>
+                n.contract_number.toLowerCase().includes(value.toLowerCase()) ||
+                n.currency_name.toLowerCase().includes(value.toLowerCase()) ||
+                n.customer_name.toLowerCase().includes(value.toLowerCase())
+            )
+        );
     };
+
 
     const [sum, steSum] = useState({});
     const [loading, setLoading] = useState(true)
@@ -72,7 +78,7 @@ export default function DebtCompany() {
         setShow(true);
         setDdebt(data)
         setInputs({
-            ...inputs, 
+            ...inputs,
             contract_code_fk: data.incuranec_code,
             contract_no: data.contract_number,
         })
@@ -109,93 +115,133 @@ export default function DebtCompany() {
     const closeFile = () => {
         setFileName('');
         setInputs({
-           ...inputs, docom_file: ''
+            ...inputs, docom_file: ''
         })
     }
-const handleSubmit =(event)=>{
-    event.preventDefault();
-    const imputData=new FormData();
-  for(const key in inputs){
-      imputData.append(key,inputs[key])
-  }
-  try {
-    axios.post(api + 'pays/create', imputData)
-      .then(function (respones) {
-        if (respones.status === 200) {
-            fetchReport();
-            showTotalDebt();
-            setShow(false);
-          Alert.successData(respones.data.message)
-        } else {
-          Alert.errorData(respones.data.error)
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const imputData = new FormData();
+        for (const key in inputs) {
+            imputData.append(key, inputs[key])
         }
-      });
-  } catch (error) {
-    console.error('Error inserting data:', error);
-  }
-}
-
-
-const sumData = itemData.reduce((acc, item) => {
-    const currency = item.currency_name;
-    if (!acc[currency]) {
-        acc[currency] = {
-            initial_fee: 0,
-            money_taxes: 0,
-            registration_fee: 0,
-            insuranc_included: 0,
-        };
+        try {
+            axios.post(api + 'pays/create', imputData)
+                .then(function (respones) {
+                    if (respones.status === 200) {
+                        fetchReport();
+                        showTotalDebt();
+                        setShow(false);
+                        Alert.successData(respones.data.message)
+                    } else {
+                        Alert.errorData(respones.data.error)
+                    }
+                });
+        } catch (error) {
+            console.error('Error inserting data:', error);
+        }
     }
-    acc[currency].initial_fee += parseFloat(item.initial_fee);
-    acc[currency].money_taxes += parseFloat(item.money_taxes);
-    acc[currency].registration_fee += parseFloat(item.registration_fee);
-    acc[currency].insuranc_included += parseFloat(item.insuranc_included);
-    return acc;
-}, {});
-
-const formatNumber = (num) => numeral(num).format('0,00.00');
 
 
+    const sumData = itemData.reduce((acc, item) => {
+        const currency = item.currency_name;
+        if (!acc[currency]) {
+            acc[currency] = {
+                initial_fee: 0,
+                money_taxes: 0,
+                registration_fee: 0,
+                insuranc_included: 0,
+            };
+        }
+        acc[currency].initial_fee += parseFloat(item.initial_fee);
+        acc[currency].money_taxes += parseFloat(item.money_taxes);
+        acc[currency].registration_fee += parseFloat(item.registration_fee);
+        acc[currency].insuranc_included += parseFloat(item.insuranc_included);
+        return acc;
+    }, {});
 
+    const formatNumber = (num) => numeral(num).format('0,00.00');
+    //==========================
+    const [checkedItems, setCheckedItems] = useState([]);
 
- //==========================
- const [checkedItems, setCheckedItems] = useState([]);
+    const handleCheckUse = (item) => {
+        setCheckedItems(prevState => {
+            if (prevState.includes(item)) {
+                return prevState.filter(i => i !== item);
+            } else {
+                return [...prevState, item];
+            }
+        });
+    };
 
- const handleCheckUse = (item) => {
-     setCheckedItems(prevState => {
-         if (prevState.includes(item)) {
-             return prevState.filter(i => i !== item);
-         } else {
-             return [...prevState, item];
-         }
-     });
- };
- 
- const dataDebt = checkedItems.map(item => ({
-     incuranec_code: item.incuranec_code,
-     contract_number: item.contract_number,
-     contract_start_date:item.contract_start_date,
-     contract_end_date:item.contract_end_date,
-     currency_name:item.currency_name,
-     genus:item.genus,
-     initial_fee:item.initial_fee,
-     percent_taxes:item.percent_taxes,
-     money_taxes:item.money_taxes,
-     registration_fee:item.registration_fee,
-     insuranc_included:item.insuranc_included
-   }));
+    const dataDebt = checkedItems.map(item => ({
+        incuranec_code: item.incuranec_code,
+        contract_number: item.contract_number,
+        contract_start_date: item.contract_start_date,
+        contract_end_date: item.contract_end_date,
+        currency_name: item.currency_name,
+        genus: item.genus,
+        initial_fee: item.initial_fee,
+        percent_taxes: item.percent_taxes,
+        money_taxes: item.money_taxes,
+        registration_fee: item.registration_fee,
+        insuranc_included: item.insuranc_included
+    }));
 
- const [showPay, setShowPay] = useState(false);
- const handlePayDebtMouti = () => {
-     setShowPay(true);
- };
- const handleClose = () => setShowPay(false);
+    const [showPay, setShowPay] = useState(false);
+    const handlePayDebtMouti = () => {
+        setShowPay(true);
+    };
+    const handleClose = () => setShowPay(false);
 
 
     useEffect(() => {
         fetchReport();
         showTotalDebt();
-    }, [data])
+    }, []);
+
+
+const handleExportExcel = () => {
+  const data = itemData.map((item, index) => ({
+    'ລ/ດ': index + 1,
+    'ຊື່ລູກຄ້າ': item.customer_name,
+    'ຊື່ບໍລິສັດ': item.com_name_lao,
+    'ເລກທີສັນຍາ': item.contract_number,
+    'ວັນທີ່ເລີ່ມ': moment(item.contract_start_date).format('DD/MM/YYYY'),
+    'ວັນທີ່ສິ້ນສຸດ': moment(item.contract_end_date).format('DD/MM/YYYY'),
+    'ພະນັກງານຂາຍ': item.agent_name,
+    'ປະເພດລູກຄ້າ': item.type_buyer_name,
+    'ປະເພດນໍາເຂົ້າ': item.type_in_name,
+    'ລາຍການເພີ່ມເຕີມ': item.options_name,
+    'ຄ່າມັດຈໍາ': `${numeral(item.initial_fee).format('0,00.00')} ${item.genus}`,
+    'ອັດຕາພາສີ': `${item.percent_taxes}%`,
+    'ພາສີເງິນ': `${numeral(item.money_taxes).format('0,00.00')} ${item.genus}`,
+    'ຄ່າລົງທະບຽນ': `${numeral(item.registration_fee).format('0,00.00')} ${item.genus}`,
+    'ປະກັນລວມ': `${numeral(item.insuranc_included).format('0,00.00')} ${item.genus}`,
+    'ວັນທີ່ບໍລິສັດ': moment(item.company_date).format('DD/MM/YYYY'),
+    'ຈໍານວນວັນ': `${item.day_company} ວັນ`,
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet([]);
+  XLSX.utils.sheet_add_aoa(worksheet, [
+    [`ລາຍງານຂໍ້ມູນໜີ້ຂອງບໍລິສັດ (ທັງໝົດ ${itemData.length} ລາຍການ)`]
+  ], { origin: 'A1' });
+  // 👉 Add the table data starting from row 3 (A3)
+  XLSX.utils.sheet_add_json(worksheet, data, { origin: 'A3', skipHeader: false });
+  // 👉 Merge title across all columns (A1 to R1)
+  const totalColumns = Object.keys(data[0]).length;
+  worksheet['!merges'] = [
+    {
+      s: { r: 0, c: 0 }, // start cell (row 0, col 0)
+      e: { r: 0, c: totalColumns - 1 }, // end cell (row 0, last column)
+    }
+  ];
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'ContractList');
+
+  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+  saveAs(blob, `ໜີ້ຄ້າງຈ່າຍບໍລິສັດ${moment().format('MMDD_HHmmss')}.xlsx`);
+};
     return (
         <div id="content" className="app-content">
             <ol className="breadcrumb float-end">
@@ -204,11 +250,11 @@ const formatNumber = (num) => numeral(num).format('0,00.00');
             </ol>
             <h3 className="page-header fs-20px">ຂໍ້ມູນໜີ້ທັງໝົດ </h3>
 
-            <div class="row">
-                <div class="col-xl-4 col-md-6">
-                    <div class="widget widget-stats bg-primary border-4 border-top border-orange rounded-4">
-                        <div class="stats-icon text-white"><i class="fa-solid fa-wallet" /></div>
-                        <div class="stats-info">
+            <div className="row">
+                <div className="col-xl-4 col-md-6">
+                    <div className="widget widget-stats bg-primary border-4 border-top border-orange rounded-4">
+                        <div className="stats-icon text-white"><i className="fa-solid fa-wallet" /></div>
+                        <div className="stats-info">
                             <h4 className='fs-16px'>ໜີ້ຄ້າງຈ່າຍບໍລິສັດປະກັນໄພ</h4>
                             {loading === true ? (
                                 <Loader size="md" content="ກຳລັງໂຫລດ..." />
@@ -216,16 +262,16 @@ const formatNumber = (num) => numeral(num).format('0,00.00');
                                 <p>{numeral(sum.insuranc_included).format('0,00.00')} kip</p>
                             )}
                         </div>
-                        <div class="stats-link">
-                            <a href="javascript:;">ເບີ່ງລາຍລະອຽດ <i class="fa fa-arrow-alt-circle-right"></i></a>
+                        <div className="stats-link">
+                            <a href="javascript:;">ເບີ່ງລາຍລະອຽດ <i className="fa fa-arrow-alt-circle-right"></i></a>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-xl-4 col-md-6">
-                    <div class="widget widget-stats bg-orange rounded-4">
-                        <div class="stats-icon text-white"><i class="fa fa-users" /></div>
-                        <div class="stats-info">
+                <div className="col-xl-4 col-md-6">
+                    <div className="widget widget-stats bg-orange rounded-4">
+                        <div className="stats-icon text-white"><i className="fa fa-users" /></div>
+                        <div className="stats-info">
                             <h4 className='fs-16px'>ໜີ້ຄ້າງຈ່າຍຕົວແທນ</h4>
                             {loading === true ? (
                                 <Loader size="md" content="ກຳລັງໂຫລດ..." />
@@ -233,17 +279,17 @@ const formatNumber = (num) => numeral(num).format('0,00.00');
                                 <p>{numeral(sum.expences_pays_taxes).format('0,00.00')} kip</p>
                             )}
                         </div>
-                        <div class="stats-link">
-                            <Link to={'/debt-agent'}>ເບີ່ງລາຍລະອຽດ <i class="fa fa-arrow-alt-circle-right"></i></Link>
+                        <div className="stats-link">
+                            <Link to={'/debt-agent'}>ເບີ່ງລາຍລະອຽດ <i className="fa fa-arrow-alt-circle-right"></i></Link>
                         </div>
                     </div>
                 </div>
 
 
-                <div class="col-xl-4 col-md-6">
-                    <div class="widget widget-stats bg-orange rounded-4">
-                        <div class="stats-icon text-white"><i class="fa-solid fa-wallet" /></div>
-                        <div class="stats-info">
+                <div className="col-xl-4 col-md-6">
+                    <div className="widget widget-stats bg-orange rounded-4">
+                        <div className="stats-icon text-white"><i className="fa-solid fa-wallet" /></div>
+                        <div className="stats-info">
                             <h4 className='fs-16px'>ໜີ້ຄ້າງຮັບ oac</h4>
                             {loading === true ? (
                                 <Loader size="md" content="ກຳລັງໂຫລດ..." />
@@ -251,23 +297,24 @@ const formatNumber = (num) => numeral(num).format('0,00.00');
                                 <p>{numeral(sum.incom_finally).format('0,00.00')} kip</p>
                             )}
                         </div>
-                        <div class="stats-link">
-                            <Link to={'/debt-oac'}>ເບີ່ງລາຍລະອຽດ <i class="fa fa-arrow-alt-circle-right"></i></Link>
+                        <div className="stats-link">
+                            <Link to={'/debt-oac'}>ເບີ່ງລາຍລະອຽດ <i className="fa fa-arrow-alt-circle-right"></i></Link>
                         </div>
                     </div>
                 </div>
 
             </div>
             <div className="panel panel-inverse">
-                <div class="panel-heading bg-white">
-                    <h4 class="panel-title text-dark fs-18px">ລາຍການໜີ້ຄ້າງຈ່າຍບໍລິສັດ</h4>
-                    <div class="panel-heading-btn">
-                    {checkedItems.length > 0 ? (
+                <div className="panel-heading bg-white">
+                    <h4 className="panel-title text-dark fs-18px">ລາຍການໜີ້ຄ້າງຈ່າຍບໍລິສັດ</h4>
+                    <div className="panel-heading-btn">
+                        {checkedItems.length > 0 ? (
                             <button onClick={handlePayDebtMouti} className="btn btn-md btn-danger">ຢືນຢັນຕັດໜີ້</button>
                         ) : (
                             <>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-danger" data-toggle="panel-remove"><i class="fa fa-times"></i></a>
+                                <button className=" rounded-4 px-2 me-2 text-green" onClick={handleExportExcel}>Excel <i className="fa-solid fa-cloud-arrow-down"></i></button>
+                                <a href="javascript:;" className="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i className="fa fa-expand"></i></a>
+                                <a href="javascript:;" className="btn btn-xs btn-icon btn-danger" data-toggle="panel-remove"><i className="fa fa-times"></i></a>
                             </>
                         )}
                     </div>
@@ -292,11 +339,15 @@ const formatNumber = (num) => numeral(num).format('0,00.00');
                         </div>
                         <div className="col-sm-3 mb-2">
                             <label htmlFor="" className='form-label'>ຄົ້ນຫາ</label>
-                            <div class="input-group">
-                                <input type='search' onChange={(e) => Filter(e.target.value)} className='form-control rounded fs-14px' placeholder='ເລກທີສັນຍາ/ສະກຸນເງິນ/ຊື່ລູກຄ້າ' />
-                                <button type="button" class="btn btn-blue  rounded ms-2" >
+                            <InputGroup inside className='rounded-end-pill rounded-start'>
+                                <Input onChange={(e) => Filter(e)} placeholder='ເລກທີສັນຍາ/ສະກຸນເງິນ/ຊື່ລູກຄ້າ' />
+                                <InputGroup.Button appearance='primary' color='red' onClick={fetchReport} className='rounded-pill'> ຄົ້ນຫາ </InputGroup.Button>
+                            </InputGroup>
+                            <div className="input-group">
+                                {/* <input type='search' onChange={(e) => Filter(e.target.value)} className='form-control rounded fs-14px' placeholder='ເລກທີສັນຍາ/ສະກຸນເງິນ/ຊື່ລູກຄ້າ' /> */}
+                                {/* <button type="button" className="btn btn-blue  rounded ms-2" >
                                     <i className="fas fa-search fs-5"></i>
-                                </button>
+                                </button> */}
                             </div>
                         </div>
                     </div>
@@ -339,10 +390,10 @@ const formatNumber = (num) => numeral(num).format('0,00.00');
                                             {itemData.map((item, key) => (
                                                 <tr key={key}>
                                                     <td className='text-center bg-white sticky-col first-col'>{key + 1}</td>
-                                                    <td className='text-center bg-white sticky-col first-col'><span onClick={() => handlePayDebt(item)} role='button' class="badge bg-primary"><i class="fa-brands fa-paypal"></i> ຕັດໜີ້ບໍລິສັດ</span></td>
+                                                    <td className='text-center bg-white sticky-col first-col'><span onClick={() => handlePayDebt(item)} role='button' className="badge bg-primary"><i className="fa-brands fa-paypal"></i> ຕັດໜີ້ບໍລິສັດ</span></td>
                                                     <td>{item.customer_name}</td>
                                                     <td>{item.com_name_lao}</td>
-                                                    <td className='text-center'>{item.contract_number}</td>
+                                                    <td>{item.contract_number}</td>
                                                     <td className='text-center'>{moment(item.contract_start_date).format('DD/MM/YYYY')}</td>
                                                     <td className='text-center'>{moment(item.contract_end_date).format('DD/MM/YYYY')}</td>
                                                     <td>{item.agent_name}</td>
@@ -357,22 +408,22 @@ const formatNumber = (num) => numeral(num).format('0,00.00');
                                                     <td className='text-center'>{moment(item.company_date).format('DD/MM/YYYY')}</td>
                                                     <td className='text-center'>{item.day_company} ວັນ</td>
                                                     <td className='text-center bg-white sticky-col first-col-end'>
-                                                        <input class="form-check-input" type="checkbox" onChange={() => handleCheckUse(item)} />
+                                                        <input className="form-check-input" type="checkbox" onChange={() => handleCheckUse(item)} />
                                                     </td>
                                                 </tr>
                                             ))}
-                                           
+
                                             {Object.keys(sumData).map((currency, key) => (
-                                        <tr key={key}>
-                                            <td colSpan={11} className='text-end'>ລວມຍອດຮັບທັງໝົດ ({currency})</td>
-                                            <td className='text-end'>{formatNumber(sumData[currency].initial_fee)}</td>
-                                            <td></td>
-                                            <td className='text-end'>{formatNumber(sumData[currency].money_taxes)}</td>
-                                            <td className='text-end'>{formatNumber(sumData[currency].registration_fee)}</td>
-                                            <td className='text-end'>{formatNumber(sumData[currency].insuranc_included)}</td>
-                                            <td colSpan={3}></td>
-                                        </tr>
-                                    ))}
+                                                <tr key={key}>
+                                                    <td colSpan={11} className='text-end'>ລວມຍອດຮັບທັງໝົດ ({currency})</td>
+                                                    <td className='text-end'>{formatNumber(sumData[currency].initial_fee)}</td>
+                                                    <td></td>
+                                                    <td className='text-end'>{formatNumber(sumData[currency].money_taxes)}</td>
+                                                    <td className='text-end'>{formatNumber(sumData[currency].registration_fee)}</td>
+                                                    <td className='text-end'>{formatNumber(sumData[currency].insuranc_included)}</td>
+                                                    <td colSpan={3}></td>
+                                                </tr>
+                                            ))}
                                         </>
                                     ) : (<tr><td colSpan={26} className='text-center text-red'>ບໍ່ພົບຂໍ້ມູນທີ່ມີການຄົ້ນຫາ.......</td></tr>)
                                 )}
@@ -384,65 +435,65 @@ const formatNumber = (num) => numeral(num).format('0,00.00');
 
             <Modal open={show} size='lg' onClose={() => handleShow(false)}>
                 <form onSubmit={handleSubmit}>
-                <Modal.Body>
-                    <h4 className='text-center'>ຟອມຊຳລະໜີ້</h4>
-                    <div className="mb-2 row">
-                        <table className='table' width={'100%'}>
-                            <tr>
-                                <td>ເລກທີສັນຍາ: <span className='fs-18px'>{debt.contract_number}</span> </td>
-                                <td rowSpan={3}>
-                                    <span className='fs-16px'>ຍອດເງິນ</span>
-                                    <h3 className='text-red'>{numeral(debt.insuranc_included).format('0,00.00')} ₭</h3>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>ວັນທີເລີມ: {moment(debt.contract_start_date).format('DD/MM/YYYY')}</td>
-                            </tr>
-                            <tr>
-                                <td>ວັນທີສິນສຸດ: {moment(debt.contract_end_date).format('DD/MM/YYYY')}</td>
-                            </tr>
-                        </table>
-                        <div className="form-group col-sm-7">
-                            <label htmlFor="" className='form-label'>ວັນທີຈ່າຍ</label>
-                            <DatePicker oneTap format="dd/MM/yyyy" onChange={(e) => handleChangeDate('doccm_date', e)} defaultValue={new Date()} block />
-                        </div>
-                        <div className="form-group col-sm-5">
-                            <label htmlFor="" className='form-label'>ເອກະສານແນບ</label>
-                            <div className="mb-1">
-                                <label className='btn btn-blue fs-15px'> <i class="fa-regular fa-folder-open fs-5"></i> ເລືອກໄຟລ໌....
-                                    <input type='file' onChange={handleFileChange} className='hide' />
-                                </label>
+                    <Modal.Body>
+                        <h4 className='text-center'>ຟອມຊຳລະໜີ້</h4>
+                        <div className="mb-2 row">
+                            <table className='table' width={'100%'}>
+                                <tr>
+                                    <td>ເລກທີສັນຍາ: <span className='fs-18px'>{debt.contract_number}</span> </td>
+                                    <td rowSpan={3}>
+                                        <span className='fs-16px'>ຍອດເງິນ</span>
+                                        <h3 className='text-red'>{numeral(debt.insuranc_included).format('0,00.00')} ₭</h3>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ວັນທີເລີມ: {moment(debt.contract_start_date).format('DD/MM/YYYY')}</td>
+                                </tr>
+                                <tr>
+                                    <td>ວັນທີສິນສຸດ: {moment(debt.contract_end_date).format('DD/MM/YYYY')}</td>
+                                </tr>
+                            </table>
+                            <div className="form-group col-sm-7">
+                                <label htmlFor="" className='form-label'>ວັນທີຈ່າຍ</label>
+                                <DatePicker oneTap format="dd/MM/yyyy" onChange={(e) => handleChangeDate('doccm_date', e)} defaultValue={new Date()} block />
                             </div>
-                            {fileName &&
-                                <div class="alert alert-success alert-dismissible fade show">
-                                    <strong className='fs-16px ms-2'><i class="fa-solid fa-paperclip" /> </strong>
-                                    {fileName}
-                                    <button type="button" onClick={closeFile} class="btn-close"></button>
+                            <div className="form-group col-sm-5">
+                                <label htmlFor="" className='form-label'>ເອກະສານແນບ</label>
+                                <div className="mb-1">
+                                    <label className='btn btn-blue fs-15px'> <i className="fa-regular fa-folder-open fs-5"></i> ເລືອກໄຟລ໌....
+                                        <input type='file' onChange={handleFileChange} className='hide' />
+                                    </label>
                                 </div>
-                            }
+                                {fileName &&
+                                    <div className="alert alert-success alert-dismissible fade show">
+                                        <strong className='fs-16px ms-2'><i className="fa-solid fa-paperclip" /> </strong>
+                                        {fileName}
+                                        <button type="button" onClick={closeFile} className="btn-close"></button>
+                                    </div>
+                                }
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="" className='form-label'>ໝາຍເຫດ</label>
+                                <Input as='textarea' onChange={(e) => handleChangeDate('debt_remark', e)} block />
+                            </div>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="" className='form-label'>ໝາຍເຫດ</label>
-                            <Input as='textarea' onChange={(e) => handleChangeDate('debt_remark', e)} block />
-                        </div>
-                    </div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button type='submit' appearance="primary" >ບັນທຶກການຈ່າຍ </Button>
-                    <Button color='red' appearance="primary" onClick={() => handleShow(false)}>
-                        ຍົກເລີກ
-                    </Button>
-                </Modal.Footer>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button type='submit' appearance="primary" >ບັນທຶກການຈ່າຍ </Button>
+                        <Button color='red' appearance="primary" onClick={() => handleShow(false)}>
+                            ຍົກເລີກ
+                        </Button>
+                    </Modal.Footer>
                 </form>
             </Modal>
 
-            <FormPayDebtcom 
-             show={showPay}
-             handleClose={handleClose}
-             data={dataDebt}
-             fetchReport={fetchReport}
-             showTotalDebt={showTotalDebt}
-             setCheckedItems={setCheckedItems}
+            <FormPayDebtcom
+                show={showPay}
+                handleClose={handleClose}
+                data={dataDebt}
+                fetchReport={fetchReport}
+                showTotalDebt={showTotalDebt}
+                setCheckedItems={setCheckedItems}
             />
         </div>
     )

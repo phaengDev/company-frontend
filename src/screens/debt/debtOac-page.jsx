@@ -8,6 +8,8 @@ import numeral from 'numeral';
 import Alert from '../../utils/config';
 import { useCompany, useAgent } from '../../config/select-option';
 import FormPayDebtoac from './Form-PayDebtoac';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 export default function DebtOac() {
     const api = Config.urlApi;
     const itemCompay = useCompany();
@@ -41,13 +43,18 @@ export default function DebtOac() {
         }
 
     };
-    const Filter = (value) => {
-        setItemData(filter.filter(n => 
-            n.contract_number.toLowerCase().includes(value) ||
-            n.currency_name.toLowerCase().includes(value) ||
-            n.customer_name.toLowerCase().includes(value) 
-        ));
-    };
+   
+        const Filter = (value) => {
+  setItemData(
+    filter.filter((n) =>
+      n.contract_number.toLowerCase().includes(value.toLowerCase()) ||
+      n.currency_name.toLowerCase().includes(value.toLowerCase()) ||
+      n.customer_name.toLowerCase().includes(value.toLowerCase())
+    )
+  );
+};
+
+
     const [sum, steSum] = useState({})
     const [loading, setLoading] = useState(true)
     const showTotalDebt = async () => {
@@ -195,6 +202,74 @@ export default function DebtOac() {
         showTotalDebt();
     }, [data])
 
+
+const handleExportToExcel = () => {
+  const exportData = itemData.map((item, index) => ({
+    'ລ/ດ': index + 1,
+    'ຊື່ລູກຄ້າ': item.customer_name,
+    'ບໍລິສັນປະກັນໄພ': item.com_name_lao,
+    'ເລກທີສັນຍາ': item.contract_number,
+    'ວັນທີເລີມ': moment(item.contract_start_date).format('DD/MM/YYYY'),
+    'ວັນທີສິນສຸດ': moment(item.contract_end_date).format('DD/MM/YYYY'),
+    'ຕົວແທນຂາຍ': item.agent_name,
+    'ປະເພດຜູ້ຊື້ປະກັນ': item.type_buyer_name,
+    'ປະເພດປະກັນ': item.type_in_name,
+    'ທາງເລືອກ': item.options_name,
+    'ຄ່າທຳນຽມເບື້ອງຕັ້ນ': numeral(item.initial_fee).format('0,00.00') + ' ' + item.genus,
+    'ເປີເຊັນຮັບ': item.precent_incom + '%',
+    'ຄອມຮັບ': numeral(item.pre_tax_profit).format('0,00.00') + ' ' + item.genus,
+    'ອາກອນ': item.percent_akorn + '%',
+    'ເປັນເງິນ': numeral(item.incom_money).format('0,00.00') + ' ' + item.genus,
+    'ຄອມຈ່າຍຫຼັງອາກອນ': numeral(item.incom_finally).format('0,00.00') + ' ' + item.genus,
+    'ວັນທີຄ້າງ': moment(item.oac_date).format('DD/MM/YYYY'),
+    'ຈຳນວນວັນ': item.day_oac + ' ວັນ',
+  }));
+
+  // Create worksheet
+  const worksheet = XLSX.utils.json_to_sheet(exportData);
+
+  // Set custom font style: Phetsarath OT
+  const range = XLSX.utils.decode_range(worksheet['!ref']);
+  for (let R = range.s.r; R <= range.e.r; ++R) {
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+      const cell_address = XLSX.utils.encode_cell({ r: R, c: C });
+      if (!worksheet[cell_address]) continue;
+
+      worksheet[cell_address].s = {
+        font: {
+          name: 'Phetsarath OT',
+          sz: 12,
+        },
+        alignment: {
+          vertical: 'center',
+          wrapText: true,
+        },
+      };
+    }
+  }
+
+  // Workbook and options
+  const workbook = {
+    SheetNames: ['Commissions'],
+    Sheets: {
+      'Commissions': worksheet,
+    },
+    Props: {
+      Title: 'Commission Report',
+    },
+  };
+
+  const excelBuffer = XLSX.write(workbook, {
+    bookType: 'xlsx',
+    type: 'array',
+    cellStyles: true, // important for styles
+  });
+
+  const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
+  saveAs(data, `ລາຍງານຄອມມິຊັນ_${moment().format('MMDD')}.xlsx`);
+};
+
+
     return (
         <div id="content" className="app-content">
             <ol className="breadcrumb float-end">
@@ -265,6 +340,7 @@ export default function DebtOac() {
                             <button onClick={handlePayDebtMouti} className="btn btn-md btn-danger">ຢືນຢັນຕັດໜີ້</button>
                         ) : (
                             <>
+                            <button className=" rounded-4 px-2 me-2 text-green" onClick={handleExportToExcel}>Excel <i className="fa-solid fa-cloud-arrow-down"></i></button>
                                 <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
                                 <a href="javascript:;" class="btn btn-xs btn-icon btn-danger" data-toggle="panel-remove"><i class="fa fa-times"></i></a>
                             </>
@@ -307,7 +383,7 @@ export default function DebtOac() {
                                     <th width='1%' className="text-center bg-header sticky-col first-col">ຕັດໜີ້</th>
                                     <th className="">ຊື່ລູກຄ້າ</th>
                                     <th className="">ບໍລິສັນປະກັນໄພ</th>
-                                    <th width="5%" className="text-center">ເລກທີສັນຍາ</th>
+                                    <th>ເລກທີສັນຍາ</th>
                                     <th className="text-center">ວັນທີເລີມ</th>
                                     <th className="text-center">ວັນທີສິນສຸດ</th>
                                     <th className="">ຕົວແທນຂາຍ</th>
@@ -342,7 +418,7 @@ export default function DebtOac() {
                                                     <td className='text-center bg-white sticky-col first-col'>{item.status_company === 1 ? 'ຄັ້ງຈ່າຍບໍລິສັດ' : (<span onClick={() => handlePayDebt(item)} role='button' class="badge bg-primary"><i class="fa-brands fa-paypal"></i> ຕັດໜີ້ບໍລິສັດ</span>)}</td>
                                                     <td>{item.customer_name}</td>
                                                     <td>{item.com_name_lao}</td>
-                                                    <td className='text-center'>{item.contract_number}</td>
+                                                    <td>{item.contract_number}</td>
                                                     <td className='text-center'>{moment(item.contract_start_date).format('DD/MM/YYYY')}</td>
                                                     <td className='text-center'>{moment(item.contract_end_date).format('DD/MM/YYYY')}</td>
                                                     <td>{item.agent_name}</td>
